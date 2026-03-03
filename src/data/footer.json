@@ -1,0 +1,27 @@
+{
+  "currentYear": 2026,
+  "copyright": "REDE CONDOR — TODOS OS DIREITOS RESERVADOS.",
+  "socialLinks": [
+    {
+      "name": "Facebook",
+      "url": "https://facebook.com/contato.condor",
+      "bg": "#1877F2",
+      "shadow": "rgba(24, 119, 242, 0.4)",
+      "icon": "facebook"
+    },
+    {
+      "name": "Instagram",
+      "url": "https://instagram.com/condorsupercenter",
+      "bg": "linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
+      "shadow": "rgba(220, 39, 67, 0.4)",
+      "icon": "instagram"
+    },
+    {
+      "name": "YouTube",
+      "url": "https://youtube.com/condorsupercenter",
+      "bg": "#FF0000",
+      "shadow": "rgba(255, 0, 0, 0.4)",
+      "icon": "youtube"
+    }
+  ]
+}

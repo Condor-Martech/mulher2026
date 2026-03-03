@@ -1,0 +1,81 @@
+---
+import Waves from "./icons/Waves.astro";
+import Container from "./ui/Container.astro";
+import { Image } from "astro:assets";
+import logoImg from "../assets/LOGO.png";
+import Facebook from "./icons/Facebook.astro";
+import Instagram from "./icons/Instagram.astro";
+import YouTube from "./icons/YouTube.astro";
+import footerData from "../data/footer.json";
+
+const { currentYear, copyright, socialLinks } = footerData;
+---
+
+<footer class="relative pt-8 mt-8 md:pt-12 md:mt-12 overflow-hidden">
+  <!-- Organic Pastel Background Layer -->
+  <div
+    class="absolute bottom-0 left-0 right-0 top-11 bg-linear-to-b from-primary/15 to-white overflow-hidden"
+    aria-hidden="true"
+  >
+    <Waves />
+  </div>
+
+  <!-- Primary Top Accent Bar -->
+  <div
+    class="absolute top-11 left-0 right-0 h-[2px] bg-linear-to-r from-transparent via-primary/60 to-transparent z-10"
+    aria-hidden="true"
+  >
+  </div>
+
+  <!-- Content -->
+  <Container
+    className="relative z-20 py-6 md:py-10 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-5"
+  >
+    <!-- Logo -->
+    <a
+      href="/"
+      class="inline-flex items-center transition-transform duration-300 hover:scale-105 shrink-0"
+      aria-label="Ir para o topo"
+    >
+      <Image
+        src={logoImg}
+        alt="Condor"
+        height={48}
+        class="w-[130px] h-auto brightness-110 drop-shadow-[0_4px_12px_rgba(228,0,70,0.3)]"
+      />
+    </a>
+
+    <!-- Copyright -->
+    <p
+      class="flex-1 text-center font-bold text-[10px] tracking-[0.2em] uppercase text-primary/80 min-w-[180px]"
+    >
+      &copy; {currentYear}
+      {copyright}
+    </p>
+
+    <!-- Social Icons -->
+    <div
+      class="flex items-center flex-wrap gap-2.5 shrink-0"
+      role="list"
+      aria-label="Redes sociais"
+    >
+      {
+        socialLinks.map((link) => (
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={link.name}
+            class="flex items-center justify-center w-10 h-10 rounded-full text-white border border-white/20 transition-all duration-300 hover:scale-115 hover:-translate-y-1 hover:brightness-110 shadow-lg"
+            style={`background: ${link.bg}; box-shadow: 0 4px 12px ${link.shadow};`}
+            role="listitem"
+          >
+            {link.icon === "facebook" && <Facebook />}
+            {link.icon === "instagram" && <Instagram />}
+            {link.icon === "youtube" && <YouTube />}
+          </a>
+        ))
+      }
+    </div>
+  </Container>
+</footer>

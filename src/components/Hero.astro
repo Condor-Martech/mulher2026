@@ -1,0 +1,77 @@
+---
+import Navbar from "./Navbar.astro";
+import Container from "./ui/Container.astro";
+import { Image } from "astro:assets";
+import heroBg from "../assets/KV - Dia da Mulher - 2026 - OP10.jpg";
+import ChevronDoubleDown from "./icons/ChevronDoubleDown.astro";
+import heroData from "../data/hero.json";
+
+const { scrollLabel } = heroData;
+---
+
+<section
+  class="relative min-h-[85vh] h-[85vh] lg:min-h-screen lg:h-screen w-[100vw] ml-[calc(50%-50vw)] grow overflow-hidden flex flex-col"
+>
+  <Navbar />
+
+  <!-- Hero Content Area -->
+  <div class="relative grow flex items-center">
+    <!-- Background Image -->
+    <div
+      class="absolute inset-0 z-0 overflow-hidden"
+      style="-webkit-mask-image: linear-gradient(to bottom, black 88%, transparent 98%); mask-image: linear-gradient(to bottom, black 88%, transparent 98%);"
+    >
+      <Image
+        src={heroBg}
+        alt="Background"
+        loading="eager"
+        fetchpriority="high"
+        class="w-full h-full object-cover max-w-full overflow-hidden animate-subtle-zoom"
+      />
+      <!-- Soft Gradient Overlay -->
+      <div
+        class="absolute inset-0 bg-linear-to-r from-primary/20 via-transparent to-transparent"
+      >
+      </div>
+    </div>
+
+    <Container
+      className="relative z-10 h-full flex flex-col justify-center items-center lg:items-start px-0 md:px-6 max-w-none md:max-w-7xl w-full"
+    >
+      <!-- Scroll Invite Element -->
+      <a
+        href="#intro"
+        class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 text-white group cursor-pointer z-20"
+      >
+        <span
+          class="text-[10px] uppercase font-black tracking-[0.4em] opacity-80 group-hover:opacity-100 transition-opacity"
+        >
+          {scrollLabel}
+        </span>
+        <div class="relative flex flex-col items-center">
+          <ChevronDoubleDown class="w-6 h-6 animate-bounce" />
+        </div>
+      </a>
+    </Container>
+  </div>
+</section>
+
+<style>
+  @keyframes subtle-zoom {
+    from {
+      transform: scale(1.05);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  .animate-subtle-zoom {
+    animation: subtle-zoom 25s ease-out infinite alternate;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-subtle-zoom,
+    .animate-bounce {
+      animation: none !important;
+    }
+  }
+</style>

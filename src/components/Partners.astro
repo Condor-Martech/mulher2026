@@ -1,0 +1,63 @@
+---
+import Container from "./ui/Container.astro";
+import partnersData from "../data/partners.json";
+import { Image } from "astro:assets";
+import { getPartnerLogos } from "../utils/partnersLoader";
+
+const { sponsorsTitle, supportTitle } = partnersData;
+const { sponsorsData, supportData } = getPartnerLogos();
+---
+
+<section id="patrocinio" class="py-6 md:py-12 bg-transparent relative">
+  <div class="px-4 md:px-12 max-w-480 mx-auto w-full">
+    <div
+      class="glass p-4 md:p-16 rounded-2xl md:rounded-[3.5rem] shadow-premium border border-primary/10 bg-white/5 backdrop-blur-md w-full"
+    >
+      <div class="mb-8 md:mb-20">
+        <h4
+          class="text-center text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] text-primary/70 mb-6 md:mb-12"
+        >
+          {sponsorsTitle}
+        </h4>
+        <div
+          class="flex flex-wrap lg:flex-nowrap justify-center items-center gap-4 md:gap-16 w-full"
+        >
+          {
+            sponsorsData.map((logo) => (
+              <div class="transition-transform duration-500 hover:scale-110 cursor-pointer flex items-center justify-center shrink-0">
+                <Image
+                  src={logo}
+                  alt="Patrocinador"
+                  class="h-12 md:h-24 w-auto max-w-[150px] md:max-w-[280px] object-contain"
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div>
+        <h4
+          class="text-center text-[10px] md:text-xs font-bold uppercase tracking-[0.4em] text-accent/20 mb-4 md:mb-10"
+        >
+          {supportTitle}
+        </h4>
+        <div
+          class="flex flex-wrap lg:flex-nowrap justify-center items-center gap-3 md:gap-10 w-full"
+        >
+          {
+            supportData.map((logo) => (
+              <div class="transition-transform duration-500 hover:scale-105 cursor-pointer flex items-center justify-center shrink-0">
+                <Image
+                  src={logo}
+                  alt="Apoiador"
+                  class="h-10 md:h-16 w-auto max-w-[100px] md:max-w-[170px] object-contain"
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

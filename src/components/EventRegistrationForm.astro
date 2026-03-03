@@ -1,0 +1,138 @@
+---
+import SpinnerIcon from "./icons/SpinnerIcon.astro";
+---
+
+<form id="event-registration-form" class="flex flex-col gap-4 md:gap-6">
+  <input type="hidden" id="modal-event-id" name="eventId" value="" />
+  <input type="hidden" id="modal-event-tema" name="eventTema" value="" />
+
+  <div class="flex flex-col gap-1 md:gap-2">
+    <label
+      for="nome"
+      class="text-sm md:text-base font-bold text-[#5A4A4A] pl-1 md:pl-2"
+      >Nome Completo</label
+    >
+    <input
+      type="text"
+      id="nome"
+      name="nome"
+      required
+      placeholder="Digite seu nome"
+      class="w-full px-4 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-base text-[#5A4A4A] placeholder:text-[#A99D9D]"
+    />
+    <span
+      class="error-message hidden text-red-500 text-xs pl-1 md:pl-2 font-medium"
+      >Por favor, insira um nome válido.</span
+    >
+  </div>
+
+  <div class="flex flex-col gap-1 md:gap-2">
+    <label
+      for="email"
+      class="text-sm md:text-base font-bold text-[#5A4A4A] pl-1 md:pl-2"
+      >E-mail</label
+    >
+    <input
+      type="email"
+      id="email"
+      name="email"
+      required
+      placeholder="seu@email.com"
+      class="w-full px-4 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-base text-[#5A4A4A] placeholder:text-[#A99D9D]"
+    />
+    <span
+      class="error-message hidden text-red-500 text-xs pl-1 md:pl-2 font-medium"
+      >Por favor, insira um e-mail válido.</span
+    >
+  </div>
+
+  <div class="flex flex-col gap-1 md:gap-2">
+    <label
+      for="telefone"
+      class="text-sm md:text-base font-bold text-[#5A4A4A] pl-1 md:pl-2"
+      >Telefone / WhatsApp</label
+    >
+    <input
+      type="tel"
+      id="telefone"
+      name="telefone"
+      required
+      placeholder="(00) 00000-0000"
+      maxlength="15"
+      class="w-full px-4 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-base text-[#5A4A4A] placeholder:text-[#A99D9D]"
+    />
+    <span
+      class="error-message hidden text-red-500 text-xs pl-1 md:pl-2 font-medium"
+      >Por favor, insira um telefone válido com DDD.</span
+    >
+  </div>
+
+  <div class="flex flex-col gap-1 md:gap-2">
+    <label
+      for="cpf"
+      class="text-sm md:text-base font-bold text-[#5A4A4A] pl-1 md:pl-2"
+      >CPF</label
+    >
+    <input
+      type="text"
+      id="cpf"
+      name="cpf"
+      required
+      placeholder="000.000.000-00"
+      maxlength="14"
+      class="w-full px-4 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-base text-[#5A4A4A] placeholder:text-[#A99D9D]"
+    />
+    <span
+      class="error-message hidden text-red-500 text-xs pl-1 md:pl-2 font-medium"
+      >Por favor, insira um CPF válido.</span
+    >
+  </div>
+
+  <div class="flex flex-col gap-1 md:gap-2 mt-1 md:mt-2 px-1 md:px-2">
+    <div class="flex items-start gap-2 md:gap-3">
+      <input
+        type="checkbox"
+        id="lgpd"
+        name="lgpd"
+        required
+        class="mt-1 w-5 h-5 md:w-5 md:h-5 rounded border-primary/30 text-primary focus:ring-primary/50 focus:ring-2 cursor-pointer transition-colors"
+      />
+      <label
+        for="lgpd"
+        class="text-[11px] md:text-xs text-[#6D5D5D] leading-tight cursor-pointer"
+      >
+        Autorizo o uso dos meus dados pela Rede Condor para receber comunicações
+        sobre este e outros eventos e de acordo com a nossa política.
+      </label>
+    </div>
+    <span class="error-message hidden text-red-500 text-xs font-medium"
+      >Você precisa aceitar os termos.</span
+    >
+  </div>
+
+  <button
+    type="submit"
+    id="submit-registration-btn"
+    disabled
+    class="mt-2 md:mt-4 w-full px-6 py-3 md:px-8 md:py-4 bg-primary text-white text-base md:text-lg font-bold rounded-xl md:rounded-2xl hover:bg-primary/90 hover:shadow-[0_10px_20px_rgba(235,93,121,0.3)] transform transition-all shadow-premium active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100 disabled:bg-primary/70 disabled:hover:shadow-none"
+  >
+    <span id="submit-text">Confirmar Inscrição</span>
+    <SpinnerIcon
+      id="submit-spinner"
+      class="animate-spin hidden h-5 w-5 text-white"
+    />
+  </button>
+
+  <div
+    id="form-feedback"
+    class="hidden text-center text-sm md:text-base mt-2 font-medium rounded-lg md:rounded-xl p-3 md:p-4"
+  >
+  </div>
+</form>
+
+<script>
+  import { initFormHandler } from "../utils/formHandler";
+
+  // Astro runs this on load
+  initFormHandler();
+</script>

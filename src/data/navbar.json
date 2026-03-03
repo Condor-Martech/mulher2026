@@ -1,0 +1,8 @@
+{
+  "links": [
+    { "label": "Home", "href": "/" },
+    { "label": "Programação", "href": "#programacao" },
+    { "label": "Ofertas", "href": "https://www.condor.com.br/ofertas", "target": "_blank" },
+    { "label": "Patrocínio e Apoio", "href": "#patrocinio" }
+  ]
+}

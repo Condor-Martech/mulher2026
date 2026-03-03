@@ -1,0 +1,209 @@
+---
+import EventModal from "./EventModal.astro";
+import EventCard from "./EventCard.astro";
+import Container from "./ui/Container.astro";
+import { fetchEvents } from "../services/eventService";
+import eventsData from "../data/events.json";
+
+const { api_url, titles, emptyMessage } = eventsData;
+const events = await fetchEvents(api_url);
+
+const getDisruptionClass = (index: number) => {
+  // Adds random slight horizontal offsets to the vertical list to make it "asymmetrical" and non-rigid
+  const disruptions = [
+    "lg:-translate-x-8",
+    "lg:translate-x-12",
+    "lg:-translate-x-4",
+    "lg:translate-x-8",
+    "lg:-translate-x-12",
+  ];
+  return disruptions[index % disruptions.length] || "";
+};
+---
+
+<section
+  id="programacao"
+  class="py-8 md:py-12 bg-transparent relative overflow-hidden"
+>
+  <Container>
+    <div
+      class="mb-12 md:mb-20 text-center relative z-10 w-full flex flex-col items-center justify-center"
+    >
+      <h2
+        class="text-3xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#E95D79] leading-none mb-2"
+      >
+        {titles.first}
+      </h2>
+      <h2
+        class="text-3xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#5A4A4A] leading-none"
+      >
+        {titles.second}
+      </h2>
+    </div>
+
+    {
+      events.length > 0 ? (
+        <>
+          <div class="md:hidden flex justify-end items-center gap-2 mb-4 text-primary relative z-10 animate-swipe pr-2">
+            <span class="text-[11px] font-black uppercase tracking-widest bg-white/70 px-3 py-1 rounded-full shadow-sm">
+              Deslize para ver mais
+            </span>
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
+            </svg>
+          </div>
+          <div class="flex flex-row items-stretch overflow-x-auto snap-x snap-mandatory gap-4 md:flex-col md:overflow-visible md:snap-none md:gap-12 lg:gap-20 w-[calc(100%+3rem)] -ml-6 px-6 pb-4 md:w-full md:ml-0 md:px-0 md:pb-0 relative z-10 hide-scrollbar">
+            {events.map((event, index) => (
+              <div
+                class={`relative shrink-0 snap-center w-[92vw] max-w-[320px] md:max-w-none md:w-full flex justify-center transform transition-transform duration-700 will-change-transform z-10 hover:z-50 ${getDisruptionClass(
+                  index,
+                )}`}
+              >
+                <EventCard event={event} inverted={index % 2 !== 0} />
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div class="bg-white/80 backdrop-blur-md p-12 rounded-[2.5rem] border-2 border-dashed border-primary/20 text-center max-w-4xl mx-auto shadow-2xl transform rotate-1 relative z-10">
+          <p class="text-accent/60 font-medium italic text-xl">
+            {emptyMessage}
+          </p>
+        </div>
+      )
+    }
+
+    {/* Bottom Message Section */}
+    <div
+      class="mt-16 md:mt-24 text-center max-w-4xl mx-auto px-4 relative z-10"
+    >
+      <h3
+        class="text-xl md:text-3xl font-black text-[#5A4A4A] leading-snug mb-6 max-w-3xl mx-auto"
+      >
+        São duas horas e meia de evento preparados com<br
+          class="hidden md:block"
+        />
+        carinho pra você com brindes, degustações<br class="hidden md:block" />
+        exclusivas e muita troca!
+      </h3>
+      <p class="text-xl md:text-3xl font-black text-[#E95D79] tracking-tight">
+        Não deixe de participar!
+      </p>
+    </div>
+  </Container>
+
+  {/* Disruptive background blobs */}
+  <div
+    class="absolute top-1/2 left-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2 pointer-events-none mix-blend-multiply opacity-70 animate-float"
+  >
+  </div>
+  <div
+    class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-accent/20 rounded-full blur-3xl translate-y-1/4 pointer-events-none mix-blend-overlay opacity-70 animate-float-delayed"
+  >
+  </div>
+
+  <EventModal />
+</section>
+
+<style>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  /* Custom Animations */
+  @keyframes swipe {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-15px);
+    }
+  }
+  .animate-swipe {
+    animation: swipe 1.5s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-20px) scale(1.05);
+    }
+  }
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  .animate-float-delayed {
+    animation: float 6s ease-in-out infinite;
+    animation-delay: 3s;
+  }
+</style>
+
+<script>
+  import { initEventGridModal } from "../utils/modalHandler";
+  import {
+    getEventStatus,
+    getStatusConfig,
+    fetchEvents,
+  } from "../services/eventService";
+  import eventsData from "../data/events.json";
+
+  const updateStatuses = async () => {
+    // Detect source from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const source = urlParams.get("src") || "social";
+
+    // We need the latest event data (mock)
+    const events = await fetchEvents(eventsData.api_url);
+
+    // Update each card
+    const cards = document.querySelectorAll(".open-event-modal-btn");
+    cards.forEach((btn) => {
+      const el = btn as HTMLButtonElement;
+      const eventId = el.getAttribute("data-event-id");
+      const event = events.find((e) => e.id === eventId);
+
+      if (event) {
+        const status = getEventStatus(event);
+        const config = getStatusConfig(status);
+
+        // Update button text and disabled state
+        el.textContent = config.button;
+        el.disabled = config.disabled;
+
+        // Update badge if found in parent
+        const card = el.closest(".group");
+        const badge = card?.querySelector(".badge-label"); // Need to ensure Badge has this class
+        if (badge) {
+          badge.textContent = config.label;
+          // Note: classes are harder to update dynamically without removing all and adding new ones
+          // but for basic mock it might be enough to update the text.
+        }
+      }
+    });
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initEventGridModal();
+    updateStatuses();
+  });
+</script>

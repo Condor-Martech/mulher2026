@@ -1,0 +1,44 @@
+[
+  {
+    "id": "event-11-mar",
+    "tema": "Degustação de Vinhos",
+    "palestrante": "Carol Schelbauer",
+    "fecha_iso": "2026-03-11T19:30:00Z",
+    "opening_date_iso": "2026-03-01T00:00:00Z",
+    "hora": "19:30",
+    "link_inscripcion": "#",
+    "tipo_evento": "Palestra",
+    "quota_crm_max": 15,
+    "quota_social_max": 15,
+    "current_crm": 0,
+    "current_social": 0
+  },
+  {
+    "id": "event-18-mar",
+    "tema": "Receitas com Arapongas",
+    "palestrante": "Chef Ricardo Prado e Chef Vera Oliveira",
+    "fecha_iso": "2026-03-18T19:30:00Z",
+    "opening_date_iso": "2026-03-13T00:00:00Z",
+    "hora": "19:30",
+    "link_inscripcion": "#",
+    "tipo_evento": "Palestra",
+    "quota_crm_max": 15,
+    "quota_social_max": 15,
+    "current_crm": 0,
+    "current_social": 0
+  },
+  {
+    "id": "event-25-mar",
+    "tema": "Cervejas Especiais",
+    "palestrante": "Ana Paula Carneiro",
+    "fecha_iso": "2026-03-25T19:30:00Z",
+    "opening_date_iso": "2026-03-13T00:00:00Z",
+    "hora": "19:30",
+    "link_inscripcion": "#",
+    "tipo_evento": "Palestra",
+    "quota_crm_max": 15,
+    "quota_social_max": 15,
+    "current_crm": 0,
+    "current_social": 0
+  }
+]

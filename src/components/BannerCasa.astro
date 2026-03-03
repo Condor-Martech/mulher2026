@@ -1,0 +1,35 @@
+---
+import { Image } from "astro:assets";
+import condorCasaImg from "../assets/condor em casa.png";
+import ArrowRight from "./icons/ArrowRight.astro";
+import bannerCasaData from "../data/banner-casa.json";
+
+const { alt, ctaLabel, ctaLink } = bannerCasaData;
+---
+
+<section class="py-6 md:py-12">
+  <div class="container mx-auto px-6">
+    <div class="max-w-5xl mx-auto relative group">
+      <!-- Glass Frame Background -->
+      <div
+        class="absolute -inset-2 md:-inset-8 glass rounded-3xl md:rounded-[3rem] opacity-50 -z-10 blur-xl group-hover:opacity-80 transition-opacity duration-700"
+      >
+      </div>
+
+      <a
+        href={ctaLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="block cursor-pointer transition-transform duration-700 hover:scale-[1.02] hover:-translate-y-1"
+      >
+        <Image
+          src={condorCasaImg}
+          alt={alt}
+          width={1000}
+          height={600}
+          class="w-full h-auto"
+        />
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #f43f5e; /* Rose 500 - more vibrant */
+  --color-secondary: #fff1f2; /* Rose 50 - softer */
+  --color-premium-pink: #ffe4e6; /* Rose 100 - consistent base */
+  --color-accent: #1e293b; /* Slate 800 - softer than pure black */
+  --color-success: #10b981;
+  --color-rose-light: #fbcfe8;
+  --color-border-raw: rgba(244, 63, 94, 0.15);
+
+  --font-inter: "Inter Variable", "Inter", sans-serif;
+  --font-outfit: "Outfit Variable", "Outfit", sans-serif;
+  --font-script: "Pacifico", cursive;
+
+  --shadow-premium: 0 25px 50px -12px rgba(244, 63, 94, 0.2);
+  --shadow-glass: 0 10px 40px 0 rgba(244, 63, 94, 0.1);
+}
+
+@layer utilities {
+  .bg-grain {
+    background-color: var(--color-premium-pink);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Ffilter id='noiseFilter'%3E%3FfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3F/filter%3E%3Frect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3F/svg%3E");
+    background-blend-mode: overlay;
+    opacity: 0.95;
+  }
+
+  .border-raw {
+    border: 2px solid var(--color-accent);
+  }
+
+  .border-raw-primary {
+    border: 2px solid var(--color-primary);
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+  }
+
+  .glass-white {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 30px -5px rgba(228, 0, 70, 0.1);
+  }
+
+  .glass-dark {
+    background: rgba(17, 17, 17, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+@layer base {
+  html {
+    font-family: var(--font-inter);
+    scroll-behavior: smooth;
+  }
+
+  a, button {
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,76 @@
+---
+import MenuIcon from "./icons/Menu.astro";
+import CloseIcon from "./icons/Close.astro";
+import navbarData from "../data/navbar.json";
+
+const { links } = navbarData;
+---
+
+<header
+  class="fixed top-8 left-0 right-0 z-50 flex justify-center md:px-6 pointer-events-none"
+>
+  <div class="container mx-auto flex justify-start pointer-events-auto">
+    <!-- Desktop Nav -->
+    <nav
+      class="hidden lg:flex glass-white px-10 py-4 rounded-full items-center space-x-10 text-[12px] font-black uppercase tracking-[0.2em] text-accent shadow-2xl border border-white/20 group"
+    >
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            target={link.target}
+            class="hover:text-primary transition-all py-1 border-b-2 border-transparent hover:border-primary transform hover:-translate-y-0.5"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <!-- Mobile Nav Toggle -->
+    <div class="lg:hidden w-full flex justify-end items-center">
+      <button
+        id="mobile-menu-toggle"
+        class="glass-dark p-3 rounded-2xl border border-white/20 shadow-xl text-white active:scale-95 transition-transform"
+        aria-label="Toggle Menu"
+      >
+        <MenuIcon class="w-6 h-6" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div
+    id="mobile-menu"
+    class="fixed inset-0 bg-white/95 backdrop-blur-2xl z-60 flex flex-col items-center justify-center space-y-8 opacity-0 pointer-events-none transition-all duration-500 lg:hidden"
+  >
+    <button
+      id="close-menu"
+      class="absolute top-8 right-8 text-white/50 hover:text-white transition-colors"
+    >
+      <CloseIcon class="w-10 h-10" />
+    </button>
+    {
+      links.map((link) => (
+        <a
+          href={link.href}
+          target={link.target}
+          class="mobile-nav-link text-5xl font-script text-accent"
+        >
+          {link.label}
+        </a>
+      ))
+    }
+  </div>
+</header>
+
+<script>
+  import { initNavbarHandler } from "../utils/navbarHandler";
+  initNavbarHandler();
+</script>
+
+<style>
+  .mobile-nav-link {
+    @apply transition-all duration-300 hover:scale-110 active:scale-95;
+  }
+</style>

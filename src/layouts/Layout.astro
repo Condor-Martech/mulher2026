@@ -1,0 +1,31 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="pt-br" class="overflow-x-hidden w-full max-w-[100vw]">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} | Condor com Elas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="bg-grain text-accent selection:bg-primary selection:text-white min-h-screen overflow-x-hidden w-full relative"
+  >
+    <slot />
+  </body>
+</html>

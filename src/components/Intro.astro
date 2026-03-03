@@ -1,0 +1,104 @@
+---
+import Container from "./ui/Container.astro";
+import { Image } from "astro:assets";
+import bannerImg from "../assets/banner.png";
+import MapPin from "./icons/MapPin.astro";
+import introData from "../data/intro.json";
+
+const { text, branding, cta, location } = introData;
+---
+
+<section
+  id="intro"
+  class="py-8 md:py-12 bg-transparent relative overflow-hidden"
+>
+  <Container>
+    <div class="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+      {/* Image Section */}
+      <div class="relative group">
+        <div
+          class="absolute -inset-4 bg-primary/10 rounded-[2.5rem] opacity-30 group-hover:opacity-50 blur-2xl transition-opacity"
+        >
+        </div>
+        <div
+          class="relative rounded-3xl overflow-hidden shadow-premium border-2 border-primary/10 lg:-rotate-1"
+        >
+          <Image
+            src={bannerImg}
+            alt="Mês da Mulher Condor"
+            width={800}
+            height={600}
+            class="w-full h-auto transition-transform duration-700 group-hover:scale-105"
+          />
+        </div>
+      </div>
+
+      {/* Content Section */}
+      <div class="flex flex-col space-y-6 md:space-y-8">
+        <div class="relative">
+          <p
+            class="text-xl md:text-2xl lg:text-3xl text-accent/80 leading-relaxed font-outfit font-medium tracking-tight"
+            set:html={text}
+          />
+        </div>
+
+        {/* Call to Action Logo Branding */}
+        <div class="relative pt-4 md:pt-6">
+          <div
+            class="absolute inset-0 bg-primary/10 rounded-[3rem] blur-3xl -z-10"
+          >
+          </div>
+          <div class="relative">
+            <div
+              class="relative flex flex-col items-center lg:items-start lg:translate-x-8"
+            >
+              <h2
+                class="text-5xl md:text-6xl lg:text-[6rem] font-script text-primary drop-shadow-sm leading-none"
+              >
+                {branding.first}
+              </h2>
+              <div
+                class="flex items-center gap-4 lg:gap-6 -mt-2 ml-12 md:ml-24 lg:ml-24"
+              >
+                <span
+                  class="font-script text-xl md:text-2xl lg:text-5xl text-accent/20 italic"
+                  >{branding.separator}
+                </span>
+                <h2
+                  class="text-5xl md:text-6xl lg:text-[6rem] font-script text-primary drop-shadow-sm leading-none"
+                >
+                  {branding.second}
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-6 md:pt-8">
+          <h3
+            class="text-2xl md:text-4xl font-bold font-outfit text-accent mb-6 md:mb-8 leading-tight"
+          >
+            {cta}
+          </h3>
+
+          <div
+            class="flex flex-col sm:inline-flex glass px-6 sm:px-8 py-4 sm:py-5 rounded-3xl sm:rounded-full shadow-premium border border-primary/20 items-center gap-4 hover:scale-105 transition-transform duration-500"
+          >
+            <div class="flex items-center gap-4">
+              <div
+                class="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary shrink-0"
+              >
+                <MapPin class="w-5 h-5" />
+              </div>
+              <p
+                class="text-[10px] sm:text-xs font-bold text-accent/60 uppercase tracking-widest"
+              >
+                {location}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>
