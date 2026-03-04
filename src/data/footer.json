@@ -1,27 +1,54 @@
 {
-  "currentYear": 2026,
-  "copyright": "REDE CONDOR — TODOS OS DIREITOS RESERVADOS.",
+  "currentYear": 2024,
+  "copyright": "Condor Online. Todos os direitos reservados.",
   "socialLinks": [
     {
+      "id": "facebook",
       "name": "Facebook",
-      "url": "https://facebook.com/contato.condor",
+      "url": "https://www.facebook.com/RedeCondor/?locale=pt_BR",
       "bg": "#1877F2",
-      "shadow": "rgba(24, 119, 242, 0.4)",
+      "shadow": "rgba(24,119,242,0.35)",
       "icon": "facebook"
     },
     {
+      "id": "instagram",
       "name": "Instagram",
-      "url": "https://instagram.com/condorsupercenter",
-      "bg": "linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
-      "shadow": "rgba(220, 39, 67, 0.4)",
+      "url": "https://www.instagram.com/redecondor/",
+      "bg": "#E4405F",
+      "shadow": "rgba(228,64,95,0.35)",
       "icon": "instagram"
     },
     {
+      "id": "x",
+      "name": "X",
+      "url": "https://x.com/RedeCondor",
+      "bg": "#000000",
+      "shadow": "rgba(0,0,0,0.4)",
+      "icon": "x"
+    },
+    {
+      "id": "tiktok",
+      "name": "TikTok",
+      "url": "https://www.tiktok.com/@redecondor",
+      "bg": "#010101",
+      "shadow": "rgba(0,0,0,0.4)",
+      "icon": "tiktok"
+    },
+    {
+      "id": "youtube",
       "name": "YouTube",
-      "url": "https://youtube.com/condorsupercenter",
+      "url": "https://www.youtube.com/user/redecondor",
       "bg": "#FF0000",
-      "shadow": "rgba(255, 0, 0, 0.4)",
+      "shadow": "rgba(255,0,0,0.35)",
       "icon": "youtube"
+    },
+    {
+      "id": "linkedin",
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com/company/redecondor/",
+      "bg": "#0A66C2",
+      "shadow": "rgba(10,102,194,0.35)",
+      "icon": "linkedin"
     }
   ]
 }

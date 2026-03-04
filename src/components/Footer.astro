@@ -2,10 +2,13 @@
 import Waves from "./icons/Waves.astro";
 import Container from "./ui/Container.astro";
 import { Image } from "astro:assets";
-import logoImg from "../assets/LOGO.png";
+import condorLogo from "../assets/condor-logo.png";
 import Facebook from "./icons/Facebook.astro";
 import Instagram from "./icons/Instagram.astro";
 import YouTube from "./icons/YouTube.astro";
+import X from "./icons/X.astro";
+import TikTok from "./icons/TikTok.astro";
+import LinkedIn from "./icons/LinkedIn.astro";
 import footerData from "../data/footer.json";
 
 const { currentYear, copyright, socialLinks } = footerData;
@@ -29,19 +32,19 @@ const { currentYear, copyright, socialLinks } = footerData;
 
   <!-- Content -->
   <Container
-    className="relative z-20 py-6 md:py-10 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-5"
+    className="relative z-20 py-4 md:py-10 flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-5"
   >
     <!-- Logo -->
     <a
-      href="/"
+      href={import.meta.env.BASE_URL}
       class="inline-flex items-center transition-transform duration-300 hover:scale-105 shrink-0"
       aria-label="Ir para o topo"
     >
       <Image
-        src={logoImg}
-        alt="Condor"
-        height={48}
-        class="w-[130px] h-auto brightness-110 drop-shadow-[0_4px_12px_rgba(228,0,70,0.3)]"
+        src={condorLogo}
+        alt="Logo Condor"
+        height={40}
+        class="h-10 md:h-8 w-auto object-contain"
       />
     </a>
 
@@ -55,7 +58,7 @@ const { currentYear, copyright, socialLinks } = footerData;
 
     <!-- Social Icons -->
     <div
-      class="flex items-center flex-wrap gap-2.5 shrink-0"
+      class="flex items-center flex-nowrap gap-2 md:gap-2.5 shrink-0"
       role="list"
       aria-label="Redes sociais"
     >
@@ -66,13 +69,16 @@ const { currentYear, copyright, socialLinks } = footerData;
             target="_blank"
             rel="noopener noreferrer"
             aria-label={link.name}
-            class="flex items-center justify-center w-10 h-10 rounded-full text-white border border-white/20 transition-all duration-300 hover:scale-115 hover:-translate-y-1 hover:brightness-110 shadow-lg"
+            class="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full text-white border border-white/20 transition-all duration-300 hover:scale-115 hover:-translate-y-1 hover:brightness-110 shadow-lg"
             style={`background: ${link.bg}; box-shadow: 0 4px 12px ${link.shadow};`}
             role="listitem"
           >
             {link.icon === "facebook" && <Facebook />}
             {link.icon === "instagram" && <Instagram />}
             {link.icon === "youtube" && <YouTube />}
+            {link.icon === "x" && <X class="w-5 h-5" />}
+            {link.icon === "tiktok" && <TikTok class="w-5 h-5" />}
+            {link.icon === "linkedin" && <LinkedIn class="w-5 h-5" />}
           </a>
         ))
       }
