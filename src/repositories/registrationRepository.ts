@@ -8,7 +8,6 @@ export interface RegistrationData {
   p_telefone: string;
   p_source: string;
   p_tema?: string;
-  p_opening_date?: string | null;
 }
 
 export interface RegistrationResult {

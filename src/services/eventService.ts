@@ -7,12 +7,26 @@ const STATUS_CONFIG: Record<EventStatus, EventStatusConfig> = eventsData.statusC
 
 
 export const getEventStatus = (event: Event): EventStatus => {
+  // --- DEBUG OVERRIDES (Only for local testing) ---
+  if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceStatus = urlParams.get('force_status') as EventStatus;
+    const forceEventId = urlParams.get('force_event');
+
+    if (forceStatus) {
+      if (!forceEventId || forceEventId === event.id) {
+        return forceStatus;
+      }
+    }
+  }
+  // ------------------------------------------------
+
   const now = new Date();
   const eventDate = new Date(event.fecha_iso);
   const openingDate = event.opening_date_iso ? new Date(event.opening_date_iso) : null;
 
-  // 1. Check if event is finished
-  if (now > eventDate) {
+  // 1. Check if event is finished explicitly or by date
+  if (event.is_active === false || event.campanha_active === false || now > eventDate) {
     return 'FINISHED';
   }
 
@@ -26,10 +40,10 @@ export const getEventStatus = (event: Event): EventStatus => {
     const urlParams = new URLSearchParams(window.location.search);
     const source = urlParams.get('src') || 'social';
     
-    if (source === 'crm' && event.current_crm !== undefined && event.quota_crm_max !== undefined) {
-      if (event.current_crm >= event.quota_crm_max) return 'FULL';
-    } else if (source === 'social' && event.current_social !== undefined && event.quota_social_max !== undefined) {
-      if (event.current_social >= event.quota_social_max) return 'FULL';
+    if (source === 'crm' && event.current_crm !== undefined && event.qtd_crm !== undefined) {
+      if (event.current_crm >= event.qtd_crm) return 'FULL';
+    } else if (source === 'social' && event.current_social !== undefined && event.qtd_social !== undefined) {
+      if (event.current_social >= event.qtd_social) return 'FULL';
     }
   }
   
@@ -79,13 +93,25 @@ export const fetchEvents = async (apiUrl: string): Promise<Event[]> => {
   }
 
   // 3. Sort and return
+  const priority: Record<EventStatus, number> = {
+    'OPEN': 0,
+    'SOON': 1,
+    'FULL': 2,
+    'FINISHED': 3
+  };
+
   return events.sort((a, b) => {
     const statusA = getEventStatus(a);
     const statusB = getEventStatus(b);
     
-    if (statusA === 'OPEN' && statusB !== 'OPEN') return -1;
-    if (statusA !== 'OPEN' && statusB === 'OPEN') return 1;
+    // First, prioritize by status group (FINISHED should be last)
+    if (statusA === 'FINISHED' && statusB !== 'FINISHED') return 1;
+    if (statusA !== 'FINISHED' && statusB === 'FINISHED') return -1;
     
-    return 0;
+    // Then, sort by date (closest first)
+    const dateA = new Date(a.fecha_iso).getTime();
+    const dateB = new Date(b.fecha_iso).getTime();
+    
+    return dateA - dateB;
   });
 };

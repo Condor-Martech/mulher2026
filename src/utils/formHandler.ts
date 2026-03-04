@@ -150,6 +150,12 @@ export function initFormHandler() {
             feedback.className = "block text-center mt-4 font-medium rounded-xl p-4 bg-blue-100 text-blue-700 border border-blue-200";
             feedback.classList.remove("hidden");
           }
+        } else if (errorType === 'EVENT_CLOSED') {
+          if (feedback) {
+            feedback.innerHTML = "🚫 Desculpe, as inscrições para este evento foram encerradas.";
+            feedback.className = "block text-center mt-4 font-medium rounded-xl p-4 bg-gray-100 text-gray-700 border border-gray-200";
+            feedback.classList.remove("hidden");
+          }
         } else {
           throw new Error(errorType || "Unknown error");
         }
@@ -175,6 +181,7 @@ export function initFormHandler() {
         if (modal) modal.close();
       }, 2500);
     } catch (err) {
+      console.error("DEBUG SUBMIT ERROR:", err);
       // 4. Manejo de Error de Conexión/Servidor
       if (feedback) {
         feedback.textContent = "❌ Ocorreu um erro técnico. Tente novamente.";

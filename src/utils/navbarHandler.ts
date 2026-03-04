@@ -4,13 +4,21 @@ export function initNavbarHandler() {
   const close = document.getElementById("close-menu");
   const links = document.querySelectorAll(".mobile-nav-link");
 
-  const toggleMenu = () => {
-    menu?.classList.toggle("opacity-0");
-    menu?.classList.toggle("pointer-events-none");
-    document.body.classList.toggle("overflow-hidden");
+  const openMenu = () => {
+    menu?.classList.remove("opacity-0", "pointer-events-none");
+    menu?.classList.add("pointer-events-auto");
+    document.body.classList.add("overflow-hidden");
   };
 
-  toggle?.addEventListener("click", toggleMenu);
-  close?.addEventListener("click", toggleMenu);
-  links.forEach((link) => link.addEventListener("click", toggleMenu));
+  const closeMenu = () => {
+    menu?.classList.add("opacity-0", "pointer-events-none");
+    menu?.classList.remove("pointer-events-auto");
+    document.body.classList.remove("overflow-hidden");
+  };
+
+  toggle?.addEventListener("click", openMenu);
+  close?.addEventListener("click", closeMenu);
+  links.forEach((link) => {
+    link.addEventListener("click", closeMenu);
+  });
 }

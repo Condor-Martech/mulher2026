@@ -15,8 +15,7 @@ export const registrationService = {
       p_cpf: (formData.cpf as string).replace(/\D/g, ''),
       p_telefone: formData.telefone,
       p_source: source,
-      p_tema: '',
-      p_opening_date: null
+      p_tema: ''
     };
 
     const performRegistration = async (retryCount = 0): Promise<RegistrationResult> => {

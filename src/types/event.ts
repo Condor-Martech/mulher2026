@@ -11,9 +11,11 @@ export interface Event {
   link_inscripcion: string;
   tipo_evento: string;
   patrocinio_destacado?: string;
+  is_active?: boolean;
+  campanha_active?: boolean;
   // Mock quota fields
-  quota_crm_max?: number;
-  quota_social_max?: number;
+  qtd_crm?: number;
+  qtd_social?: number;
   current_crm?: number;
   current_social?: number;
 }
