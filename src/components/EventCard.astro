@@ -27,16 +27,18 @@ const formattedDate = dateObj.toLocaleDateString("pt-BR", {
 const formattedDay = new Intl.DateTimeFormat("pt-BR", {
   weekday: "long",
 }).format(dateObj);
-const capitalizedDay =
-  formattedDay.charAt(0).toUpperCase() + formattedDay.slice(1);
+const capitalizedDay = formattedDay
+  .split("-")
+  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+  .join("-");
 const formattedTime = event.hora.replace(":", "h");
 const dateTimeText = `${formattedDate} | ${capitalizedDay} | ${formattedTime}`;
 
 // Map images based on event ID or some other criteria
 const getEventImage = (id: string) => {
-  if (id === "event-11-mar") return palestra1;
-  if (id === "event-18-mar") return palestra2;
-  if (id === "event-25-mar") return palestra3;
+  if (id === "degustacao-vinhos") return palestra1;
+  if (id === "receitas-arapongas") return palestra3;
+  if (id === "cervejas-especiais") return palestra2;
   return mulheresImg;
 };
 
@@ -45,67 +47,67 @@ const eventImage = getEventImage(event.id);
 const flexDir = inverted ? "md:flex-row-reverse" : "md:flex-row";
 ---
 
-<div
-  class={`flex flex-col ${flexDir} group mx-auto w-full h-full max-w-5xl bg-[#FFF1F2] rounded-[2rem] overflow-hidden transition-all duration-700 hover:shadow-[0_15px_40px_rgba(235,93,121,0.15)] hover:-translate-y-1`}
->
-  {/* Image Section */}
-  <div
-    class="w-full md:w-2/5 aspect-[16/10] md:aspect-auto relative overflow-hidden shrink-0"
-  >
-    <Image
-      src={eventImage}
-      alt={event.tema || "Imagem do evento"}
-      width={600}
-      height={800}
-      class="w-full h-full object-cover object-[center_15%] md:object-center transform scale-100 group-hover:scale-110 transition-transform duration-1000 ease-out"
-    />
-    <div
-      class="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-    >
-    </div>
-    <div
-      class="absolute top-6 left-6 transform group-hover:-rotate-3 transition-transform duration-500"
-    >
+{
+  status === "FINISHED" ? (
+    <div class="flex flex-col group mx-auto w-full h-full max-w-5xl bg-gray-50 rounded-4xl overflow-hidden grayscale opacity-80 justify-center items-center p-12 text-center transition-all duration-700 border border-gray-200 shadow-sm">
+      <h3 class="text-3xl md:text-4xl lg:text-5xl font-black text-gray-400 mb-6">
+        {event.tema || "A DEFINIR"}
+      </h3>
       <Badge
         label={config.label}
-        className={`${config.class} shadow-lg backdrop-blur-md`}
+        className={`bg-gray-200 text-gray-500 shadow-sm backdrop-blur-md px-6 py-2 text-lg`}
       />
     </div>
-  </div>
-
-  <div
-    class="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center text-center md:text-left relative grow"
-  >
-    <h3
-      class="text-3xl md:text-4xl lg:text-5xl font-black text-[#E95D79] mb-2 mt-2 md:mt-0 leading-tight"
-    >
-      {event.tema || "A DEFINIR"}
-    </h3>
-
-    <p class="text-base md:text-lg text-[#8B7E7E] mb-6 font-medium">
-      Com <span class="">{event.palestrante || "a confirmar"}</span>
-    </p>
-
+  ) : (
     <div
-      class="border-t-[1px] border-dashed border-primary/20 mb-8 mx-auto md:mx-0 w-full max-w-[200px] md:max-w-none"
+      class={`flex flex-col ${flexDir} group mx-auto w-full h-full max-w-5xl bg-[#FFF1F2] rounded-3xl md:rounded-4xl overflow-hidden transition-all duration-700 hover:shadow-[0_15px_40px_rgba(235,93,121,0.15)] hover:-translate-y-1`}
     >
-    </div>
+      {/* Image Section */}
+      <div class="w-full md:w-2/5 aspect-4/3 md:aspect-auto relative overflow-hidden shrink-0">
+        <Image
+          src={eventImage}
+          alt={event.tema || "Imagem do evento"}
+          width={600}
+          height={800}
+          class="w-full h-full object-cover object-[center_20%] md:object-center transform scale-100 group-hover:scale-110 transition-transform duration-1000 ease-out"
+        />
+        <div class="absolute inset-x-0 bottom-0 h-1/2 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div class="absolute top-6 left-6 transform group-hover:-rotate-3 transition-transform duration-500">
+          <Badge
+            label={config.label}
+            className={`${config.class} shadow-lg backdrop-blur-md`}
+          />
+        </div>
+      </div>
 
-    <p class="text-lg md:text-xl font-bold text-[#5A4A4A] mb-8">
-      {dateTimeText}
-    </p>
+      <div class="w-full md:w-3/5 p-6 md:p-12 flex flex-col justify-center text-center md:text-left relative grow">
+        <h3 class="text-2xl md:text-4xl lg:text-5xl font-outfit font-black text-[#E95D79] mb-4 mt-1 md:mt-0 leading-tight">
+          {event.tema || "A DEFINIR"}
+        </h3>
 
-    <div class="mt-auto flex justify-center md:justify-start">
-      <Button
-        type="button"
-        disabled={config.disabled}
-        className="open-event-modal-btn w-full md:w-auto px-8 py-2 bg-[#E9E9E9] text-[#A6A6A6] font-bold rounded-xl border-none shadow-none hover:bg-primary hover:text-white transition-all duration-300"
-        data-event-id={event.id}
-        data-event-tema={event.tema}
-        data-event-date={dateTimeText}
-      >
-        {config.button}
-      </Button>
+        <p class="text-base md:text-lg text-[#8B7E7E] mb-4 font-medium">
+          Com <span class="">{event.palestrante || "a confirmar"}</span>
+        </p>
+
+        <div class="border-t-[1px] border-dashed border-primary/20 mb-4 mx-auto md:mx-0 w-full max-w-[200px] md:max-w-none" />
+
+        <p class="text-lg md:text-xl font-bold text-[#5A4A4A] mb-6">
+          {dateTimeText}
+        </p>
+
+        <div class="mt-auto flex justify-center md:justify-start">
+          <Button
+            type="button"
+            disabled={config.disabled}
+            className="open-event-modal-btn w-full md:w-auto px-8 py-2 bg-primary text-white font-bold rounded-xl border-none shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all duration-300"
+            data-event-id={event.id}
+            data-event-tema={event.tema}
+            data-event-date={dateTimeText}
+          >
+            {config.button}
+          </Button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+  )
+}

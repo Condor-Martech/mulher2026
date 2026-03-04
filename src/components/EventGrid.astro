@@ -69,7 +69,7 @@ const getDisruptionClass = (index: number) => {
                   index,
                 )}`}
               >
-                <EventCard event={event} inverted={index % 2 !== 0} />
+                <EventCard event={event} inverted={index % 2 === 0} />
               </div>
             ))}
           </div>
@@ -82,24 +82,6 @@ const getDisruptionClass = (index: number) => {
         </div>
       )
     }
-
-    {/* Bottom Message Section */}
-    <div
-      class="mt-16 md:mt-24 text-center max-w-4xl mx-auto px-4 relative z-10"
-    >
-      <h3
-        class="text-xl md:text-3xl font-black text-[#5A4A4A] leading-snug mb-6 max-w-3xl mx-auto"
-      >
-        São duas horas e meia de evento preparados com<br
-          class="hidden md:block"
-        />
-        carinho pra você com brindes, degustações<br class="hidden md:block" />
-        exclusivas e muita troca!
-      </h3>
-      <p class="text-xl md:text-3xl font-black text-[#E95D79] tracking-tight">
-        Não deixe de participar!
-      </p>
-    </div>
   </Container>
 
   {/* Disruptive background blobs */}
