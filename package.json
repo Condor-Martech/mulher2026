@@ -1,7 +1,7 @@
 {
   "name": "web",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -20,6 +20,7 @@
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
