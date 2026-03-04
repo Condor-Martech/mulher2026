@@ -14,8 +14,21 @@ export const EventCard: React.FC<Props> = ({ event, inverted = false }) => {
   const status = getEventStatus(event);
   const config = getStatusConfig(status);
 
-  // Use a different placeholder or specific images if available
-  const currentImage = "/assets/mulheres.png";
+  // Determine image based on event ID
+  const getEventImage = (id: string) => {
+    switch (id) {
+      case "degustacao-vinhos":
+        return "/assets/Palestra1.png";
+      case "receitas-arapongas":
+        return "/assets/palestra3.png";
+      case "cervejas-especiais":
+        return "/assets/palestra2.png";
+      default:
+        return "/assets/mulheres.png";
+    }
+  };
+
+  const currentImage = getEventImage(event.id);
 
   const dateObj = new Date(event.fecha_iso);
   const formattedDate = dateObj.toLocaleDateString("pt-BR", {

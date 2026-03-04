@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import condorCasaImg from "../assets/condor em casa.png";
+import condorCasaMobileImg from "../assets/condor em casa - mobile.png";
 import ArrowRight from "./icons/ArrowRight.astro";
 import bannerCasaData from "../data/banner-casa.json";
 
@@ -22,12 +23,21 @@ const { alt, ctaLabel, ctaLink } = bannerCasaData;
         rel="noopener noreferrer"
         class="block cursor-pointer transition-transform duration-700 hover:scale-[1.02] hover:-translate-y-1"
       >
+        <!-- Desktop Banner -->
         <Image
           src={condorCasaImg}
           alt={alt}
           width={1000}
           height={600}
-          class="w-full h-auto"
+          class="hidden md:block w-full h-auto"
+        />
+        <!-- Mobile Banner -->
+        <Image
+          src={condorCasaMobileImg}
+          alt={alt}
+          width={500}
+          height={500}
+          class="md:hidden w-full h-auto"
         />
       </a>
     </div>

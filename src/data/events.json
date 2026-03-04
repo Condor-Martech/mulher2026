@@ -9,7 +9,7 @@
     "SOON": {
       "label": "Inscrições em Breve",
       "class": "bg-gray-100/50 text-gray-400 border-gray-200",
-      "button": "Inscrições em Breve",
+      "button": "Inscreva-se em Breve",
       "disabled": true
     },
     "OPEN": {

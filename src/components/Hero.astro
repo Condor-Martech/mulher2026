@@ -3,6 +3,8 @@ import Navbar from "./Navbar.astro";
 import Container from "./ui/Container.astro";
 import { Image } from "astro:assets";
 import heroBg from "../assets/KV - Dia da Mulher - 2026 - OP10.jpg";
+import heroMobileBg from "../assets/mulheres.png";
+import logoImg from "../assets/LOGO.png";
 import ChevronDoubleDown from "./icons/ChevronDoubleDown.astro";
 import heroData from "../data/hero.json";
 
@@ -10,20 +12,20 @@ const { scrollLabel } = heroData;
 ---
 
 <section
-  class="relative min-h-[85vh] h-[85vh] lg:min-h-screen lg:h-screen w-[100vw] ml-[calc(50%-50vw)] grow overflow-hidden flex flex-col"
+  class="relative min-h-[80vh] h-[80vh] lg:min-h-screen lg:h-screen w-[100vw] ml-[calc(50%-50vw)] grow overflow-hidden flex flex-col"
 >
   <Navbar />
 
   <!-- Hero Content Area -->
-  <div class="relative grow flex items-center">
-    <!-- Background Image -->
+  <div class="relative grow flex items-center justify-center lg:justify-start">
+    <!-- Desktop Background Image -->
     <div
-      class="absolute inset-0 z-0 overflow-hidden"
+      class="absolute inset-0 z-0 overflow-hidden hidden lg:block"
       style="-webkit-mask-image: linear-gradient(to bottom, black 88%, transparent 98%); mask-image: linear-gradient(to bottom, black 88%, transparent 98%);"
     >
       <Image
         src={heroBg}
-        alt="Background"
+        alt="Background Desktop"
         loading="eager"
         fetchpriority="high"
         class="w-full h-full object-cover max-w-full overflow-hidden animate-subtle-zoom"
@@ -35,13 +37,34 @@ const { scrollLabel } = heroData;
       </div>
     </div>
 
+    <!-- Mobile Background Image & Logo Section -->
+    <div class="absolute inset-0 z-0 overflow-hidden lg:hidden">
+      <div class="absolute inset-0 bg-[#FDE7E9]"></div>
+      <Image
+        src={heroMobileBg}
+        alt="Background Mobile"
+        loading="eager"
+        fetchpriority="high"
+        class="w-full h-full object-cover object-center animate-subtle-zoom opacity-70"
+      />
+      <!-- Logo Centered on Mobile -->
+      <div class="absolute inset-0 flex items-center justify-center p-6 mb-4">
+        <Image
+          src={logoImg}
+          alt="Logo"
+          quality="max"
+          class="w-full max-w-[420px] h-auto drop-shadow-[0_10px_30px_rgba(0,0,0,0.25)] animate-fade-in"
+        />
+      </div>
+    </div>
+
     <Container
-      className="relative z-10 h-full flex flex-col justify-center items-center lg:items-start px-0 md:px-6 max-w-none md:max-w-7xl w-full"
+      className="relative z-10 h-full flex flex-col justify-end lg:justify-center items-center lg:items-start px-0 md:px-6 max-w-none md:max-w-7xl w-full"
     >
       <!-- Scroll Invite Element -->
       <a
         href="#intro"
-        class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 text-white group cursor-pointer z-20"
+        class="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 text-primary group cursor-pointer z-20"
       >
         <span
           class="text-[10px] uppercase font-black tracking-[0.4em] opacity-80 group-hover:opacity-100 transition-opacity"
@@ -59,17 +82,31 @@ const { scrollLabel } = heroData;
 <style>
   @keyframes subtle-zoom {
     from {
-      transform: scale(1.05);
+      transform: scale(1.1);
     }
     to {
       transform: scale(1);
     }
   }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
   .animate-subtle-zoom {
     animation: subtle-zoom 25s ease-out infinite alternate;
   }
+  .animate-fade-in {
+    animation: fade-in 1.5s ease-out forwards;
+  }
   @media (prefers-reduced-motion: reduce) {
     .animate-subtle-zoom,
+    .animate-fade-in,
     .animate-bounce {
       animation: none !important;
     }
