@@ -4,16 +4,53 @@ import partnersData from "../data/partners.json";
 import { Image } from "astro:assets";
 import { getPartnerLogos } from "../utils/partnersLoader";
 
-const { sponsorsTitle, supportTitle } = partnersData;
-const { sponsorsData, supportData } = getPartnerLogos();
+const {
+  sponsorsTitle,
+  supportTitle,
+  sponsors = [],
+  support = [],
+} = partnersData;
+const { sponsorsMap = {}, supportMap = {} } = getPartnerLogos();
+
+const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+// Map and sort sponsors based on partners.json
+const sponsorsData = sponsors
+  .map((name) => {
+    const normalizedName = normalize(name);
+    const key = Object.keys(sponsorsMap).find((k) => {
+      const normalizedKey = normalize(k.split("/").pop()?.split(".")[0] || "");
+      return (
+        normalizedKey.includes(normalizedName) ||
+        normalizedName.includes(normalizedKey)
+      );
+    });
+    return key ? sponsorsMap[key] : null;
+  })
+  .filter(Boolean);
+
+// Map and sort support brands based on partners.json
+const supportData = support
+  .map((name) => {
+    const normalizedName = normalize(name);
+    const key = Object.keys(supportMap).find((k) => {
+      const normalizedKey = normalize(k.split("/").pop()?.split(".")[0] || "");
+      return (
+        normalizedKey.includes(normalizedName) ||
+        normalizedName.includes(normalizedKey)
+      );
+    });
+    return key ? supportMap[key] : null;
+  })
+  .filter(Boolean);
 ---
 
-<section id="patrocinio" class="py-6 md:py-12 bg-transparent relative">
-  <div class="px-4 md:px-12 max-w-480 mx-auto w-full">
+<section id="patrocinio" class="py-4 md:py-8 bg-transparent relative">
+  <div class="px-4 md:px-12 max-w-400 mx-auto w-full">
     <div
       class="glass p-4 md:p-16 rounded-2xl md:rounded-[3.5rem] shadow-premium border border-primary/10 bg-white/5 backdrop-blur-md w-full"
     >
-      <div class="mb-10 md:mb-20">
+      <div class="mb-6 md:mb-10">
         <h4
           class="text-center text-xl md:text-3xl font-black font-outfit text-[#5A4A4A] mb-8 md:mb-14"
         >

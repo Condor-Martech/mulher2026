@@ -7,8 +7,10 @@ import heroMobileBg from "../assets/mulheres.png";
 import logoImg from "../assets/LOGO.png";
 import ChevronDoubleDown from "./icons/ChevronDoubleDown.astro";
 import heroData from "../data/hero.json";
+import settings from "../data/settings.json";
 
 const { scrollLabel } = heroData;
+const { heroCta } = settings;
 ---
 
 <section
@@ -59,8 +61,42 @@ const { scrollLabel } = heroData;
     </div>
 
     <Container
-      className="relative z-10 h-full flex flex-col justify-end lg:justify-center items-center lg:items-start px-0 md:px-6 max-w-none md:max-w-7xl w-full"
+      className="relative z-10 h-full flex flex-col justify-center items-center lg:items-start px-0 md:px-6 max-w-none md:max-w-7xl w-full pt-20 lg:pt-0"
     >
+      <div
+        class="flex flex-col items-center lg:items-start gap-8 animate-fade-in-delayed"
+      >
+        <!-- Main CTA Button -->
+        {heroCta && (
+        <a
+          href={heroCta}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group relative inline-flex items-center gap-3 bg-primary text-white px-8 py-4 rounded-full font-bold text-lg shadow-2xl hover:bg-primary/90 transition-all duration-300 hover:scale-105 hover:-translate-y-1 active:scale-95"
+        >
+          <span>Inscreva-se Agora</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 transition-transform group-hover:translate-x-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          </svg>
+          <!-- Subtle Glow Effect -->
+          <div
+            class="absolute inset-0 rounded-full bg-white/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+          </div>
+        </a>
+        )}
+      </div>
+
       <!-- Scroll Invite Element -->
       <a
         href="#intro"
@@ -98,11 +134,25 @@ const { scrollLabel } = heroData;
       transform: translateY(0);
     }
   }
+  @keyframes fade-in-delayed {
+    0%,
+    40% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
   .animate-subtle-zoom {
     animation: subtle-zoom 25s ease-out infinite alternate;
   }
   .animate-fade-in {
     animation: fade-in 1.5s ease-out forwards;
+  }
+  .animate-fade-in-delayed {
+    animation: fade-in-delayed 2s ease-out forwards;
   }
   @media (prefers-reduced-motion: reduce) {
     .animate-subtle-zoom,
