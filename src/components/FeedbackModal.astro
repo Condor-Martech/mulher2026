@@ -1,0 +1,54 @@
+---
+// src/components/FeedbackModal.astro
+import CloseIcon from "./icons/CloseIcon.astro";
+---
+
+<dialog
+  id="feedback-modal"
+  class="backdrop:bg-black/60 backdrop:backdrop-blur-sm bg-transparent w-full h-full max-w-none max-h-none m-0 p-0 md:h-auto md:max-w-[400px] md:m-auto md:p-4 open:animate-in open:fade-in open:zoom-in duration-300"
+>
+  <div
+    class="bg-[#FFF6F6] rounded-none md:rounded-4xl min-h-full md:min-h-0 overflow-hidden shadow-none md:shadow-[0_20px_50px_rgba(235,93,121,0.3)] relative flex flex-col justify-center items-center p-8 md:p-10 text-center"
+  >
+    <button
+      id="close-feedback-btn"
+      type="button"
+      class="absolute top-6 right-6 text-gray-400 hover:text-primary hover:bg-primary/10 p-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50"
+      aria-label="Fechar modal"
+    >
+      <CloseIcon />
+    </button>
+
+    <div id="feedback-icon" class="mb-6 text-5xl">
+      <!-- Icon will be injected via JS -->
+    </div>
+
+    <h3 id="feedback-title" class="text-2xl font-black mb-2 text-[#5A4A4A]">
+      <!-- Title will be injected via JS -->
+    </h3>
+
+    <p id="feedback-message" class="text-base font-medium text-[#6D5D5D]">
+      <!-- Message will be injected via JS -->
+    </p>
+
+    <button
+      id="feedback-ok-btn"
+      type="button"
+      class="mt-8 px-8 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 hover:shadow-lg transition-all active:scale-95"
+    >
+      Entendi
+    </button>
+  </div>
+</dialog>
+
+<script>
+  import { initFeedbackModalHandler } from "../utils/modalHandler";
+  initFeedbackModalHandler();
+</script>
+
+<style>
+  dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+  }
+</style>

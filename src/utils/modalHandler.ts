@@ -97,3 +97,29 @@ export function initEventGridModal() {
     });
   }
 }
+
+export function initFeedbackModalHandler() {
+  const modal = document.getElementById("feedback-modal") as HTMLDialogElement;
+  const closeBtn = document.getElementById("close-feedback-btn");
+  const okBtn = document.getElementById("feedback-ok-btn");
+
+  if (modal) {
+    const closeModal = () => modal.close();
+
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (okBtn) okBtn.addEventListener("click", closeModal);
+
+    // Fechar clicando fora do modal (no backdrop)
+    modal.addEventListener("click", (e) => {
+      const dialogDimensions = modal.getBoundingClientRect();
+      if (
+        e.clientX < dialogDimensions.left ||
+        e.clientX > dialogDimensions.right ||
+        e.clientY < dialogDimensions.top ||
+        e.clientY > dialogDimensions.bottom
+      ) {
+        closeModal();
+      }
+    });
+  }
+}

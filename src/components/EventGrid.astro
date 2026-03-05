@@ -1,5 +1,6 @@
 ---
 import EventModal from "./EventModal.astro";
+import FeedbackModal from "./FeedbackModal.astro";
 import EventCard from "./EventCard.astro";
 import Container from "./ui/Container.astro";
 import { fetchEvents } from "../services/eventService";
@@ -95,6 +96,7 @@ const getDisruptionClass = (index: number) => {
   </div>
 
   <EventModal />
+  <FeedbackModal />
 </section>
 
 <style>

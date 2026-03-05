@@ -113,18 +113,50 @@ export function initFormHandler() {
     if (btnText) btnText.textContent = "Processando...";
     if (spinner) spinner.classList.remove("hidden");
 
-    if (feedback) {
-      feedback.classList.add("hidden");
-      feedback.className =
-        "hidden text-center mt-4 font-medium rounded-xl p-4 transition-all duration-300";
-    }
-
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
     // Capture source from URL
     const urlParams = new URLSearchParams(window.location.search);
     const source = urlParams.get('src') || 'social';
+
+    const feedbackModal = document.getElementById("feedback-modal") as HTMLDialogElement;
+    const feedbackIcon = document.getElementById("feedback-icon");
+    const feedbackTitle = document.getElementById("feedback-title");
+    const feedbackMessage = document.getElementById("feedback-message");
+    
+    // Función auxiliar para configurar y mostrar el modal
+    const showFeedback = (type: 'success' | 'error' | 'warning', title: string, message: string) => {
+      if (feedbackIcon && feedbackTitle && feedbackMessage) {
+        if (type === 'success') {
+          feedbackIcon.className = "mb-6 text-6xl text-green-500 animate-bounce";
+          feedbackIcon.innerHTML = "🎉";
+          feedbackTitle.className = "text-3xl font-black mb-4 text-green-600";
+        } else if (type === 'error') {
+          feedbackIcon.className = "mb-6 text-6xl text-red-500";
+          feedbackIcon.innerHTML = "❌";
+          feedbackTitle.className = "text-3xl font-black mb-4 text-red-600";
+        } else if (type === 'warning') {
+          feedbackIcon.className = "mb-6 text-6xl text-orange-500";
+          feedbackIcon.innerHTML = "⚠️";
+          feedbackTitle.className = "text-3xl font-black mb-4 text-orange-600";
+        }
+        
+        feedbackTitle.textContent = title;
+        feedbackMessage.textContent = message;
+      }
+      
+      // Cerrar modal actual
+      if (modal) modal.close();
+      
+      // Mostrar nuevo modal
+      if (feedbackModal) {
+        /* Pequeño timeout para permitir la animación de cierre del otro modal (opcional) */
+        setTimeout(() => {
+          feedbackModal.showModal();
+        }, 100);
+      }
+    };
 
     try {
       const result = await registrationService.submitRegistration(data, source);
@@ -133,29 +165,13 @@ export function initFormHandler() {
         const errorType = result.error;
         
         if (errorType === 'ALREADY_REGISTERED') {
-          if (feedback) {
-            feedback.innerHTML = "⚠️ Este CPF já está inscrito para este evento.";
-            feedback.className = "block text-center mt-4 font-medium rounded-xl p-4 bg-orange-100 text-orange-700 border border-orange-200";
-            feedback.classList.remove("hidden");
-          }
+          showFeedback('warning', 'Inscrição Duplicada', 'Este CPF já está inscrito para este evento.');
         } else if (errorType === 'QUOTA_FULL') {
-          if (feedback) {
-            feedback.innerHTML = "🚫 Desculpe, as inscrições para esta fonte (CRM/Social) estão esgotadas.";
-            feedback.className = "block text-center mt-4 font-medium rounded-xl p-4 bg-red-100 text-red-700 border border-red-200";
-            feedback.classList.remove("hidden");
-          }
+          showFeedback('error', 'Vagas Esgotadas', 'Desculpe, as inscrições para esta fonte (CRM/Social) estão esgotadas.');
         } else if (errorType === 'NOT_OPEN_YET') {
-          if (feedback) {
-            feedback.innerHTML = "⏳ As inscrições para este evento ainda não abriram.";
-            feedback.className = "block text-center mt-4 font-medium rounded-xl p-4 bg-blue-100 text-blue-700 border border-blue-200";
-            feedback.classList.remove("hidden");
-          }
+          showFeedback('warning', 'Aguarde', 'As inscrições para este evento ainda não abriram.');
         } else if (errorType === 'EVENT_CLOSED') {
-          if (feedback) {
-            feedback.innerHTML = "🚫 Desculpe, as inscrições para este evento foram encerradas.";
-            feedback.className = "block text-center mt-4 font-medium rounded-xl p-4 bg-gray-100 text-gray-700 border border-gray-200";
-            feedback.classList.remove("hidden");
-          }
+          showFeedback('error', 'Evento Encerrado', 'Desculpe, as inscrições para este evento foram encerradas.');
         } else {
           throw new Error(errorType || "Unknown error");
         }
@@ -167,33 +183,15 @@ export function initFormHandler() {
       }
 
       // 3. Manejo de Éxito
-      if (feedback) {
-        feedback.innerHTML = "🎉 Inscrição realizada com sucesso!";
-        feedback.className = "block text-center mt-4 font-medium rounded-xl p-4 bg-green-100 text-green-700 border border-green-200 animate-[pulse_1.5s_ease-in-out_infinite]";
-        feedback.classList.remove("hidden");
-      }
+      showFeedback('success', 'Inscrição Confirmada!', 'Sua inscrição foi realizada com sucesso. Te esperamos lá!');
 
       if (btnText) btnText.textContent = "Concluído";
       if (spinner) spinner.classList.add("hidden");
 
-      // Timeout para fechar el modal
-      setTimeout(() => {
-        if (modal) modal.close();
-      }, 2500);
     } catch (err) {
       console.error("DEBUG SUBMIT ERROR:", err);
       // 4. Manejo de Error de Conexión/Servidor
-      if (feedback) {
-        feedback.textContent = "❌ Ocorreu um erro técnico. Tente novamente.";
-        feedback.classList.add(
-          "block",
-          "bg-red-100",
-          "text-red-700",
-          "border",
-          "border-red-200",
-        );
-        feedback.classList.remove("hidden");
-      }
+      showFeedback('error', 'Erro Técnico', 'Ocorreu um erro ao processar sua inscrição. Por favor, tente novamente mais tarde.');
 
       if (submitBtn) submitBtn.disabled = false;
       if (btnText) btnText.textContent = "Tentar Novamente";
