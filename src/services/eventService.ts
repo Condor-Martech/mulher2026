@@ -30,8 +30,8 @@ export const getEventStatus = (event: Event): EventStatus => {
     return 'FINISHED';
   }
 
-  // 2. Check if registration is not yet open
-  if (openingDate && now < openingDate) {
+  // 2. Check if registration is not yet open or opening date is not defined
+  if (!event.opening_date_iso || (openingDate && now < openingDate)) {
     return 'SOON';
   }
 

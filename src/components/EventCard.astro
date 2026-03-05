@@ -99,7 +99,7 @@ const flexDir = inverted ? "md:flex-row-reverse" : "md:flex-row";
           <Button
             type="button"
             disabled={config.disabled}
-            className="open-event-modal-btn w-full md:w-auto px-8 py-2 bg-primary text-white font-bold rounded-xl border-none shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all duration-300"
+            className={`open-event-modal-btn w-full md:w-auto px-8 py-2 font-bold rounded-xl border-none transition-all duration-300 ${config.disabled ? "!bg-gray-200 !text-gray-500 cursor-not-allowed shadow-none" : "!bg-primary !text-white shadow-lg shadow-primary/20 hover:bg-primary-hover"}`}
             data-event-id={event.id}
             data-event-tema={event.tema}
             data-event-date={dateTimeText}
