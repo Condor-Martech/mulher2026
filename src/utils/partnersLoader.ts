@@ -1,19 +1,24 @@
 export function getPartnerLogos() {
-  const sponsorsFiles = import.meta.glob(
+  const sponsorsFiles: Record<string, any> = import.meta.glob(
     "../assets/logos/patrocinio/*.{jpeg,jpg,png,webp,svg}",
     { eager: true },
   );
-  const sponsorsData = Object.values(sponsorsFiles).map(
-    (file: any) => file.default,
-  );
-
-  const supportFiles = import.meta.glob(
+  const supportFiles: Record<string, any> = import.meta.glob(
     "../assets/logos/apoidores/*.{jpeg,jpg,png,webp,svg}",
     { eager: true },
   );
-  const supportData = Object.values(supportFiles).map(
-    (file: any) => file.default,
-  );
 
-  return { sponsorsData, supportData };
+  const sponsorsMap: Record<string, any> = {};
+  Object.keys(sponsorsFiles).forEach((path) => {
+    const filename = path.split("/").pop() || "";
+    sponsorsMap[filename] = sponsorsFiles[path].default;
+  });
+
+  const supportMap: Record<string, any> = {};
+  Object.keys(supportFiles).forEach((path) => {
+    const filename = path.split("/").pop() || "";
+    supportMap[filename] = supportFiles[path].default;
+  });
+
+  return { sponsorsMap, supportMap };
 }

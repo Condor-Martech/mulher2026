@@ -4,10 +4,9 @@ export interface Event {
   id: string;
   tema: string;
   palestrante: string;
-  fecha_iso: string;
-  opening_date_iso?: string; // New field for opening date
-  fecha?: string;
-  hora: string;
+  data_evento: string;
+  data_abertura_inscricao?: string; // When the form opens
+  data_limite_inscricao?: string; // Optional deadline
   link_inscripcion: string;
   tipo_evento: string;
   patrocinio_destacado?: string;

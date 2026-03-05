@@ -30,7 +30,7 @@ export const EventCard: React.FC<Props> = ({ event, inverted = false }) => {
 
   const currentImage = getEventImage(event.id);
 
-  const dateObj = new Date(event.fecha_iso);
+  const dateObj = new Date(event.data_evento);
   const formattedDate = dateObj.toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "2-digit",
@@ -41,7 +41,13 @@ export const EventCard: React.FC<Props> = ({ event, inverted = false }) => {
   }).format(dateObj);
   const capitalizedDay =
     formattedDay.charAt(0).toUpperCase() + formattedDay.slice(1);
-  const formattedTime = event.hora.replace(":", "h");
+  const formattedTime = dateObj
+    .toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "America/Sao_Paulo",
+    })
+    .replace(":", "h");
   const dateTimeText = `${formattedDate} | ${capitalizedDay} | ${formattedTime}`;
 
   const flexDir = inverted ? "md:flex-row-reverse" : "md:flex-row";

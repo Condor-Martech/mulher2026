@@ -1,7 +1,6 @@
 import type { Event, EventStatus, EventStatusConfig } from '../types/event';
 import { registrationRepository } from '../repositories/registrationRepository';
 import eventsData from '../data/events.json';
-import mockEventsList from '../data/mock_events.json';
 
 const STATUS_CONFIG: Record<EventStatus, EventStatusConfig> = eventsData.statusConfig as Record<EventStatus, EventStatusConfig>;
 
@@ -22,8 +21,8 @@ export const getEventStatus = (event: Event): EventStatus => {
   // ------------------------------------------------
 
   const now = new Date();
-  const eventDate = new Date(event.fecha_iso);
-  const openingDate = event.opening_date_iso ? new Date(event.opening_date_iso) : null;
+  const eventDate = new Date(event.data_evento);
+  const openingDate = event.data_abertura_inscricao ? new Date(event.data_abertura_inscricao) : null;
 
   // 1. Check if event is finished explicitly or by date
   if (event.is_active === false || event.campanha_active === false || now > eventDate) {
@@ -31,7 +30,7 @@ export const getEventStatus = (event: Event): EventStatus => {
   }
 
   // 2. Check if registration is not yet open or opening date is not defined
-  if (!event.opening_date_iso || (openingDate && now < openingDate)) {
+  if (!event.data_abertura_inscricao || (openingDate && now < openingDate)) {
     return 'SOON';
   }
 
@@ -40,9 +39,9 @@ export const getEventStatus = (event: Event): EventStatus => {
     const urlParams = new URLSearchParams(window.location.search);
     const source = urlParams.get('src') || 'social';
     
-    if (source === 'crm' && event.current_crm !== undefined && event.qtd_crm !== undefined) {
+    if (source === 'crm' && event.current_crm !== undefined && event.qtd_crm && event.qtd_crm > 0) {
       if (event.current_crm >= event.qtd_crm) return 'FULL';
-    } else if (source === 'social' && event.current_social !== undefined && event.qtd_social !== undefined) {
+    } else if (source === 'social' && event.current_social !== undefined && event.qtd_social && event.qtd_social > 0) {
       if (event.current_social >= event.qtd_social) return 'FULL';
     }
   }
@@ -54,22 +53,39 @@ export const getStatusConfig = (status: EventStatus): EventStatusConfig => {
   return STATUS_CONFIG[status];
 };
 
-export const fetchEvents = async (apiUrl: string): Promise<Event[]> => {
-  // 1. Get base event data (from mock or API)
+export const fetchEvents = async (apiUrl?: string): Promise<Event[]> => {
+  // 1. Get base event data from Supabase palestras table
   let events: Event[] = [];
   
-  if (import.meta.env.PUBLIC_USE_MOCK_API === 'true') {
-    events = [...(mockEventsList as Event[])];
-  } else {
-    try {
-      const response = await fetch(apiUrl);
-      if (!response.ok) throw new Error('Network response was not ok');
-      const data = await response.json();
-      events = data.events || [];
-    } catch (error) {
-      console.error('Failed to fetch events from API, falling back to mock data:', error);
-      events = [...(mockEventsList as Event[])];
+  try {
+    const { supabase } = await import('../lib/supabase');
+    const { data: palestras, error } = await supabase
+      .from('palestras')
+      .select('*')
+      .eq('active', true);
+
+    if (error) {
+      throw error;
     }
+
+    events = (palestras || []).map((p: any) => ({
+      id: p.id,
+      tema: p.nome,
+      palestrante: p.palestrante,
+      data_evento: p.data_evento,
+      data_abertura_inscricao: p.data_abertura_inscricao,
+      data_limite_inscricao: p.data_limite_inscricao,
+      link_inscripcion: p.link_inscripcion,
+      tipo_evento: p.tipo_evento || 'Palestra',
+      is_active: p.active,
+      campanha_active: true, // Assuming true for now
+      qtd_crm: p.qtd_crm,
+      qtd_social: p.qtd_social,
+      current_crm: 0,
+      current_social: 0
+    }));
+  } catch (error) {
+    console.error('Failed to fetch events from Supabase:', error);
   }
 
   // 2. Fetch real registration counts from Repository
@@ -109,8 +125,8 @@ export const fetchEvents = async (apiUrl: string): Promise<Event[]> => {
     if (statusA !== 'FINISHED' && statusB === 'FINISHED') return -1;
     
     // Then, sort by date (closest first)
-    const dateA = new Date(a.fecha_iso).getTime();
-    const dateB = new Date(b.fecha_iso).getTime();
+    const dateA = new Date(a.data_evento).getTime();
+    const dateB = new Date(b.data_evento).getTime();
     
     return dateA - dateB;
   });

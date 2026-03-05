@@ -6,8 +6,8 @@ import Container from "./ui/Container.astro";
 import { fetchEvents } from "../services/eventService";
 import eventsData from "../data/events.json";
 
-const { api_url, titles, emptyMessage } = eventsData;
-const events = await fetchEvents(api_url);
+const { titles, emptyMessage } = eventsData;
+const events = await fetchEvents();
 
 const getDisruptionClass = (index: number) => {
   // Adds random slight horizontal offsets to the vertical list to make it "asymmetrical" and non-rigid
@@ -28,7 +28,7 @@ const getDisruptionClass = (index: number) => {
 >
   <Container>
     <div
-      class="mb-12 md:mb-20 text-center relative z-10 w-full flex flex-col items-center justify-center"
+      class="mb-6 md:mb-10 text-center relative z-10 w-full flex flex-col items-center justify-center"
     >
       <h2
         class="text-3xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight text-[#E95D79] leading-none mb-2"
@@ -157,7 +157,7 @@ const getDisruptionClass = (index: number) => {
     const source = urlParams.get("src") || "social";
 
     // We need the latest event data (mock)
-    const events = await fetchEvents(eventsData.api_url);
+    const events = await fetchEvents();
 
     // Update each card
     const cards = document.querySelectorAll(".open-event-modal-btn");
