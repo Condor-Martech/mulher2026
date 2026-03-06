@@ -6,8 +6,11 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  base: '/mulher',
+  base: '/',
   trailingSlash: 'always',
+  redirects: {
+    '/': 'https://www.condor.com.br',
+  },
   vite: {
     plugins: [tailwindcss()]
   },

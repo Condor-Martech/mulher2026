@@ -1,0 +1,215 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import Footer from "../../../components/Footer.astro";
+import FeedbackModal from "../../../components/FeedbackModal.astro";
+import SpinnerIcon from "../../../components/icons/SpinnerIcon.astro";
+import { supabase } from "../../../lib/supabase";
+
+export async function getStaticPaths() {
+  const { data: palestras, error } = await supabase
+    .from("palestras")
+    .select("*")
+    .eq("active", true);
+
+  if (error || !palestras) return [];
+
+  return palestras.map((p: any) => ({
+    params: { id: p.id },
+    props: {
+      eventId: p.id,
+      tema: p.nome,
+      palestrante: p.palestrante,
+      data_evento: p.data_evento,
+      tipo_evento: p.tipo_evento || "Palestra",
+    },
+  }));
+}
+
+interface Props {
+  eventId: string;
+  tema: string;
+  palestrante: string;
+  data_evento: string;
+  tipo_evento: string;
+}
+
+const { eventId, tema, palestrante, data_evento, tipo_evento } = Astro.props;
+
+const dateObj = data_evento ? new Date(data_evento) : null;
+const isValidDate = dateObj && !isNaN(dateObj.getTime());
+
+let dateFormatted = "A definir";
+let timeFormatted = "";
+let dayFormatted = "";
+let dateTimeText = "A Definir";
+
+if (isValidDate && dateObj) {
+  dayFormatted = new Intl.DateTimeFormat("pt-BR", {
+    weekday: "long",
+    timeZone: "America/Sao_Paulo",
+  }).format(dateObj);
+  dayFormatted = dayFormatted.charAt(0).toUpperCase() + dayFormatted.slice(1);
+
+  dateFormatted = dateObj.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    timeZone: "America/Sao_Paulo",
+  });
+
+  timeFormatted = dateObj
+    .toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "America/Sao_Paulo",
+    })
+    .replace(":", "h");
+
+  dateTimeText = `${dayFormatted}, ${dateFormatted} · ${timeFormatted}`;
+}
+---
+
+<Layout title={tema || "Palestra"}>
+  <main class="min-h-screen bg-grain overflow-x-hidden relative">
+    {/* Ambient blobs — full page, behind everything */}
+    <div class="absolute -top-32 -left-32 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="absolute top-1/3 -right-24 w-[400px] h-[400px] bg-rose-200/30 rounded-full blur-[80px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-primary/5 rounded-full blur-[80px] pointer-events-none"></div>
+
+    {/* Single centered column */}
+    <div class="relative z-10 max-w-xl mx-auto px-6 py-8 md:py-20">
+
+      {/* ── HERO ── */}
+      <div class="mb-6">
+        <div class="flex items-center gap-3 mb-8 animate-fade-in">
+          <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary text-[11px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full border border-primary/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse inline-block"></span>
+            {tipo_evento}
+          </span>
+        </div>
+
+        <h1 class="font-outfit font-black text-4xl md:text-5xl lg:text-6xl text-[#E95D79] leading-[1.05] mb-5 animate-slide-up">
+          {tema || "A Definir"}
+        </h1>
+
+        <div class="w-14 h-[3px] bg-gradient-to-r from-primary to-rose-300 rounded-full mb-8"></div>
+
+        <div class="flex flex-col gap-5 animate-slide-up" style="animation-delay:0.1s">
+          <div>
+            <p class="text-[14px] font-black uppercase tracking-[0.22em] text-[#B8ACAC] mb-1.5">Palestrante</p>
+            <p class="text-lg md:text-xl font-bold text-[#5A4A4A]">{palestrante || "A confirmar"}</p>
+          </div>
+          {isValidDate && (
+            <div>
+              <p class="text-[14px] font-black uppercase tracking-[0.22em] text-[#B8ACAC] mb-1.5">Data &amp; Hora</p>
+              <p class="text-base font-bold text-[#5A4A4A]">
+                {dayFormatted}, {dateFormatted}
+                <span class="text-primary"> · {timeFormatted}</span>
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── FORM CARD ── */}
+      <div class="animate-slide-up" style="animation-delay:0.18s">
+        <div class="glass-white rounded-3xl shadow-[0_24px_64px_rgba(244,63,94,0.13)] overflow-hidden border border-white/70 p-4">
+
+          {/* Card header */}
+          <div class="bg-gradient-to-br from-primary/8 to-rose-50/80 pt-10 pb-8 border-b border-primary/10">
+            <p class="font-script text-primary text-2xl text-4xl mb-2">Inscreva-se</p>
+            <p class="text-sm text-[#9B8F8F] font-medium leading-relaxed">
+              Preencha seus dados para garantir sua vaga neste evento.
+            </p>
+          </div>
+
+          {/* Form body */}
+          <div class="mt-8">
+            <form id="event-registration-form" class="flex flex-col gap-7">
+              <input type="hidden" id="modal-event-id" name="eventId" value={eventId} />
+              <input type="hidden" id="modal-event-tema" name="eventTema" value={tema} />
+
+              <div class="flex flex-col gap-2">
+                <label for="nome" class="text-sm font-bold text-[#5A4A4A] pl-1">Nome Completo</label>
+                <input type="text" id="nome" name="nome" required placeholder="Digite seu nome completo"
+                  class="w-full md:px-5 md:py-4 p-3 rounded-2xl bg-white border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-base text-[#5A4A4A] placeholder:text-[#C4B8B8]" />
+                <span class="error-message hidden text-red-500 text-xs pl-1 font-medium">Por favor, insira um nome válido.</span>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label for="email" class="text-sm font-bold text-[#5A4A4A] pl-1">E-mail</label>
+                <input type="email" id="email" name="email" required placeholder="seu@email.com"
+                  class="w-full md:px-5 md:py-4 p-3 rounded-2xl bg-white border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-base text-[#5A4A4A] placeholder:text-[#C4B8B8]" />
+                <span class="error-message hidden text-red-500 text-xs pl-1 font-medium">Por favor, insira um e-mail válido.</span>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label for="telefone" class="text-sm font-bold text-[#5A4A4A] pl-1">Telefone / WhatsApp</label>
+                <input type="tel" id="telefone" name="telefone" required placeholder="(00) 00000-0000" maxlength="15"
+                  class="w-full md:px-5 md:py-4 p-3 rounded-2xl bg-white border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-base text-[#5A4A4A] placeholder:text-[#C4B8B8]" />
+                <span class="error-message hidden text-red-500 text-xs pl-1 font-medium">Por favor, insira um telefone válido com DDD.</span>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label for="cpf" class="text-sm font-bold text-[#5A4A4A] pl-1">CPF</label>
+                <input type="text" id="cpf" name="cpf" required placeholder="000.000.000-00" maxlength="14"
+                  class="w-full md:px-5 md:py-4 p-3 rounded-2xl bg-white border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all text-base text-[#5A4A4A] placeholder:text-[#C4B8B8]" />
+                <span class="error-message hidden text-red-500 text-xs pl-1 font-medium">Por favor, insira um CPF válido.</span>
+              </div>
+
+              <div class="flex flex-col gap-2 pt-1">
+                <div class="flex items-start gap-3">
+                  <input type="checkbox" id="lgpd" name="lgpd" required
+                    class="mt-0.5 w-5 h-5 rounded border-primary/30 text-primary focus:ring-primary/50 focus:ring-2 cursor-pointer transition-colors shrink-0" />
+                  <label for="lgpd" class="text-[11px] text-[#7A6E6E] leading-relaxed cursor-pointer">
+                    Autorizo o uso dos meus dados pela Rede Condor para receber comunicações sobre este e outros eventos e de acordo com a nossa política.
+                  </label>
+                </div>
+                <span class="error-message hidden text-red-500 text-xs font-medium pl-8">Você precisa aceitar os termos.</span>
+              </div>
+
+              <button type="submit" id="submit-registration-btn" disabled
+                class="mt-2 w-full px-6 py-4 bg-primary text-white text-base font-bold rounded-2xl hover:bg-primary/90 hover:shadow-[0_12px_28px_rgba(244,63,94,0.35)] transform transition-all shadow-[0_6px_16px_rgba(244,63,94,0.25)] active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100 disabled:bg-primary/70 disabled:hover:shadow-none">
+                <span id="submit-text">Confirmar Inscrição</span>
+                <SpinnerIcon id="submit-spinner" class="animate-spin hidden h-5 w-5 text-white" />
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <p class="text-center text-[10px] font-black uppercase tracking-[0.25em] text-[#B8ACAC] mt-10">
+          Condor com Elas · Mês da Mulher
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <FeedbackModal />
+  <Footer />
+</Layout>
+
+<script>
+  import { initFormHandler } from "../../../utils/formHandler";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    initFormHandler();
+  });
+</script>
+
+<style>
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.5s ease both;
+  }
+  .animate-slide-up {
+    animation: slide-up 0.6s ease both;
+  }
+</style>
