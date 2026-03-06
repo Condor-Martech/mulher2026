@@ -31,13 +31,13 @@ RUN npm run build
 FROM nginx:alpine AS runner
 
 # Remover configuración por defecto de Nginx
-RUN rm -rf /usr/share/nginx/html/*
+RUN rm -rf /usr/share/nginx/html/* /etc/nginx/conf.d/default.conf
 
-# Crear la estructura de subcarpeta para que el ruteo funcione sin config extra
-RUN mkdir -p /usr/share/nginx/html/lp/mulher
+# Copiar la compilación desde la etapa builder hacia la raíz de Nginx
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copiar la compilación desde la etapa builder hacia la subcarpeta en Nginx
-COPY --from=builder /app/dist /usr/share/nginx/html/lp/mulher
+# Copiar configuración customizada de Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Exponer el puerto 80 para el tráfico HTTP
 EXPOSE 80
