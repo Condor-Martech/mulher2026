@@ -16,6 +16,12 @@ RUN npm install
 # Copiar todo el código fuente del proyecto
 COPY . .
 
+# Build-time environment variables (passed via --build-arg)
+ARG PUBLIC_SUPABASE_URL
+ARG PUBLIC_SUPABASE_ANON_KEY
+ENV PUBLIC_SUPABASE_URL=$PUBLIC_SUPABASE_URL
+ENV PUBLIC_SUPABASE_ANON_KEY=$PUBLIC_SUPABASE_ANON_KEY
+
 # Compilar Astro para producción (generar carpeta dist/)
 RUN npm run build
 
