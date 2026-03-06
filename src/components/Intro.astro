@@ -2,6 +2,7 @@
 import Container from "./ui/Container.astro";
 import { Image } from "astro:assets";
 import bannerImg from "../assets/banner.png";
+import brandingImg from "../assets/Condor com Elas.png";
 import MapPin from "./icons/MapPin.astro";
 import introData from "../data/intro.json";
 
@@ -52,24 +53,11 @@ const { text, branding, cta, location } = introData;
             <div
               class="relative flex flex-col items-center lg:items-start lg:translate-x-8"
             >
-              <h2
-                class="text-5xl md:text-6xl lg:text-[6rem] font-script text-white drop-shadow-sm leading-none"
-              >
-                {branding.first}
-              </h2>
-              <div
-                class="flex items-center gap-4 lg:gap-6 -mt-2 ml-12 md:ml-24 lg:ml-24"
-              >
-                <span
-                  class="font-script text-xl md:text-2xl lg:text-5xl text-accent/20 italic"
-                  >{branding.separator}
-                </span>
-                <h2
-                  class="text-5xl md:text-6xl lg:text-[6rem] font-script text-white drop-shadow-sm leading-none"
-                >
-                  {branding.second}
-                </h2>
-              </div>
+              <Image
+                src={brandingImg}
+                alt="Condor com Elas"
+                class="w-full max-w-[550px] h-auto drop-shadow-md"
+              />
             </div>
           </div>
         </div>
