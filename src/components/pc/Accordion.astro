@@ -1,0 +1,58 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div class="accordion-item mb-4 last:mb-0">
+  <details
+    class="group bg-white rounded-xl md:rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 open:shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-transparent open:border-blue-100"
+  >
+    <summary
+      class="flex justify-between items-center cursor-pointer list-none py-5 px-6 md:px-8 font-black text-lg md:text-xl text-blue-950 italic uppercase hover:bg-slate-50 transition-colors"
+    >
+      <span class="tracking-tight">{title}</span>
+      <span
+        class="text-blue-500 transform group-open:rotate-90 transition-transform duration-300 bg-blue-50 p-2 rounded-full"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path d="M8 5v14l11-7z"></path>
+        </svg>
+      </span>
+    </summary>
+    <div
+      class="pb-6 px-6 md:px-8 text-blue-900/80 text-base md:text-lg leading-relaxed animate-fade-in"
+    >
+      <div class="h-0.5 w-12 bg-blue-300 mb-4 rounded-full"></div>
+      <slot />
+    </div>
+  </details>
+</div>
+
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out forwards;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+</style>

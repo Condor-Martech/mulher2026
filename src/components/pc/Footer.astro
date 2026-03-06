@@ -1,0 +1,87 @@
+---
+const currentYear = 2026;
+
+const socialLinks = [
+  {
+    name: "Facebook",
+    url: "https://www.facebook.com/redecondor",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>`,
+  },
+  {
+    name: "Instagram",
+    url: "https://www.instagram.com/redecondor",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>`,
+  },
+  {
+    name: "X",
+    url: "https://twitter.com/redecondor",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z" /><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" /></svg>`,
+  },
+  {
+    name: "TikTok",
+    url: "https://www.tiktok.com/@redecondor",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5v3a4 4 0 0 1 -1.569 -.317l-.431 -.183"></path></svg>`,
+  },
+  {
+    name: "YouTube",
+    url: "https://www.youtube.com/redecondor",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>`,
+  },
+  {
+    name: "LinkedIn",
+    url: "https://www.linkedin.com/company/rede-condor",
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>`,
+  },
+];
+---
+
+<footer
+  class="relative bg-brand-dark py-4 text-white overflow-hidden mt-0 font-['Inter',sans-serif] border-t-2 border-brand-primary bg-[#1A1B4B]"
+>
+  <div class="container mx-auto px-4 relative z-10">
+    <div
+      class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4"
+    >
+      <!-- Logo Left -->
+      <div class="shrink-0 scale-75 md:scale-90 origin-left">
+        <div
+          class="overflow-hidden w-[160px] h-[38px] relative rounded-md shadow-sm"
+        >
+          <img
+            src="/public/assets/pc/Group 4.png"
+            alt="Condor"
+            class="absolute left-[-15px] top-1/2 -translate-y-1/2 w-[500px] h-auto max-w-none filter brightness-110"
+          />
+        </div>
+      </div>
+
+      <!-- Copyright Center -->
+      <div class="grow text-center">
+        <p
+          class="text-white text-[10px] md:text-xs font-normal tracking-tight opacity-60"
+        >
+          &copy; {currentYear} Condor. Todos os direitos reservados.
+        </p>
+      </div>
+
+      <!-- Social Icons Right -->
+      <div class="flex items-center gap-3">
+        {
+          socialLinks.map((link) => (
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={link.name}
+              class="flex items-center justify-center w-8 h-8 rounded-full bg-white text-brand-white hover:bg-brand-primary hover:text-brand-white transition-all duration-300 shadow-md"
+              set:html={link.icon.replace(
+                "currentColor",
+                "#1A1B4B",
+              )}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</footer>

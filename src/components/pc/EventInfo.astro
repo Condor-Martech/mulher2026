@@ -1,0 +1,173 @@
+---
+// EventInfo.astro - Refined implementation matching Image 2 with fixed layout overlap
+---
+
+<section class="relative w-full overflow-hidden bg-[#00A0E2] py-8 md:py-16">
+  <div class="container mx-auto px-4 relative z-10 max-w-6xl">
+    <!-- Main Dark Container -->
+    <div
+      class="relative bg-[#1A1B4B] text-white pt-10 pb-16 px-6 md:px-12 rounded-[50px] shadow-2xl overflow-visible border-b-8 border-black/20"
+    >
+      <!-- Top Row: Evento Gratuito and Data -->
+      <div
+        class="flex flex-col lg:flex-row items-center justify-between gap-6 mb-12"
+      >
+        <!-- Evento Gratuito Box -->
+        <div class="relative">
+          <div
+            class="bg-[#B5E1FA] -skew-x-20 py-3 px-8 md:px-16 rounded-tl-xl rounded-br-xl shadow-lg border-b-4 border-blue-300"
+          >
+            <div class="skew-x-20 text-center">
+              <h2
+                class="text-[#2E2A7B] text-3xl md:text-5xl font-black uppercase leading-none tracking-tighter"
+              >
+                EVENTO <br />
+                <span class="text-4xl md:text-6xl">GRATUITO</span>
+              </h2>
+              <p
+                class="text-[#2E2A7B] text-lg md:text-2xl font-bold mt-1 tracking-tight"
+              >
+                Venha com sua Bike
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Box -->
+        <div class="relative">
+          <div
+            class="bg-[#0057B8] -skew-x-20 py-4 px-8 md:px-20 rounded-tl-xl rounded-br-xl shadow-lg border-b-4 border-blue-900"
+          >
+            <div class="skew-x-20 text-center">
+              <span
+                class="text-white text-2xl md:text-3xl font-bold uppercase tracking-widest block border-b border-white/30 mb-1 pb-1"
+                >DATA:</span
+              >
+              <span
+                class="text-[#FCE38A] text-5xl md:text-8xl font-black leading-none drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]"
+                >29/03</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Middle Row: Info Items (Largada, Chegada, Distância) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <!-- Largada -->
+        <div class="relative flex flex-col items-center">
+          <div
+            class="w-full border-2 border-white/20 -skew-x-20 py-2 px-4 rounded-tl-lg rounded-br-lg bg-[#2E2A7B]/40 shadow-inner"
+          >
+            <div class="skew-x-20 text-center">
+              <span
+                class="text-white text-lg md:text-xl font-bold uppercase tracking-widest"
+                >LARGADA:</span
+              >
+            </div>
+          </div>
+          <p
+            class="text-white text-base md:text-2xl font-medium text-center mt-3 uppercase leading-tight tracking-tighter"
+          >
+            HIPER CONDOR <br /> ÁGUA VERDE
+          </p>
+        </div>
+
+        <!-- Chegada -->
+        <div class="relative flex flex-col items-center">
+          <div
+            class="w-full border-2 border-white/20 -skew-x-20 py-2 px-4 rounded-tl-lg rounded-br-lg bg-[#2E2A7B]/40 shadow-inner"
+          >
+            <div class="skew-x-20 text-center">
+              <span
+                class="text-white text-lg md:text-xl font-bold uppercase tracking-widest"
+                >CHEGADA:</span
+              >
+            </div>
+          </div>
+          <p
+            class="text-white text-base md:text-2xl font-medium text-center mt-3 uppercase leading-tight tracking-tighter"
+          >
+            PARQUE <br /> BARIGUI
+          </p>
+        </div>
+
+        <!-- Distância -->
+        <div class="relative flex flex-col items-center">
+          <div
+            class="w-full border-2 border-white/20 -skew-x-20 py-2 px-4 rounded-tl-lg rounded-br-lg bg-[#2E2A7B]/40 shadow-inner"
+          >
+            <div class="skew-x-20 text-center">
+              <span
+                class="text-white text-lg md:text-xl font-bold uppercase tracking-widest"
+                >DISTÂNCIA:</span
+              >
+            </div>
+          </div>
+          <p
+            class="text-[#FCE38A] text-4xl md:text-6xl font-black text-center mt-2 drop-shadow-md"
+          >
+            6,3km
+          </p>
+        </div>
+      </div>
+
+      <!-- Bottom Row: Concentração and Início -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 max-w-4xl mx-auto"
+      >
+        <!-- Concentração -->
+        <div class="relative flex flex-col items-center">
+          <div
+            class="w-full border-2 border-white/20 -skew-x-20 py-3 px-6 rounded-tl-xl rounded-br-xl bg-[#2E2A7B]/40 shadow-inner"
+          >
+            <div class="skew-x-20 text-center">
+              <span
+                class="text-white text-xl md:text-2xl font-bold uppercase tracking-widest"
+                >CONCENTRAÇÃO:</span
+              >
+            </div>
+          </div>
+          <p
+            class="text-[#FCE38A] text-4xl md:text-6xl font-black text-center mt-2 drop-shadow-md"
+          >
+            8h30
+          </p>
+        </div>
+
+        <!-- Início -->
+        <div class="relative flex flex-col items-center">
+          <div
+            class="w-full border-2 border-white/20 -skew-x-20 py-3 px-6 rounded-tl-xl rounded-br-xl bg-[#2E2A7B]/40 shadow-inner"
+          >
+            <div class="skew-x-20 text-center">
+              <span
+                class="text-white text-xl md:text-2xl font-bold uppercase tracking-widest"
+                >INÍCIO:</span
+              >
+            </div>
+          </div>
+          <p
+            class="text-[#FCE38A] text-4xl md:text-6xl font-black text-center mt-2 drop-shadow-md"
+          >
+            10h
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative Dotted Line -->
+  <div
+    class="w-full border-t-2 border-dashed border-white/20 mt-12 mb-4 opacity-50"
+  >
+  </div>
+</section>
+
+<style>
+  h2,
+  span,
+  p {
+    font-family: "Inter", sans-serif;
+  }
+</style>

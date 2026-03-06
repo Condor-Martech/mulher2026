@@ -1,0 +1,75 @@
+---
+
+---
+
+<section
+  id="home"
+  class="relative w-full pt-16 pb-0 md:pt-20 lg:pt-24 min-h-[70vh] flex flex-col justify-end"
+  style="background: linear-gradient(180deg, #00A0E2 0%, #0081B7 100%);"
+>
+  <div class="container mx-auto px-4 relative z-10 max-w-6xl mb-16 md:mb-24">
+    <!-- Split Layout Container -->
+    <div
+      class="flex flex-col lg:flex-row items-center justify-between gap-8 lg:items-center"
+    >
+      <!-- Left Column: Familia -->
+      <div
+        class="w-full lg:w-1/2 flex justify-center lg:justify-end animate-fade-in relative z-20"
+      >
+        <img
+          src="/public/assets/pc/Familia 2.png"
+          alt="Família"
+          class="w-full max-w-[500px] lg:max-w-[700px] h-auto drop-shadow-2xl translate-y-4"
+        />
+      </div>
+
+      <!-- Right Column: Branding -->
+      <div
+        class="w-full lg:w-1/2 flex flex-col items-center lg:items-start space-y-8 lg:pl-16 relative z-30"
+      >
+        <!-- Logos -->
+        <div class="flex flex-col items-center lg:items-start gap-6 md:gap-8">
+          <img
+            src="/public/assets/pc/Selo 333_Branco 1.png"
+            alt="Curitiba 333 Anos"
+            class="h-24 md:h-32 lg:h-40 w-auto drop-shadow-md"
+          />
+
+          <img
+            src="/public/assets/pc/Selo_Vertical 1.png"
+            alt="Passeio Ciclístico"
+            class="w-full max-w-[280px] md:max-w-[380px] lg:max-w-[460px] h-auto drop-shadow-xl"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative separator dot-line -->
+  <div
+    class="w-full border-t-2 border-dashed border-white absolute bottom-32 md:bottom-0 z-10"
+  >
+  </div>
+
+  <!-- Diagonal Cut SVG -->
+  <div
+    class="absolute bottom-0 left-0 w-full h-[120px] md:h-[180px] pointer-events-none z-0"
+  >
+  </div>
+</section>
+
+<style>
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+</style>

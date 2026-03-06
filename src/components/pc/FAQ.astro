@@ -1,0 +1,57 @@
+---
+import Accordion from "./Accordion.astro";
+---
+
+<section id="faq" class="py-10 relative overflow-hidden">
+  <div class="container mx-auto px-4 max-w-4xl relative z-10">
+    <div class="text-center mb-8">
+      <h2
+        class="text-white text-4xl md:text-6xl font-[600] uppercase leading-none tracking-tighter"
+      >
+        DÚVIDAS FREQUENTES
+      </h2>
+    </div>
+
+    <div class="space-y-4">
+      <Accordion title="COMO FUNCIONA?">
+        <p class="text-[#000000]">
+          O passeio será realizado no dia 29 de março de 2026, com concentração
+          às 08h30 no Hiper Condor Água Verde e largada às 10h. A chegada está
+          prevista para às 11h30 no Parque Barigui. A participação é gratuita e
+          não é necessário fazer inscrição prévia.
+        </p>
+      </Accordion>
+
+      <Accordion title="QUEM PODE PARTICIPAR?">
+        <p class="text-[#000000]">
+          A participación é aberta ao público em geral. O participante deve
+          estar apto fisicamente para realizar o percurso e concordar com as
+          regras do regulamento.
+        </p>
+      </Accordion>
+
+      <Accordion title="COMO GANHAR O KIT EXCLUSIVO?">
+        <p class="text-[#000000]">
+          Os participantes receberão gratuitamente uma camiseta e uma sacochila
+          no dia do evento. A entrega será feita por ordem de chegada e as
+          quantidades e tamanhos são limitados. Não haverá entrega após o
+          término do evento.
+        </p>
+      </Accordion>
+
+      <Accordion title="COMO SERÁ O PERCURSO?">
+        <p class="text-[#000000]">
+          O trajeto terá aproximadamente 6,3 km, com saída do Hiper Condor Água
+          Verde e chegada no Parque Barigui (em frente ao Museu do Automóvel). O
+          percurso passará pelas seguintes vias: Rua Bento Viana, Av. Getúlio
+          Vargas, Rua Brigadeiro Franco, Rua Padre Agostinho e Av. Cândido
+          Hartmann.
+        </p>
+      </Accordion>
+    </div>
+  </div>
+
+  <!-- Decorative Separator -->
+  <div class="mt-10 w-full border-t-2 border-dashed border-white/50 opacity-30">
+  </div>
+</section>
