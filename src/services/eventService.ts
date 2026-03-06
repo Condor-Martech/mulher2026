@@ -37,7 +37,9 @@ export const getEventStatus = (event: Event): EventStatus => {
   // 3. Check for quotas (Mock implementation detects from URL if in browser)
   if (typeof window !== 'undefined') {
     const urlParams = new URLSearchParams(window.location.search);
-    const source = urlParams.get('src') || 'social';
+    const srcParam = urlParams.get('src');
+    const isPalestraPath = window.location.pathname.includes('/palestra/');
+    const source = srcParam ?? (isPalestraPath ? 'crm' : 'social');
     
     if (source === 'crm' && event.current_crm !== undefined && event.qtd_crm && event.qtd_crm > 0) {
       if (event.current_crm >= event.qtd_crm) return 'FULL';

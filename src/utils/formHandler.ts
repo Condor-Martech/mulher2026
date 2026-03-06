@@ -116,9 +116,11 @@ export function initFormHandler() {
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
 
-    // Capture source from URL
+    // Capture source from URL (path /palestra/ implies crm by default)
     const urlParams = new URLSearchParams(window.location.search);
-    const source = urlParams.get('src') || 'social';
+    const srcParam = urlParams.get('src');
+    const isPalestraPath = window.location.pathname.includes('/palestra/');
+    const source = srcParam ?? (isPalestraPath ? 'crm' : 'social');
 
     const feedbackModal = document.getElementById("feedback-modal") as HTMLDialogElement;
     const feedbackIcon = document.getElementById("feedback-icon");
