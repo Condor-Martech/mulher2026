@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "mcp__claude_ai_Supabase__list_projects",
-      "mcp__claude_ai_Supabase__execute_sql"
+      "mcp__claude_ai_Supabase__execute_sql",
+      "Bash(git fetch --tags --force origin)",
+      "Bash(git pull origin main)"
     ]
   }
 }
