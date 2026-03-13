@@ -54,3 +54,90 @@ const contentData = await getPascoaContent();
   <!-- Footer at the bottom of the background image -->
   <FooterCondor data={contentData.footer} />
 </Layout>
+
+<script>
+  const S3_URL = "https://s3.cndr.me/lp-content/pascoa/content.json";
+  const S3_ASSETS_BASE = "https://s3.cndr.me/lp-content/pascoa/pascoa/";
+
+  function transformAsset(path: string): string {
+    if (path.startsWith("/assets/pascoa/")) {
+      return path.replace("/assets/pascoa/", S3_ASSETS_BASE);
+    }
+    return path;
+  }
+
+  function get(obj: any, path: string): any {
+    return path.split(".").reduce((o: any, k: string) => o?.[k], obj);
+  }
+
+  async function hydratePascoa() {
+    try {
+      const res = await fetch(S3_URL, { cache: "no-cache" });
+      if (!res.ok) return;
+      const data = await res.json();
+
+      // img[data-s3-src] → update src
+      document.querySelectorAll<HTMLImageElement>("[data-s3-src]").forEach((el) => {
+        const val = get(data, el.dataset.s3Src!);
+        if (val) el.src = transformAsset(val);
+      });
+
+      // [data-s3-bg] → update background-image style
+      document.querySelectorAll<HTMLElement>("[data-s3-bg]").forEach((el) => {
+        const val = get(data, el.dataset.s3Bg!);
+        if (val) el.style.backgroundImage = `url('${transformAsset(val)}')`;
+      });
+
+      // [data-s3-text] → update text content
+      document.querySelectorAll<HTMLElement>("[data-s3-text]").forEach((el) => {
+        const val = get(data, el.dataset.s3Text!);
+        if (val != null) el.textContent = val;
+      });
+
+      // NiloPecanhaInfo — target by existing CSS classes
+      const { eventInfo } = data;
+      if (eventInfo) {
+        const nilo: Record<string, string | undefined> = {
+          ".nilo-line1": eventInfo.headline?.[0],
+          ".nilo-line2": eventInfo.headline?.[1],
+          ".nilo-description": eventInfo.description,
+          ".nilo-dates": eventInfo.dates,
+          ".nilo-address": eventInfo.address,
+        };
+        for (const [sel, val] of Object.entries(nilo)) {
+          const el = document.querySelector(sel);
+          if (el && val != null) el.textContent = val;
+        }
+      }
+
+      // video-container data-video-id
+      if (data.video?.youtubeId) {
+        document.getElementById("video-container")?.setAttribute("data-video-id", data.video.youtubeId);
+      }
+
+      // ContentCards — re-render the list
+      const cardsList = document.getElementById("content-cards-list");
+      if (cardsList && Array.isArray(data.cards)) {
+        cardsList.innerHTML = data.cards
+          .map((card: any) => {
+            const isExternal = card.link?.startsWith("http");
+            return `<a href="${card.link || "#"}"
+              ${isExternal ? 'target="_blank" rel="noopener noreferrer"' : ""}
+              class="card-item relative aspect-3/4 overflow-hidden rounded-3xl group cursor-pointer shadow-xl transition-all duration-700 ease-out min-w-[50%] md:min-w-0 snap-center md:snap-align-none block no-underline">
+              <div class="absolute inset-0 ${card.bgPlaceholder || ""}"></div>
+              ${card.image ? `<img src="${transformAsset(card.image)}" alt="${card.title}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 pointer-events-none">` : ""}
+              <div class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-80 pointer-events-none"></div>
+              <div class="absolute inset-x-0 bottom-0 p-8 pointer-events-none">
+                <h3 class="text-xl md:text-[1.75rem] font-bold text-white whitespace-pre-line leading-tight text-center drop-shadow-md">${card.title}</h3>
+              </div>
+            </a>`;
+          })
+          .join("") + `<div class="min-w-[4%] md:hidden snap-end"></div>`;
+      }
+    } catch {
+      // S3 falhou — mantém os dados do build
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", hydratePascoa);
+</script>

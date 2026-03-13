@@ -29,6 +29,7 @@ const { data } = Astro.props;
       style="bottom: -80px; left: -180px; width: 1250px; height: 1000px;"
     >
       <img
+        data-s3-src="hero.mascotImg"
         src={data.mascotImg}
         alt="Mascot Páscoa Condor"
         class="w-full h-full object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.5)]"
@@ -41,6 +42,7 @@ const { data } = Astro.props;
       style="top: -30px; right: -80px; width: 480px; height: 620px;"
     >
       <img
+        data-s3-src="hero.badges.desktop"
         src={data.badges.desktop}
         alt="Condições de Parcelamento"
         class="w-full h-full object-contain drop-shadow-2xl"
@@ -53,6 +55,7 @@ const { data } = Astro.props;
       style="bottom: -40px; right: 0px; width: 300px; height: 210px;"
     >
       <img
+        data-s3-src="hero.txtImg"
         src={data.txtImg}
         alt="A Maior Páscoa do Brasil"
         class="w-full h-full object-contain"
@@ -68,6 +71,7 @@ const { data } = Astro.props;
     {/* Mascot/Seal */}
     <div class="w-[140%] max-w-[700px] z-20 my-2 px-2">
       <img
+        data-s3-src="hero.mascotImg"
         src={data.mascotImg}
         alt="Mascot Páscoa Condor"
         class="w-full h-auto drop-shadow-lg animate-float"
@@ -77,6 +81,7 @@ const { data } = Astro.props;
     {/* Text: A Maior Páscoa */}
     <div class="w-[45%] max-w-[180px] z-30 -mt-4">
       <img
+        data-s3-src="hero.txtImg"
         src={data.txtImg}
         alt="A Maior Páscoa do Brasil"
         class="w-full h-auto"
@@ -86,6 +91,7 @@ const { data } = Astro.props;
     {/* Badge: Parcelamento (Red Seal) */}
     <div class="w-[95%] max-w-[340px] z-10 mt-2">
       <img
+        data-s3-src="hero.badges.mobile"
         src={data.badges.mobile}
         alt="Condições de Parcelamento"
         class="w-full h-auto drop-shadow-xl"

@@ -24,13 +24,14 @@ const { data } = Astro.props;
     {/* Background dark blue base with the texture image */}
     <div class="absolute inset-0 bg-brand-blue-dark -z-20"></div>
     <div
+      data-s3-bg="condorEmCasa.bgImg"
       class="absolute inset-0 -z-10 opacity-30 bg-cover bg-center mix-blend-overlay"
       style={`background-image: url('${data.bgImg}')`}
     >
     </div>
 
     <div class="shrink-0 w-44 md:w-56 lg:w-72">
-      <img src={data.badgeImg} alt="Condor em Casa" class="w-full h-auto" />
+      <img data-s3-src="condorEmCasa.badgeImg" src={data.badgeImg} alt="Condor em Casa" class="w-full h-auto" />
     </div>
 
     <div
@@ -39,11 +40,9 @@ const { data } = Astro.props;
       <h2
         class="text-xl md:text-2xl lg:text-[2.4rem] font-bold text-white leading-[1.1] uppercase tracking-[-0.02em]"
       >
-        {data.text1}
+        <span data-s3-text="condorEmCasa.text1">{data.text1}</span>
         <br class="hidden sm:block" />
-        <span class="text-[#ffb600] font-black tracking-[-0.05em]"
-          >{data.text2}</span
-        >
+        <span data-s3-text="condorEmCasa.text2" class="text-[#ffb600] font-black tracking-[-0.05em]">{data.text2}</span>
       </h2>
     </div>
   </a>

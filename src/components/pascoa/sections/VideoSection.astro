@@ -24,6 +24,7 @@ const { data } = Astro.props;
     >
       {/* Fallback Image */}
       <div
+        data-s3-bg="video.thumbnailImg"
         class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-105"
         style={`background-image: url('${data.thumbnailImg}')`}
       >

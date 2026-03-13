@@ -7,6 +7,7 @@ const S3_ASSETS_BASE = "https://s3.cndr.me/lp-content/pascoa/pascoa/";
  * Transforms relative asset paths to absolute S3 URLs.
  */
 const transformData = (obj: any): any => {
+  console.log("transformData", obj);
   if (typeof obj === 'string') {
     if (obj.startsWith('/assets/pascoa/')) {
       return obj.replace('/assets/pascoa/', S3_ASSETS_BASE);
