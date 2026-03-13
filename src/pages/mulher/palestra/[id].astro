@@ -21,6 +21,7 @@ export async function getStaticPaths() {
       palestrante: p.palestrante,
       data_evento: p.data_evento,
       tipo_evento: p.tipo_evento || "Palestra",
+      qtd_crm: p.qtd_crm ?? 0,
     },
   }));
 }
@@ -31,9 +32,10 @@ interface Props {
   palestrante: string;
   data_evento: string;
   tipo_evento: string;
+  qtd_crm: number;
 }
 
-const { eventId, tema, palestrante, data_evento, tipo_evento } = Astro.props;
+const { eventId, tema, palestrante, data_evento, tipo_evento, qtd_crm } = Astro.props;
 
 const dateObj = data_evento ? new Date(data_evento) : null;
 const isValidDate = dateObj && !isNaN(dateObj.getTime());
@@ -111,8 +113,29 @@ if (isValidDate && dateObj) {
         </div>
       </div>
 
+      {/* ── VAGAS ESGOTADAS ── */}
+      <div id="vagas-esgotadas-block" class="hidden animate-slide-up" style="animation-delay:0.18s"
+        data-event-id={eventId} data-qtd-crm={qtd_crm}>
+        <div class="glass-white rounded-3xl shadow-[0_24px_64px_rgba(244,63,94,0.13)] overflow-hidden border border-white/70 p-4">
+          <div class="bg-gradient-to-br from-primary/8 to-rose-50/80 py-16 px-6 text-center">
+            <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+              </svg>
+            </div>
+            <p class="font-outfit font-black text-2xl text-primary mb-3">Vagas Esgotadas</p>
+            <p class="text-sm text-[#9B8F8F] font-medium leading-relaxed max-w-xs mx-auto">
+              Todas as vagas para este evento foram preenchidas. Fique de olho em novos eventos do Condor com Elas!
+            </p>
+          </div>
+        </div>
+        <p class="text-center text-[10px] font-black uppercase tracking-[0.25em] text-[#B8ACAC] mt-10">
+          Condor com Elas · Mês da Mulher
+        </p>
+      </div>
+
       {/* ── FORM CARD ── */}
-      <div class="animate-slide-up" style="animation-delay:0.18s">
+      <div id="form-block" class="animate-slide-up" style="animation-delay:0.18s">
         <div class="glass-white rounded-3xl shadow-[0_24px_64px_rgba(244,63,94,0.13)] overflow-hidden border border-white/70 p-4">
 
           {/* Card header */}
@@ -191,9 +214,32 @@ if (isValidDate && dateObj) {
 
 <script>
   import { initFormHandler } from "../../../utils/formHandler";
+  import { supabase } from "../../../lib/supabase";
 
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", async () => {
     initFormHandler();
+
+    // Check CRM quota for this event
+    const vagasEl = document.getElementById("vagas-esgotadas-block");
+    const eventId = vagasEl?.dataset.eventId;
+    const qtdCrm = Number(vagasEl?.dataset.qtdCrm ?? 0);
+
+    if (eventId && qtdCrm > 0) {
+      try {
+        const { count, error } = await supabase
+          .from("inscricoes")
+          .select("*", { count: "exact", head: true })
+          .eq("event_id", eventId)
+          .eq("source", "crm");
+
+        if (!error && count !== null && count >= qtdCrm) {
+          document.getElementById("form-block")?.classList.add("hidden");
+          vagasEl?.classList.remove("hidden");
+        }
+      } catch (e) {
+        console.error("Failed to check CRM quota:", e);
+      }
+    }
   });
 </script>
 
