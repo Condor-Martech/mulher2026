@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+
+  --color-brand-brown: #3e0c03;
+  --color-brand-red: #c44955; /* Precise red from design */
+  --color-brand-orange-light: #e59358;
+  --color-brand-yellow: #fcd55c;
+  --color-brand-cyan: #00aeef;
+
+  --color-brand-blue: #0b2569;
+  --color-brand-blue-dark: #002353; /* For 'Em Casa' banner */
+
+  --color-brand-black: #050505;
+  --color-brand-light: #f8fafc;
+
+  --shadow-premium: 0 20px 50px -12px rgba(62, 12, 3, 0.4);
+  --shadow-glow: 0 0 20px rgba(252, 213, 92, 0.3);
+}
+
+@utility condense-title {
+  letter-spacing: -0.05em;
+  font-weight: 800;
+}
+
+@utility sharp-glass {
+  background-color: rgb(255 255 255 / 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgb(255 255 255 / 0.2);
+  box-shadow: var(--shadow-premium);
+}
+
+@utility sharp-glass-dark {
+  background-color: rgba(62, 12, 3, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
+}
+
+body {
+  overflow-x: hidden !important;
+  scroll-behavior: smooth;
+  background-image: url("/assets/pascoa/BG@2x.png") !important;
+  background-size: 100% auto;
+  background-position: top center;
+  background-attachment: scroll !important;
+  background-repeat: no-repeat;
+  background-color: #f1bf91 !important; /* Lighter color matching the bottom clouds of the BG */
+  background-blend-mode: normal !important;
+  color: var(--color-brand-brown) !important;
+}
+
+body::before {
+  content: none !important;
+}
+
+/* Ocultar barra de scroll para Chrome, Safari y Opera */
+.hide-scrollbar::-webkit-scrollbar,
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ocultar barra de scroll para IE, Edge y Firefox */
+.hide-scrollbar,
+body {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@utility animate-float {
+  animation: float 4s ease-in-out infinite;
+}

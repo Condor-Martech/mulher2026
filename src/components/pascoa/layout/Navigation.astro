@@ -1,0 +1,110 @@
+---
+interface Props {
+  data: {
+    navLinks: { label: string; href: string; hoverColor: string }[];
+  };
+}
+
+const { data } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<header
+  class="absolute top-4 md:top-8 left-0 right-0 max-w-[100vw] overflow-x-hidden md:left-1/2 md:-translate-x-1/2 md:w-auto md:min-w-[800px] z-50 flex flex-col items-center pointer-events-none"
+>
+  <nav
+    class="relative w-full md:w-auto flex flex-col items-center pointer-events-auto"
+  >
+    <!-- Mobile Hamburger Button -->
+    <div class="w-full flex justify-end items-center md:hidden pr-6">
+      <button
+        id="mobile-menu-btn"
+        class="text-white focus:outline-none p-2 transition-transform hover:scale-105 cursor-pointer"
+        aria-label="Toggle menu"
+      >
+        <!-- Animated Hamburger Icon -->
+        <div class="relative w-8 h-[22px] pointer-events-none">
+          <span
+            class="absolute top-0 left-0 block w-8 h-[3px] bg-white rounded-full transition-all duration-300 ease-in-out shadow-[0_1px_3px_rgba(0,0,0,0.3)]"
+          ></span>
+          <span
+            class="absolute top-1/2 -translate-y-1/2 left-0 block w-8 h-[3px] bg-white rounded-full transition-all duration-300 ease-in-out shadow-[0_1px_3px_rgba(0,0,0,0.3)]"
+          ></span>
+          <span
+            class="absolute bottom-0 left-0 block w-8 h-[3px] bg-white rounded-full transition-all duration-300 ease-in-out shadow-[0_1px_3px_rgba(0,0,0,0.3)]"
+          ></span>
+        </div>
+      </button>
+    </div>
+
+    <!-- Navigation Links -->
+    <div
+      id="mobile-menu"
+      class="hidden md:flex flex-col md:flex-row flex-wrap justify-center items-center gap-x-4 gap-y-4 md:gap-x-12 md:gap-y-0 lg:gap-x-24 transition-all duration-300 w-[90%] max-w-[320px] md:max-w-none md:w-auto bg-brand-red md:bg-brand-red rounded-3xl md:rounded-full py-6 md:py-5 px-6 md:px-16 mt-4 md:mt-0 shadow-2xl border border-white/20"
+    >
+      {
+        data.navLinks.map((link) => {
+          const isActive =
+            currentPath === link.href ||
+            (currentPath === "/" && link.href === "/");
+          const activeColor = link.hoverColor;
+
+          return (
+            <a
+              href={link.href}
+              class={`text-white font-bold condense-title tracking-wider text-center uppercase transition-colors duration-300 relative group text-[15px] leading-tight sm:text-sm md:text-[18px] w-full md:w-auto py-2 md:py-0 cursor-pointer`}
+              style={`--hover-color: ${activeColor};`}
+            >
+              {link.label}
+              <span
+                class={`absolute -bottom-1 left-1/2 -translate-x-1/2 md:left-0 md:translate-x-0 h-0.5 transition-all duration-300 ${isActive ? "w-1/2 md:w-full" : "w-0 group-hover:w-1/2 md:group-hover:w-full"}`}
+                style={`background-color: ${activeColor};`}
+              />
+            </a>
+          );
+        })
+      }
+    </div>
+  </nav>
+</header>
+
+<script>
+  const btn = document.getElementById("mobile-menu-btn");
+  const menu = document.getElementById("mobile-menu");
+
+  if (btn && menu) {
+    btn.addEventListener("click", () => {
+      const isHidden = menu.classList.contains("hidden");
+      menu.classList.toggle("hidden");
+      menu.classList.toggle("flex");
+      btn.classList.toggle("is-active");
+
+      // GSAP Entrance animation for links
+      if (isHidden) {
+        import("gsap").then(({ gsap }) => {
+          gsap.from("#mobile-menu a", {
+            y: 20,
+            opacity: 0,
+            duration: 0.5,
+            stagger: 0.1,
+            ease: "back.out(1.7)",
+          });
+        });
+      }
+    });
+  }
+</script>
+
+<style>
+  /* Menu icon animations */
+  #mobile-menu-btn.is-active span:nth-child(1) {
+    transform: translateY(9.5px) rotate(45deg);
+  }
+  #mobile-menu-btn.is-active span:nth-child(2) {
+    opacity: 0;
+    transform: scale(0);
+  }
+  #mobile-menu-btn.is-active span:nth-child(3) {
+    transform: translateY(-9.5px) rotate(-45deg);
+  }
+</style>

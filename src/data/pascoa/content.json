@@ -1,0 +1,119 @@
+{
+  "header": {
+    "navLinks": [
+      {
+        "label": "Home",
+        "href": "#",
+        "hoverColor": "var(--color-brand-yellow)"
+      },
+      {
+        "label": "Condor em Casa",
+        "href": "#condoremcasa",
+        "hoverColor": "var(--color-brand-cyan)"
+      },
+      {
+        "label": "Circuito do Condor",
+        "href": "#nilopecanha",
+        "hoverColor": "var(--color-brand-purple)"
+      }
+    ]
+  },
+  "hero": {
+    "titleImg": "/assets/pascoa/MOTE-1-2048x348.webp",
+    "mascotImg": "/assets/pascoa/SELO.png",
+    "txtImg": "/assets/pascoa/TXT.png",
+    "badges": {
+      "desktop": "/assets/pascoa/12x_6x_Desktop.png",
+      "mobile": "/assets/pascoa/12x_6x_Mobile.png"
+    }
+  },
+  "video": {
+    "thumbnailImg": "/assets/pascoa/videoThumb.png",
+    "youtubeId": "dQw4w9WgXcQ"
+  },
+  "condorEmCasa": {
+    "badgeImg": "/assets/pascoa/Selo-Condor-em-Casa-2024@2x.png",
+    "text1": "Compre on-line e receba a",
+    "text2": "Páscoa Condor na sua casa.",
+    "bgImg": "/assets/pascoa/BG_condoremcasa@2x.png"
+  },
+  "eventInfo": {
+    "headline": [
+      "A MAIOR PÁSCOA DE TODAS TE ESPERA",
+      "NO CONDOR NILO PEÇANHA"
+    ],
+    "description": "No nosso espaço, você vai encontrar o Condorelho, o Coelho do Condor, além de brindes exclusivos e um espaço instagramável pra você deixar esse momento registrado.",
+    "dates": "Nos dias 7, 13, 14, 20, 21, 27 e 28/3, 3 e 4/4,\ndas 10h às 20h.",
+    "address": "Rua Nilo Peçanha, 1.000, São Francisco"
+  },
+  "cards": [
+    {
+      "title": "Receitas\nde Páscoa",
+      "bgPlaceholder": "bg-amber-900/30",
+      "image": "/assets/pascoa/blog1.png",
+      "link": "https://blog.condor.com.br/?s=p%C3%A1scoa"
+    },
+    {
+      "title": "Dicas de\nPáscoa",
+      "bgPlaceholder": "bg-orange-800/30",
+      "image": "/assets/pascoa/blog2.png",
+      "link": "https://blog.condor.com.br/?s=p%C3%A1scoa"
+    },
+    {
+      "title": "Blog\nCondor",
+      "bgPlaceholder": "bg-slate-800/60",
+      "image": "/assets/pascoa/blog3.png",
+      "link": "https://blog.condor.com.br/"
+    }
+  ],
+  "footer": {
+    "logo": "/assets/pascoa/Logo-Condor-com-sombra.png",
+    "copyrightText": "REDE CONDOR — TODOS OS DIREITOS RESERVADOS.",
+    "socialLinks": [
+      {
+        "name": "Facebook",
+        "url": "https://www.facebook.com/RedeCondor",
+        "icon": "facebook",
+        "bg": "#1877F2",
+        "shadow": "rgba(0, 0, 0, 0.2)"
+      },
+      {
+        "name": "Instagram",
+        "url": "https://www.instagram.com/redecondor/",
+        "icon": "instagram",
+        "bg": "linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
+        "shadow": "rgba(0, 0, 0, 0.2)"
+      },
+      {
+        "name": "X",
+        "url": "https://x.com/redecondor",
+        "icon": "x",
+        "bg": "#000000",
+        "shadow": "rgba(0, 0, 0, 0.2)",
+        "border": "rgba(255, 255, 255, 0.1)"
+      },
+      {
+        "name": "TikTok",
+        "url": "https://www.tiktok.com/@redecondor",
+        "icon": "tiktok",
+        "bg": "#000000",
+        "shadow": "rgba(0, 0, 0, 0.2)",
+        "border": "rgba(255, 255, 255, 0.2)"
+      },
+      {
+        "name": "YouTube",
+        "url": "https://www.youtube.com/user/RedeCondor",
+        "icon": "youtube",
+        "bg": "#FF0000",
+        "shadow": "rgba(0, 0, 0, 0.2)"
+      },
+      {
+        "name": "LinkedIn",
+        "url": "https://www.linkedin.com/company/condor-super-center-ltda-",
+        "icon": "linkedin",
+        "bg": "#0077B5",
+        "shadow": "rgba(0, 0, 0, 0.2)"
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/globalPascoa.css";
+import Navigation from "../../components/pascoa/layout/Navigation.astro";
+import Hero from "../../components/pascoa/sections/Hero.astro";
+import VideoSection from "../../components/pascoa/sections/VideoSection.astro";
+import BannerEmCasa from "../../components/pascoa/sections/BannerEmCasa.astro";
+import NiloPecanhaInfo from "../../components/pascoa/sections/NiloPecanhaInfo.astro";
+import ContentCards from "../../components/pascoa/sections/ContentCards.astro";
+import FooterCondor from "../../components/pascoa/layout/FooterCondor.astro";
+
+import { getPascoaContent } from "../../services/pascoaService";
+
+const contentData = await getPascoaContent();
+---
+
+<Layout title="Páscoa Condor">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
+    rel="stylesheet"
+  />
+  <!-- Navigation Header at top -->
+  <Navigation data={contentData.header} />
+
+  <!-- Main Container: flex column, fills space proportionally -->
+  <main class="w-full relative flex flex-col items-center overflow-x-hidden">
+    <Hero data={contentData.hero} />
+
+    <!-- ZONE 2: Video + BannerEmCasa (orange middle) -->
+    <section
+      class="w-full flex flex-col items-center gap-6 md:gap-10 py-4 md:py-8 px-4 max-w-[1400px] mx-auto"
+    >
+      <div class="w-full" data-reveal>
+        <VideoSection data={contentData.video} />
+      </div>
+      <div class="w-full" data-reveal>
+        <BannerEmCasa data={contentData.condorEmCasa} />
+      </div>
+    </section>
+
+    <!-- ZONE 3: Event info + Cards -->
+    <section
+      class="w-full flex flex-col items-center gap-4 md:gap-8 py-4 md:py-8 px-4 max-w-[1000px] mx-auto overflow-hidden"
+    >
+      <NiloPecanhaInfo data={contentData.eventInfo} />
+      <div class="w-full" data-reveal>
+        <ContentCards data={contentData.cards} />
+      </div>
+    </section>
+
+    <div class="flex-1"></div>
+  </main>
+
+  <!-- Footer at the bottom of the background image -->
+  <FooterCondor data={contentData.footer} />
+</Layout>

@@ -1,0 +1,119 @@
+---
+interface Props {
+  data: {
+    headline: string[];
+    description: string;
+    dates: string;
+    address: string;
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<section id="nilopecanha" class="nilo-section" data-reveal>
+  <!-- Headline -->
+  <div class="nilo-headline">
+    <p class="nilo-line1">{data.headline[0]}</p>
+    <p class="nilo-line2">{data.headline[1]}</p>
+  </div>
+
+  <!-- Description -->
+  <p class="nilo-description">{data.description}</p>
+
+  <!-- Dark card -->
+  <div class="nilo-card">
+    <p class="nilo-dates">{data.dates}</p>
+    <p class="nilo-address">{data.address}</p>
+  </div>
+</section>
+
+<style>
+  .nilo-section {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: clamp(1rem, 4vw, 2rem) clamp(1rem, 3vw, 1.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+    z-index: 20;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  /* ── HEADLINE ── */
+  .nilo-headline {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  .nilo-line1 {
+    font-size: clamp(1.1rem, 2.5vw, 1.8rem);
+    font-weight: 800;
+    color: #712306;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .nilo-line2 {
+    font-size: clamp(1.8rem, 4.8vw, 3.4rem);
+    font-weight: 900;
+    color: #712306;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    line-height: 0.9;
+    margin: 0;
+  }
+
+  /* ── DESCRIPTION ── */
+  .nilo-description {
+    font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+    font-weight: 700;
+    color: #712306;
+    max-width: 65ch;
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  /* ── CARD ── */
+  .nilo-card {
+    background: radial-gradient(circle at center, #712306 0%, #3e0c03 100%);
+    border-radius: 35px;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    max-width: 589px;
+    min-height: 209px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 50px -12px rgba(62, 12, 3, 0.4);
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .nilo-dates {
+    font-weight: 900;
+    font-size: clamp(1.4rem, 2.8vw, 1.85rem);
+    color: #ffb600;
+    line-height: 1.25;
+    white-space: pre-line;
+    margin: 0 0 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  .nilo-address {
+    font-size: clamp(0.85rem, 1.6vw, 1rem);
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin: 0;
+    opacity: 0.9;
+  }
+</style>

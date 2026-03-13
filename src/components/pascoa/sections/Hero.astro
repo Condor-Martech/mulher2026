@@ -1,0 +1,134 @@
+---
+interface Props {
+  data: {
+    titleImg: string;
+    mascotImg: string;
+    txtImg: string;
+    badges: {
+      desktop: string;
+      mobile: string;
+    };
+  };
+}
+
+const { data } = Astro.props;
+---
+
+<section
+  id="hero"
+  class="relative h-auto md:min-h-svh md:h-screen w-full md:overflow-hidden flex flex-col items-center justify-center pt-20 md:pt-10 pb-0 md:pb-0"
+>
+  {/* Desktop Content: Absolute Positioning inside Centered Container */}
+  <div
+    class="hidden md:block relative w-[1300px] h-[800px] hero-scaler origin-center"
+    data-reveal
+  >
+    {/* SELO.png — Mascot (MUCH LARGER) */}
+    <div
+      class="absolute animate-float-gentle z-20"
+      style="bottom: -80px; left: -180px; width: 1250px; height: 1000px;"
+    >
+      <img
+        src={data.mascotImg}
+        alt="Mascot Páscoa Condor"
+        class="w-full h-full object-contain drop-shadow-[0_25px_50px_rgba(0,0,0,0.5)]"
+      />
+    </div>
+
+    {/* 12x_6x_Desktop.png — Badges */}
+    <div
+      class="absolute z-10"
+      style="top: -30px; right: -80px; width: 480px; height: 620px;"
+    >
+      <img
+        src={data.badges.desktop}
+        alt="Condições de Parcelamento"
+        class="w-full h-full object-contain drop-shadow-2xl"
+      />
+    </div>
+
+    {/* TXT.png — A Maior Páscoa */}
+    <div
+      class="absolute z-30"
+      style="bottom: -40px; right: 0px; width: 300px; height: 210px;"
+    >
+      <img
+        src={data.txtImg}
+        alt="A Maior Páscoa do Brasil"
+        class="w-full h-full object-contain"
+      />
+    </div>
+  </div>
+
+  {/* Mobile Content: Flexible Stack */}
+  <div
+    class="md:hidden w-full flex flex-col items-center px-4 pb-6 gap-2 sm:gap-4"
+    data-reveal
+  >
+    {/* Mascot/Seal */}
+    <div class="w-[140%] max-w-[700px] z-20 my-2 px-2">
+      <img
+        src={data.mascotImg}
+        alt="Mascot Páscoa Condor"
+        class="w-full h-auto drop-shadow-lg animate-float"
+      />
+    </div>
+
+    {/* Text: A Maior Páscoa */}
+    <div class="w-[45%] max-w-[180px] z-30 -mt-4">
+      <img
+        src={data.txtImg}
+        alt="A Maior Páscoa do Brasil"
+        class="w-full h-auto"
+      />
+    </div>
+
+    {/* Badge: Parcelamento (Red Seal) */}
+    <div class="w-[95%] max-w-[340px] z-10 mt-2">
+      <img
+        src={data.badges.mobile}
+        alt="Condições de Parcelamento"
+        class="w-full h-auto drop-shadow-xl"
+      />
+    </div>
+  </div>
+</section>
+
+<script>
+  function updateHeroScale() {
+    const heroContent = document.querySelector(".hero-scaler");
+    if (heroContent instanceof HTMLElement) {
+      if (window.innerWidth < 1350 && window.innerWidth >= 768) {
+        // Calculate proportional scale to fit width with a 40px margin
+        const scale = (window.innerWidth - 40) / 1300;
+        heroContent.style.transform = `scale(${Math.min(scale, 1)})`;
+      } else {
+        heroContent.style.transform = "scale(1)";
+      }
+    }
+  }
+
+  // Run scale calculation on resize and on initial load
+  window.addEventListener("resize", updateHeroScale);
+  document.addEventListener("DOMContentLoaded", updateHeroScale);
+  // Run once immediately for Astro transitions or fast loads
+  updateHeroScale();
+</script>
+
+<style>
+  @keyframes float-gentle {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  .animate-float-gentle {
+    animation: float-gentle 4s ease-in-out infinite;
+  }
+  .animate-float {
+    animation: float-gentle 6s ease-in-out infinite;
+  }
+</style>
