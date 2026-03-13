@@ -219,26 +219,35 @@ if (isValidDate && dateObj) {
   document.addEventListener("DOMContentLoaded", async () => {
     initFormHandler();
 
-    // Check CRM quota for this event
     const vagasEl = document.getElementById("vagas-esgotadas-block");
     const eventId = vagasEl?.dataset.eventId;
-    const qtdCrm = Number(vagasEl?.dataset.qtdCrm ?? 0);
 
-    if (eventId && qtdCrm > 0) {
-      try {
-        const { count, error } = await supabase
+    if (!eventId) return;
+
+    try {
+      // Fetch qtd_crm from DB at runtime (not relying on build-time baked value)
+      const { data: palestra, error: palestrasError } = await supabase
+        .from("palestras")
+        .select("qtd_crm")
+        .eq("id", eventId)
+        .single();
+
+      const qtdCrm = palestra?.qtd_crm ?? 0;
+
+      if (!palestrasError && qtdCrm > 0) {
+        const { count, error: countError } = await supabase
           .from("inscricoes")
           .select("*", { count: "exact", head: true })
           .eq("event_id", eventId)
           .eq("source", "crm");
 
-        if (!error && count !== null && count >= qtdCrm) {
+        if (!countError && count !== null && count >= qtdCrm) {
           document.getElementById("form-block")?.classList.add("hidden");
           vagasEl?.classList.remove("hidden");
         }
-      } catch (e) {
-        console.error("Failed to check CRM quota:", e);
       }
+    } catch (e) {
+      console.error("Failed to check CRM quota:", e);
     }
   });
 </script>
