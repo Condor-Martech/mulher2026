@@ -10,11 +10,11 @@ const { data } = Astro.props;
 ---
 
 <section
-  class="relative w-full max-w-6xl mx-auto px-2 md:px-4 py-4 md:py-8 z-20"
+  class="relative w-full max-w-6xl mx-auto px-2 md:px-4 py-4 md:py-8 z-20 xl:mt-12"
 >
   <div
     id="video-container"
-    class="relative aspect-video w-full rounded-3xl md:rounded-[3.5rem] overflow-hidden sharp-glass shadow-[0_40px_80px_-15px_rgba(62,12,3,0.5)] group cursor-pointer transition-transform duration-300 ease-out"
+    class="relative aspect-video w-full rounded-3xl md:rounded-[3rem] overflow-hidden sharp-glass shadow-[0_40px_80px_-15px_rgba(62,12,3,0.5)] group cursor-pointer transition-transform duration-300 ease-out will-change-transform"
     data-video-id={data.youtubeId}
   >
     {/* Thumbnail & UI (Visible by default) */}
@@ -24,9 +24,7 @@ const { data } = Astro.props;
     >
       {/* Fallback Image */}
       <div
-        data-s3-bg="video.thumbnailImg"
-        class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-105"
-        style={`background-image: url('${data.thumbnailImg}')`}
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-105 bg-thumbnail"
       >
       </div>
 
@@ -42,8 +40,7 @@ const { data } = Astro.props;
           class="play-button w-16 h-16 md:w-32 md:h-32 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-all duration-300 group-hover:scale-110 group-hover:bg-white/30 active:scale-95"
         >
           <div
-            class="ml-1.5 md:ml-3 w-0 h-0 border-y-10 border-l-16 md:border-y-18 md:border-l-30"
-            style="border-top-color: transparent; border-bottom-color: transparent; border-left-color: white;"
+            class="ml-1.5 md:ml-3 w-0 h-0 border-y-10 border-l-16 md:border-y-18 md:border-l-30 border-t-transparent border-b-transparent border-l-white"
           >
           </div>
         </div>
@@ -60,6 +57,7 @@ const { data } = Astro.props;
 </section>
 
 <script>
+  // Script directly derived from original VideoSection to handle the click-to-load logic
   const videoContainer = document.getElementById("video-container");
   const videoOverlay = document.getElementById("video-overlay");
   const playerDiv = document.getElementById("youtube-player");
@@ -89,8 +87,11 @@ const { data } = Astro.props;
     });
   }
 </script>
-<style>
+<style define:vars={{ thumbnailImg: `url('${data.thumbnailImg}')` }}>
   #video-container {
     will-change: transform;
+  }
+  .bg-thumbnail {
+    background-image: var(--thumbnailImg);
   }
 </style>

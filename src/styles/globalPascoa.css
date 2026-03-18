@@ -44,13 +44,19 @@ body {
   overflow-x: hidden !important;
   scroll-behavior: smooth;
   background-image: url("/assets/pascoa/BG@2x.png") !important;
-  background-size: 100% auto;
-  background-position: top center;
+  background-size: 100% 100% !important; /* Forces 100% width (crisp) and 100% height (reaches bottom) */
+  background-position: center top !important;
   background-attachment: scroll !important;
   background-repeat: no-repeat;
-  background-color: #f1bf91 !important; /* Lighter color matching the bottom clouds of the BG */
+  background-color: #f1bf91 !important;
   background-blend-mode: normal !important;
   color: var(--color-brand-brown) !important;
+}
+
+@media (max-width: 768px) {
+  body {
+    background-size: cover !important;
+  }
 }
 
 body::before {

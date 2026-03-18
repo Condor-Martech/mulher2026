@@ -13,43 +13,68 @@ const { data } = Astro.props;
 
 <section
   id="condoremcasa"
-  class="relative w-[95%] md:w-[90%] lg:w-[80%] xl:w-[70vw] max-w-7xl mx-auto py-4 md:py-8 z-20"
+  class="relative w-[95%] md:w-[90%] lg:w-[95%] xl:w-[85vw] max-w-7xl mx-auto py-4 md:py-8 z-20 overflow-hidden lg:overflow-visible"
 >
+  <div
+    class="absolute -top-10 -left-10 w-40 h-40 bg-brand-blue-dark/20 rounded-full blur-[80px] -z-10 animate-pulse"
+  >
+  </div>
+  <div
+    class="absolute -bottom-10 -right-10 w-64 h-64 bg-[#ffb600]/10 rounded-full blur-[100px] -z-10"
+  >
+  </div>
+
   <a
     href="https://www.condor.com.br/"
     target="_blank"
     rel="noopener noreferrer"
-    class="banner-content relative w-full rounded-4xl lg:rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row items-center justify-center py-10 lg:py-10 px-6 md:px-8 lg:px-16 gap-6 md:gap-8 lg:gap-16 cursor-pointer block no-underline"
+    class="group relative w-full block no-underline transition-transform duration-500 hover:scale-[1.01]"
   >
-    {/* Background dark blue base with the texture image */}
-    <div class="absolute inset-0 bg-brand-blue-dark -z-20"></div>
     <div
-      data-s3-bg="condorEmCasa.bgImg"
-      class="absolute inset-0 -z-10 opacity-30 bg-cover bg-center mix-blend-overlay"
-      style={`background-image: url('${data.bgImg}')`}
+      class="banner-content relative w-full rounded-4xl lg:rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row items-center justify-center py-10 lg:py-10 px-6 md:px-8 lg:px-16 gap-6 md:gap-8 lg:gap-16 shadow-2xl will-change-transform will-change-opacity"
     >
-    </div>
+      {/* Background dark blue base */}
+      <div class="absolute inset-0 bg-brand-blue-dark -z-20"></div>
 
-    <div class="shrink-0 w-44 md:w-56 lg:w-72">
-      <img data-s3-src="condorEmCasa.badgeImg" src={data.badgeImg} alt="Condor em Casa" class="w-full h-auto" />
-    </div>
-
-    <div
-      class="flex flex-col text-center md:text-left justify-center font-['Montserrat']"
-    >
-      <h2
-        class="text-xl md:text-2xl lg:text-[2.4rem] font-bold text-white leading-[1.1] uppercase tracking-[-0.02em]"
+      {/* Shine effect on hover */}
+      <div
+        class="absolute top-0 -inset-full h-full w-1/2 z-30 block transform -skew-x-12 bg-linear-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:animate-[shine_0.75s_ease-in-out]"
       >
-        <span data-s3-text="condorEmCasa.text1">{data.text1}</span>
-        <br class="hidden sm:block" />
-        <span data-s3-text="condorEmCasa.text2" class="text-[#ffb600] font-black tracking-[-0.05em]">{data.text2}</span>
-      </h2>
+      </div>
+
+      {/* Texture image with scale effect */}
+      <div
+        class="absolute inset-0 -z-10 opacity-100 bg-cover bg-center transition-transform duration-1000 group-hover:scale-110 bg-[url('/assets/pascoa/BG_mobile@2x.png')] md:bg-[url('/assets/pascoa/BG_condoremcasa@2x.png')]"
+      >
+      </div>
+
+      <div
+        class="relative shrink-0 w-44 md:w-56 lg:w-72 transition-all duration-700 group-hover:-rotate-6 group-hover:scale-110 z-10"
+      >
+        <div
+          class="absolute inset-0 bg-white/10 blur-[50px] rounded-full scale-75 group-hover:bg-[#ffb600]/20 transition-colors"
+        >
+        </div>
+        <img
+          src={data.badgeImg}
+          alt="Condor em Casa"
+          class="relative w-full h-auto drop-shadow-[0_20px_30px_rgba(0,0,0,0.6)]"
+        />
+      </div>
+
+      <div
+        class="flex flex-col text-center md:text-left justify-center font-['Montserrat'] z-10 transition-transform duration-500 group-hover:translate-x-2"
+      >
+        <h2
+          class="text-xl md:text-2xl lg:text-[2.4rem] font-bold text-white leading-[1.1] uppercase tracking-[-0.02em]"
+        >
+          <span>{data.text1}</span>
+          <br class="hidden sm:block" />
+          <span class="text-[#ffb600] font-black tracking-[-0.05em]"
+            >{data.text2}</span
+          >
+        </h2>
+      </div>
     </div>
   </a>
 </section>
-
-<style>
-  .banner-content {
-    will-change: transform, opacity;
-  }
-</style>
