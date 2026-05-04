@@ -64,7 +64,8 @@ export const fetchEvents = async (apiUrl?: string): Promise<Event[]> => {
     const { data: palestras, error } = await supabase
       .from('palestras')
       .select('*')
-      .eq('active', true);
+      .eq('active', true)
+      .eq('campanha_id', 'mes-da-mulher-2026');
 
     if (error) {
       throw error;

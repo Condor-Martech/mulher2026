@@ -1,15 +1,43 @@
 ---
 import SpinnerIcon from "./icons/SpinnerIcon.astro";
+
+interface Props {
+  eventId?: string;
+  eventTema?: string;
+  campaign?: "maes" | "mulher";
+}
+
+const { eventId = "", eventTema = "", campaign = "maes" } = Astro.props;
+
+// Campaign-specific styling
+const styles = {
+  maes: {
+    label: "text-[#713334]",
+    inputBorder: "border-maes-primary/20",
+    inputFocus: "focus:ring-maes-primary/50 focus:border-maes-primary",
+    button: "bg-maes-primary hover:bg-maes-wine",
+    shadow: "hover:shadow-[0_10px_20px_rgba(113,51,52,0.3)]",
+  },
+  mulher: {
+    label: "text-[#5A4A4A]",
+    inputBorder: "border-primary/20",
+    inputFocus: "focus:ring-primary/50 focus:border-primary",
+    button: "bg-primary hover:bg-primary/90",
+    shadow: "hover:shadow-[0_10px_20px_rgba(235,93,121,0.3)]",
+  }
+};
+
+const currentStyle = styles[campaign];
 ---
 
-<form id="event-registration-form" class="flex flex-col gap-4 md:gap-6">
-  <input type="hidden" id="modal-event-id" name="eventId" value="" />
-  <input type="hidden" id="modal-event-tema" name="eventTema" value="" />
+<form id="event-registration-form" class="flex flex-col gap-2 md:gap-6">
+  <input type="hidden" id="modal-event-id" name="eventId" value={eventId} />
+  <input type="hidden" id="modal-event-tema" name="eventTema" value={eventTema} />
 
   <div class="flex flex-col gap-1 md:gap-2">
     <label
       for="nome"
-      class="text-sm md:text-base font-bold text-[#5A4A4A] pl-1 md:pl-2"
+      class={`text-xs md:text-base font-bold pl-1 md:pl-2 ${currentStyle.label}`}
       >Nome Completo</label
     >
     <input
@@ -18,7 +46,7 @@ import SpinnerIcon from "./icons/SpinnerIcon.astro";
       name="nome"
       required
       placeholder="Digite seu nome"
-      class="w-full px-4 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-base text-[#5A4A4A] placeholder:text-[#A99D9D]"
+      class={`w-full px-4 py-2.5 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white border ${currentStyle.inputBorder} focus:outline-none focus:ring-2 ${currentStyle.inputFocus} transition-all text-base text-[#5A4A4A] placeholder:text-[#A99D9D]`}
     />
     <span
       class="error-message hidden text-red-500 text-xs pl-1 md:pl-2 font-medium"
@@ -29,7 +57,7 @@ import SpinnerIcon from "./icons/SpinnerIcon.astro";
   <div class="flex flex-col gap-1 md:gap-2">
     <label
       for="email"
-      class="text-sm md:text-base font-bold text-[#5A4A4A] pl-1 md:pl-2"
+      class={`text-xs md:text-base font-bold pl-1 md:pl-2 ${currentStyle.label}`}
       >E-mail</label
     >
     <input
@@ -38,7 +66,7 @@ import SpinnerIcon from "./icons/SpinnerIcon.astro";
       name="email"
       required
       placeholder="seu@email.com"
-      class="w-full px-4 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-base text-[#5A4A4A] placeholder:text-[#A99D9D]"
+      class={`w-full px-4 py-2.5 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white border ${currentStyle.inputBorder} focus:outline-none focus:ring-2 ${currentStyle.inputFocus} transition-all text-base text-[#5A4A4A] placeholder:text-[#A99D9D]`}
     />
     <span
       class="error-message hidden text-red-500 text-xs pl-1 md:pl-2 font-medium"
@@ -49,7 +77,7 @@ import SpinnerIcon from "./icons/SpinnerIcon.astro";
   <div class="flex flex-col gap-1 md:gap-2">
     <label
       for="telefone"
-      class="text-sm md:text-base font-bold text-[#5A4A4A] pl-1 md:pl-2"
+      class={`text-xs md:text-base font-bold pl-1 md:pl-2 ${currentStyle.label}`}
       >Telefone / WhatsApp</label
     >
     <input
@@ -59,7 +87,7 @@ import SpinnerIcon from "./icons/SpinnerIcon.astro";
       required
       placeholder="(00) 00000-0000"
       maxlength="15"
-      class="w-full px-4 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-base text-[#5A4A4A] placeholder:text-[#A99D9D]"
+      class={`w-full px-4 py-2.5 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white border ${currentStyle.inputBorder} focus:outline-none focus:ring-2 ${currentStyle.inputFocus} transition-all text-base text-[#5A4A4A] placeholder:text-[#A99D9D]`}
     />
     <span
       class="error-message hidden text-red-500 text-xs pl-1 md:pl-2 font-medium"
@@ -70,7 +98,7 @@ import SpinnerIcon from "./icons/SpinnerIcon.astro";
   <div class="flex flex-col gap-1 md:gap-2">
     <label
       for="cpf"
-      class="text-sm md:text-base font-bold text-[#5A4A4A] pl-1 md:pl-2"
+      class={`text-sm md:text-base font-bold pl-1 md:pl-2 ${currentStyle.label}`}
       >CPF</label
     >
     <input
@@ -80,7 +108,7 @@ import SpinnerIcon from "./icons/SpinnerIcon.astro";
       required
       placeholder="000.000.000-00"
       maxlength="14"
-      class="w-full px-4 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white border border-primary/20 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-base text-[#5A4A4A] placeholder:text-[#A99D9D]"
+      class={`w-full px-4 py-3 md:px-6 md:py-4 rounded-xl md:rounded-2xl bg-white border ${currentStyle.inputBorder} focus:outline-none focus:ring-2 ${currentStyle.inputFocus} transition-all text-base text-[#5A4A4A] placeholder:text-[#A99D9D]`}
     />
     <span
       class="error-message hidden text-red-500 text-xs pl-1 md:pl-2 font-medium"
@@ -95,7 +123,7 @@ import SpinnerIcon from "./icons/SpinnerIcon.astro";
         id="lgpd"
         name="lgpd"
         required
-        class="mt-1 w-5 h-5 md:w-5 md:h-5 rounded border-primary/30 text-primary focus:ring-primary/50 focus:ring-2 cursor-pointer transition-colors"
+        class={`mt-1 w-5 h-5 md:w-5 md:h-5 rounded border-gray-300 ${campaign === 'maes' ? 'text-maes-primary focus:ring-maes-primary/50' : 'text-primary focus:ring-primary/50'} cursor-pointer transition-colors`}
       />
       <label
         for="lgpd"
@@ -114,7 +142,7 @@ import SpinnerIcon from "./icons/SpinnerIcon.astro";
     type="submit"
     id="submit-registration-btn"
     disabled
-    class="mt-2 md:mt-4 w-full px-6 py-3 md:px-8 md:py-4 bg-primary text-white text-base md:text-lg font-bold rounded-xl md:rounded-2xl hover:bg-primary/90 hover:shadow-[0_10px_20px_rgba(235,93,121,0.3)] transform transition-all shadow-premium active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100 disabled:bg-primary/70 disabled:hover:shadow-none"
+    class={`mt-2 md:mt-4 w-full px-6 py-3 md:px-8 md:py-4 ${currentStyle.button} text-white text-base md:text-lg font-bold rounded-xl md:rounded-2xl ${currentStyle.shadow} transform transition-all shadow-premium active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:active:scale-100 disabled:opacity-70 disabled:hover:shadow-none`}
   >
     <span id="submit-text">Confirmar Inscrição</span>
     <SpinnerIcon

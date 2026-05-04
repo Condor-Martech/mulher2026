@@ -1,0 +1,16 @@
+---
+import { getMaesContent } from "../../services/maesService";
+
+const data = await getMaesContent();
+const { footer } = data;
+---
+
+<section class="pb-12 lg:pb-16 bg-maes-wine">
+  <div class="maes-container">
+    <p
+      class="text-center text-white/85 font-maes-sans text-[11px] lg:text-xs leading-relaxed max-w-4xl mx-auto"
+    >
+      {footer.disclaimer}
+    </p>
+  </div>
+</section>

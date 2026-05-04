@@ -1,0 +1,84 @@
+---
+import { fetchMaesEvents, getEventStatus, getStatusConfig } from "../../services/maesEventService";
+import { getMaesContent } from "../../services/maesService";
+
+const staticData = await getMaesContent();
+const events = await fetchMaesEvents();
+const { program, ui } = staticData;
+
+// Map static images to dynamic events
+const eventsWithMetadata = events.map(event => {
+  const staticEvent = program.events.find((e: any) => e.id === event.id);
+  const status = getEventStatus(event);
+  const statusConfig = getStatusConfig(status);
+  
+  return {
+    ...event,
+    image: staticEvent?.image || "/assets/maes/bg-hero-maes.webp",
+    description: staticEvent?.description || ui.defaultEventDescription,
+    status,
+    statusLabel: statusConfig.label,
+    statusColor: status === 'OPEN' ? 'bg-maes-primary text-white' : 
+                 status === 'SOON' ? 'bg-[#FFCE00] text-black' : 
+                 'bg-gray-400 text-white'
+  };
+});
+---
+
+<section id="programacao" class="py-24 bg-white">
+  <div class="maes-container">
+    <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+      <div class="max-w-xl">
+        <h2 class="text-3xl lg:text-4xl font-bold text-maes-secondary font-maes-heading">
+          {program.title}
+        </h2>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      {eventsWithMetadata.map((event: any) => (
+        <div class="group relative bg-maes-bg rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-maes-primary/5">
+          <!-- Image & Badge -->
+          <div class="aspect-[4/3] overflow-hidden relative">
+            <div class={`absolute top-4 left-4 z-10 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-lg ${event.statusColor}`}>
+              {event.statusLabel}
+            </div>
+            <img 
+              src={event.image} 
+              alt={event.tema} 
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+            />
+          </div>
+          
+          <!-- Content -->
+          <div class="p-8">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="px-3 py-1 bg-white text-maes-primary text-xs font-bold rounded-lg shadow-sm">
+                {new Date(event.data_evento).toLocaleDateString('pt-BR')}
+              </span>
+              <span class="text-gray-400 text-xs">•</span>
+              <span class="text-gray-500 text-xs font-medium">
+                {new Date(event.data_evento).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'h')}
+              </span>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-maes-secondary mb-3">
+              {event.tema}
+            </h3>
+            
+            <p class="text-gray-600 text-sm leading-relaxed mb-6">
+              {event.description}
+            </p>
+            
+            <a href={event.link_inscripcion} class="inline-flex items-center text-maes-primary font-bold hover:gap-2 transition-all">
+              {ui.signUp}
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

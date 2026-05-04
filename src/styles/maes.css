@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@theme {
+  --color-maes-primary: #713334;
+  --color-maes-secondary: #a34b4c;
+  --color-maes-wine: #8b3a3c;
+  --color-maes-accent: #f8e18b;
+  --color-maes-bg: #ffd7d7;
+  --color-maes-card: #f9bebe;
+  --color-maes-card-inner: #f59e9e;
+
+  --font-maes-sans: "Montserrat", system-ui, sans-serif;
+  --font-maes-script: "Pacifico", cursive;
+  --font-maes-italic: "Pinyon Script", cursive;
+}
+
+/* Maes-scoped base — applied via .maes-root, NOT global body */
+.maes-root {
+  font-family: var(--font-maes-sans);
+  color: white;
+}
+
+.maes-container {
+  max-width: 1536px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 1024px) {
+  .maes-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+.maes-card-shadow {
+  box-shadow: 0 20px 60px -15px rgba(255, 255, 255, 0.15), 0 0 20px -2px rgba(255, 255, 255, 0.08);
+}
+
+/* Typography helpers — scoped names so they never leak */
+.font-maes-sans { font-family: var(--font-maes-sans); }
+.font-maes-script { font-family: var(--font-maes-script); font-weight: 400; }
+.font-maes-italic { font-family: var(--font-maes-italic); font-weight: 400; }
+
+/* Backwards-compat for existing component class names */
+.font-urbane { font-family: var(--font-maes-sans); }
+.font-ernie { font-family: var(--font-maes-script); }
+/* Custom Animations */
+@keyframes maes-zoom {
+  from { transform: scale(1.1); }
+  to { transform: scale(1); }
+}
+
+@keyframes maes-fade-in {
+  0%, 30% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-maes-zoom {
+  animation: maes-zoom 25s ease-out infinite alternate;
+}
+
+.animate-maes-fade-in {
+  animation: maes-fade-in 1.6s ease-out forwards;
+}
+
+/* Scroll Reveal Base */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Atmospheric Glow Utilities */
+.maes-glow-bg {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.12;
+  mix-blend-mode: plus-lighter;
+}
+
+.maes-glow-white {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
+}
+
+.maes-glow-accent {
+  background: radial-gradient(circle, rgba(248, 225, 139, 0.4) 0%, transparent 70%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-maes-zoom,
+  .animate-maes-fade-in {
+    animation: none !important;
+  }
+}
+

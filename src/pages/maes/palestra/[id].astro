@@ -1,0 +1,204 @@
+---
+import LayoutMaes from "../../../layouts/LayoutMaes.astro";
+import FooterMaes from "../../../components/maes/FooterMaes.astro";
+import FeedbackModalMaes from "../../../components/maes/FeedbackModalMaes.astro";
+import SpinnerIcon from "../../../components/icons/SpinnerIcon.astro";
+import EventRegistrationForm from "../../../components/EventRegistrationForm.astro";
+import { supabase } from "../../../lib/supabase";
+
+export async function getStaticPaths() {
+  const { data: palestras, error } = await supabase
+    .from("palestras")
+    .select("*")
+    .eq("active", true)
+    .eq("campanha_id", "dia-das-maes-2026");
+
+  if (error || !palestras) {
+    console.error("Static paths error:", error);
+    return [];
+  }
+
+  return palestras.map((p: any) => ({
+    params: { id: p.id },
+    props: {
+      eventId: p.id,
+      tema: p.nome,
+      palestrante: p.palestrante,
+      data_evento: p.data_evento,
+      tipo_evento: p.tipo_evento || "Programa Especial",
+      qtd_crm: p.qtd_crm ?? 0,
+    },
+  }));
+}
+
+interface Props {
+  eventId: string;
+  tema: string;
+  palestrante: string;
+  data_evento: string;
+  tipo_evento: string;
+  qtd_crm: number;
+}
+
+const { eventId, tema, palestrante, data_evento, tipo_evento, qtd_crm } = Astro.props;
+
+const dateObj = data_evento ? new Date(data_evento) : null;
+const isValidDate = dateObj && !isNaN(dateObj.getTime());
+
+let dateFormatted = "A definir";
+let timeFormatted = "";
+let dayFormatted = "";
+let dateTimeText = "A Definir";
+
+if (isValidDate && dateObj) {
+  dayFormatted = new Intl.DateTimeFormat("pt-BR", {
+    weekday: "long",
+    timeZone: "America/Sao_Paulo",
+  }).format(dateObj);
+  dayFormatted = dayFormatted.charAt(0).toUpperCase() + dayFormatted.slice(1);
+
+  dateFormatted = dateObj.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    timeZone: "America/Sao_Paulo",
+  });
+
+  timeFormatted = dateObj
+    .toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "America/Sao_Paulo",
+    })
+    .replace(":", "h");
+
+  dateTimeText = `${dayFormatted}, ${dateFormatted} · ${timeFormatted}`;
+}
+---
+
+<LayoutMaes title={tema || "Programa Especial"}>
+
+  <main class="h-screen w-full bg-maes-bg overflow-hidden relative flex items-center justify-center py-4 md:py-8 lg:py-12">
+    <!-- Ambient elements -->
+    <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-maes-card/20 to-transparent pointer-events-none"></div>
+
+    <div class="maes-container relative z-10 w-full max-h-full overflow-y-auto hide-scrollbar">
+      <div class="max-w-4xl mx-auto flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-20 px-4 md:px-8">
+        
+        <!-- Info Column -->
+        <div class="flex-1 text-center lg:text-left pt-2 lg:pt-0">
+          <div class="animate-maes-fade-in">
+            <span class="inline-flex items-center gap-2 bg-maes-wine/10 text-maes-wine text-[9px] md:text-[12px] font-black uppercase tracking-widest px-3 py-1 rounded-full border border-maes-wine/20 mb-2 lg:mb-8">
+              <span class="w-1 h-1 rounded-full bg-maes-wine animate-pulse"></span>
+              {tipo_evento}
+            </span>
+
+            <h1 class="font-maes-sans font-black text-xl md:text-4xl lg:text-5xl xl:text-6xl text-maes-primary leading-tight mb-2 lg:mb-6 drop-shadow-sm">
+              {tema || "Carregando..."}
+            </h1>
+
+            <div class="w-12 lg:w-20 h-1 bg-maes-wine rounded-full mb-4 lg:mb-10 mx-auto lg:mx-0"></div>
+
+            <div class="space-y-2 lg:space-y-8 mb-4 lg:mb-0">
+              <div class="flex flex-col lg:block">
+                <p class="text-[9px] lg:text-[13px] font-black uppercase tracking-widest text-maes-wine/60 mb-0.5">Palestrante / Convidado</p>
+                <p class="text-base lg:text-2xl font-bold text-maes-primary leading-tight">{palestrante || "A confirmar"}</p>
+              </div>
+
+              {isValidDate && (
+                <div class="flex flex-col lg:block">
+                  <p class="text-[9px] lg:text-[13px] font-black uppercase tracking-widest text-maes-wine/60 mb-0.5">Data & Horário</p>
+                  <p class="text-sm lg:text-xl font-bold text-maes-primary leading-tight">
+                    {dayFormatted}, {dateFormatted}
+                    <span class="text-maes-wine"> · {timeFormatted}</span>
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <!-- Registration Column -->
+        <div class="w-full lg:w-[400px] xl:w-[450px] shrink-0 pb-6 lg:pb-0">
+          <!-- Sold Out State -->
+          <div id="vagas-esgotadas-block" class="hidden animate-maes-fade-in" data-event-id={eventId}>
+            <div class="bg-white/80 backdrop-blur-md rounded-[24px] lg:rounded-[32px] border-2 border-maes-wine/10 p-6 text-center shadow-xl">
+              <div class="w-12 h-12 rounded-full bg-maes-wine/10 flex items-center justify-center mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-maes-wine" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                </svg>
+              </div>
+              <h2 class="font-maes-sans font-black text-lg text-maes-primary mb-1 uppercase">Vagas Esgotadas</h2>
+              <p class="text-maes-primary/70 font-medium leading-relaxed text-xs">
+                Desculpe, todas as vagas foram preenchidas.
+              </p>
+            </div>
+          </div>
+
+          <!-- Form Block -->
+          <div id="form-block" class="animate-maes-fade-in">
+            <div class="bg-white rounded-[24px] lg:rounded-[32px] border-2 border-maes-wine/5 p-5 lg:p-10 shadow-2xl relative overflow-hidden">
+              <div class="relative z-10">
+                <h3 class="font-maes-sans font-black text-lg lg:text-2xl text-maes-primary mb-0.5">Inscreva-se</h3>
+                <p class="text-maes-primary/60 text-[11px] lg:text-[13px] font-medium mb-4 lg:mb-8">
+                  Garanta sua participação.
+                </p>
+
+                <EventRegistrationForm eventId={eventId} eventTema={tema} campaign="maes" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+
+  <FeedbackModalMaes />
+</LayoutMaes>
+
+<script>
+  import { supabase } from "../../../lib/supabase";
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const vagasEl = document.getElementById("vagas-esgotadas-block");
+    const eventId = vagasEl?.dataset.eventId;
+
+    if (!eventId) return;
+
+    try {
+      const { data: palestra, error: palestrasError } = await supabase
+        .from("palestras")
+        .select("qtd_crm, qtd_social")
+        .eq("id", eventId)
+        .single();
+
+      if (!palestrasError) {
+        // Simple logic for sold out check
+        const urlParams = new URLSearchParams(window.location.search);
+        const source = urlParams.get('src') || 'crm'; // Default to CRM in this page as per requirement
+        const quota = source === 'crm' ? palestra.qtd_crm : palestra.qtd_social;
+
+        if (quota > 0) {
+          const { count, error: countError } = await supabase
+            .from("inscricoes")
+            .select("*", { count: "exact", head: true })
+            .eq("event_id", eventId)
+            .eq("source", source);
+
+          if (!countError && count !== null && count >= quota) {
+            document.getElementById("form-block")?.classList.add("hidden");
+            vagasEl?.classList.remove("hidden");
+          }
+        }
+      }
+    } catch (e) {
+      console.error("Failed to check quota:", e);
+    }
+  });
+</script>

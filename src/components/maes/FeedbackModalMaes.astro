@@ -1,0 +1,57 @@
+---
+// src/components/maes/FeedbackModalMaes.astro
+import CloseIcon from "../icons/CloseIcon.astro";
+---
+
+<dialog
+  id="feedback-modal"
+  class="backdrop:bg-black/60 backdrop:backdrop-blur-sm bg-transparent w-full h-full max-w-none max-h-none m-0 p-0 md:h-auto md:max-w-[450px] md:m-auto md:p-4 open:animate-in open:fade-in open:zoom-in duration-300"
+>
+  <div
+    class="bg-maes-bg rounded-none md:rounded-[40px] min-h-full md:min-h-0 overflow-hidden shadow-2xl relative flex flex-col justify-center items-center p-10 lg:p-14 text-center border-4 border-white/50"
+  >
+    <button
+      id="close-feedback-btn"
+      type="button"
+      class="absolute top-6 right-6 text-maes-primary/40 hover:text-maes-wine hover:bg-maes-wine/10 p-2 rounded-full transition-colors focus:outline-none"
+      aria-label="Fechar modal"
+    >
+      <CloseIcon />
+    </button>
+
+    <div id="feedback-icon" class="mb-8 text-7xl drop-shadow-lg">
+      <!-- Icon will be injected via JS -->
+    </div>
+
+    <h3 id="feedback-title" class="font-maes-sans text-3xl font-black mb-4 text-maes-primary">
+      <!-- Title will be injected via JS -->
+    </h3>
+
+    <p id="feedback-message" class="text-lg font-medium text-maes-primary/70 leading-relaxed max-w-[300px]">
+      <!-- Message will be injected via JS -->
+    </p>
+
+    <button
+      id="feedback-ok-btn"
+      type="button"
+      class="mt-10 w-full py-4 bg-maes-primary text-white font-black uppercase tracking-widest rounded-2xl hover:bg-maes-wine hover:shadow-xl transition-all active:scale-95 shadow-lg shadow-maes-primary/20"
+    >
+      Entendi
+    </button>
+    
+    <!-- Decorative heart -->
+    <div class="absolute -bottom-10 -left-10 text-maes-wine/10 text-9xl pointer-events-none -rotate-12">♥</div>
+  </div>
+</dialog>
+
+<script>
+  import { initFeedbackModalHandler } from "../../utils/modalHandler";
+  initFeedbackModalHandler();
+</script>
+
+<style>
+  dialog::backdrop {
+    background-color: rgba(113, 51, 52, 0.4);
+    backdrop-filter: blur(8px);
+  }
+</style>

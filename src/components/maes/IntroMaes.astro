@@ -1,0 +1,279 @@
+---
+import { getMaesContent } from "../../services/maesService";
+import { fetchMaesEvents, getEventStatus, getStatusConfig } from "../../services/maesEventService";
+
+const data = await getMaesContent();
+const events = await fetchMaesEvents();
+const { intro, program, ui } = data;
+
+// Map static events from JSON to database events to preserve design and filter non-existent ones
+const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) => {
+  const dbEvent = events.find(e => e.id === staticEvent.id);
+  const status = dbEvent ? getEventStatus(dbEvent) : 'SOON';
+  const statusConfig = getStatusConfig(status);
+  
+  // Format DB date if available, otherwise use static
+  const eventDate = dbEvent ? new Date(dbEvent.data_evento) : new Date();
+  const formattedDate = dbEvent 
+    ? `${eventDate.toLocaleDateString('pt-BR')} - ${eventDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'h')}`
+    : `${staticEvent.date} - ${staticEvent.time}`;
+
+  return {
+    ...staticEvent,
+    ...dbEvent,
+    status,
+    statusLabel: statusConfig.label,
+    statusColor: status === 'OPEN' ? 'bg-maes-accent text-maes-primary shadow-[0_8px_20px_-4px_rgba(255,206,0,0.4)]' : 
+                 status === 'SOON' ? 'bg-maes-accent text-maes-primary shadow-[0_8px_20px_-4px_rgba(255,206,0,0.4)]' : 
+                 'bg-gray-400 text-white shadow-none',
+    tema: staticEvent.title,
+    subtitle: staticEvent.subtitle,
+    palestrante: staticEvent.lecturer,
+    displayDate: formattedDate,
+    displayImage: staticEvent.image || "/assets/maes/mae-1.png",
+    link_inscripcion: dbEvent?.link_inscripcion || `/maes/palestra/${staticEvent.id}/`
+  };
+});
+---
+
+<section id="trajeto" class="relative pt-6 lg:pt-8 xl:pt-10 pb-0 lg:pb-8 bg-maes-wine px-0 xs:px-0 lg:px-7 xl:px-14 2xl:px-20 overflow-x-clip">
+  <!-- Torn edge transition using CSS Mask for 100% color parity -->
+  <div
+    class="absolute top-0 left-[calc(50%-50vw)] w-screen h-[120px] z-10 -translate-y-[70%] bg-maes-wine pointer-events-none select-none"
+    style="mask-image: url('/assets/maes/torn-edge.png'); mask-size: 100% 100%; -webkit-mask-image: url('/assets/maes/torn-edge.png'); -webkit-mask-size: 100% 100%;"
+  ></div>
+
+  <!-- Atmospheric Background Glows -->
+  <div class="maes-glow-bg top-[10%] left-[-10%] opacity-20 pointer-events-none"></div>
+  <div class="maes-glow-bg bottom-[5%] right-[-5%] opacity-15 pointer-events-none" style="width: 600px; height: 600px;"></div>
+  <div class="maes-container px-0 relative z-10 lg:max-w-[940px] xl:max-w-[1260px] 2xl:max-w-[1440px] mx-auto">
+    <!-- Outer Especial Mães card -->
+    <div
+      class="reveal rounded-[24px] lg:rounded-[32px] px-0 pt-3 pb-2 xs:px-5 xs:pt-3 xs:pb-2 lg:px-4 lg:py-4 xl:p-5 maes-card-shadow bg-maes-card border-2 border-maes-card/50"
+    >
+      <!-- Header: Especial Mães | Reserve sua agenda -->
+      <div class="grid grid-cols-1 md:grid-cols-[1fr_2px_1fr] lg:grid-cols-[1fr_2px_1.2fr] gap-0 md:gap-0 items-center">
+        <!-- Left: Logo/Title -->
+        <div
+          class="flex justify-center md:justify-end md:pr-14"
+        >
+          <h2
+            class="font-maes-script text-maes-primary text-[60px] xs:text-[72px] sm:text-[108px] md:text-[110px] lg:text-[115px] xl:text-[150px] 2xl:text-[180px] leading-[1.1] md:leading-[0.8] text-center md:text-right py-1 lg:py-2"
+          >
+            Especial<br />
+            Mães
+          </h2>
+        </div>
+
+        <!-- Desktop Divider -->
+        <div class="hidden md:block w-[2px] h-[140px] bg-maes-primary/20 self-center"></div>
+
+        <!-- Right: Info -->
+        <div class="flex flex-col items-center md:items-start gap-6 md:pl-14 lg:pl-10">
+          <h3
+            class="font-maes-sans font-extrabold text-maes-primary text-2xl sm:text-3xl lg:text-[36px] xl:text-[46px] leading-[1.1] text-center md:text-left max-w-[320px] md:max-w-[420px] lg:max-w-none"
+          >
+            Reserve sua<br />agenda e participe!
+          </h3>
+
+          <div
+            class="rounded-[28px] px-5 py-4 sm:px-8 sm:py-5 flex items-center gap-4 sm:gap-6 max-w-md w-full bg-maes-card-inner/60 border border-maes-primary/10 shadow-sm"
+          >
+            <div class="w-12 h-12 rounded-full bg-maes-primary/10 flex items-center justify-center shrink-0">
+              <svg class="w-7 h-7 text-maes-primary" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+              </svg>
+            </div>
+            <div class="text-maes-primary font-maes-sans">
+              <p class="font-extrabold text-lg lg:text-[19px] xl:text-[21px] leading-tight">
+                {intro.address.location}
+              </p>
+              <p class="text-sm lg:text-[16px] xl:text-[18px] leading-tight mt-1 font-medium opacity-90">
+                {intro.address.street}<br />{intro.address.city}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inner Programação card (Removed background/border on mobile for 'peek-a-boo' effect) -->
+      <div
+        class="mt-4 lg:mt-14 xl:mt-24 rounded-[24px] lg:rounded-[32px] px-0 pt-6 pb-2 sm:p-6 lg:px-6 lg:py-10 xl:p-12 lg:bg-maes-card-inner/30 lg:border-2 lg:border-maes-card/20"
+      >
+        <!-- Title Section with lines -->
+        <div class="flex items-center justify-center gap-6 mb-10 lg:mb-14">
+          <div class="hidden lg:block h-[3px] grow bg-maes-primary/20 rounded-full max-w-[180px]"></div>
+          <h4 class="font-maes-sans font-black text-maes-primary text-2xl lg:text-[36px] xl:text-[42px] tracking-tight uppercase text-center">
+            {program.title}
+          </h4>
+          <div class="hidden lg:block h-[3px] grow bg-maes-primary/20 rounded-full max-w-[180px]"></div>
+        </div>
+        <!-- Swipe indicator for mobile (Colorized with Maes Accent) -->
+        <div class="md:hidden flex justify-center mb-4">
+          <button 
+            id="intro-swipe-btn"
+            aria-label={ui.swipeToSeeMore}
+            data-swipe={ui.swipeToSeeMore}
+            data-back={ui.backToStart}
+            class="flex justify-center items-center gap-2 animate-swipe active:scale-95 transition-all duration-500"
+          >
+            <span 
+              id="intro-swipe-text"
+              class="text-[11px] font-maes-sans font-black uppercase tracking-[0.25em] bg-maes-accent text-maes-primary px-5 py-2 rounded-full shadow-lg border border-maes-primary/20 transition-all"
+            >
+              {ui.swipeToSeeMore}
+            </span>
+            <div class="w-6 h-6 rounded-full bg-maes-primary flex items-center justify-center shadow-md">
+              <svg
+                id="intro-swipe-arrow"
+                class="w-4 h-4 text-maes-accent transition-transform duration-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="3"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
+            </div>
+          </button>
+        </div>
+
+        <div 
+          id="intro-carousel"
+          class="flex flex-row lg:grid lg:grid-cols-3 gap-6 lg:gap-6 xl:gap-12 overflow-x-auto overflow-y-hidden snap-x snap-mandatory hide-scrollbar -mx-5 px-5 pt-7 pb-0 lg:mx-0 lg:px-0 lg:pt-4 lg:pb-0 w-full mx-auto"
+        >
+          {
+            eventsWithMetadata.map((event: any, idx: number) => {
+              // Dynamic button colors based on image reference
+              return (
+                <div 
+                  class="reveal flex flex-col gap-2 shrink-0 w-[82vw] sm:w-[350px] lg:w-auto snap-center relative"
+                  style={`transition-delay: ${idx * 150}ms`}
+                >
+                  <!-- Status Badge (Floating Outside) -->
+                  <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
+                    <div class:list={[
+                      "px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-[0.1em] border-2 border-white/50 whitespace-nowrap",
+                      event.statusColor
+                    ]}>
+                      {event.statusLabel}
+                    </div>
+                  </div>
+
+                  <div class="relative rounded-[32px] p-2 lg:p-3 xl:p-5 flex flex-col items-center justify-between text-center min-h-[300px] lg:min-h-0 lg:aspect-square group transition-all duration-500 hover:scale-[1.02] shadow-[0_20px_50px_-15px_rgba(113,51,52,0.35)] border-2 border-maes-primary/10 overflow-visible gap-4 lg:gap-2">
+                    <!-- Background Image with Overlay -->
+                    <div class="absolute inset-0 z-0 rounded-[30px] overflow-hidden">
+                      <img src={event.displayImage} alt={event.tema} class="w-full h-full object-cover" />
+                      <div class="absolute inset-0 bg-white/15" />
+                    </div>
+  
+                    <div class="w-full flex flex-col items-center z-10 pt-12 lg:pt-14">
+                      <!-- Top Group -->
+                      <div class="flex flex-col items-center gap-2 xl:gap-3 px-2">
+                        <h5 class="font-maes-sans font-black text-maes-primary text-[22px] xs:text-2xl lg:text-[18px] xl:text-[22px] 2xl:text-[26px] leading-[1.1] text-center min-h-[2.8em] flex items-center justify-center uppercase tracking-tight">
+                          {event.tema || event.title}
+                        </h5>
+                        <p class="font-maes-sans font-bold text-maes-primary text-lg lg:text-[14px] xl:text-base 2xl:text-xl opacity-70 text-center max-w-[280px] leading-tight italic">
+                          {event.subtitle}
+                        </p>
+                        
+                        <!-- Lecturer - Simple Text -->
+                        <div class="mt-2">
+                          <p class="font-maes-sans font-black text-maes-primary text-lg lg:text-[14px] xl:text-[16px] 2xl:text-[18px] leading-tight opacity-90">
+                            {event.palestrante || event.lecturer}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <!-- Date at the bottom -->
+                    <div class="w-full z-10 flex flex-col items-center pb-2 lg:pb-4">
+                      <p class="font-maes-sans font-black text-maes-primary text-xl lg:text-base xl:text-[20px] 2xl:text-[24px] tracking-tight">
+                        {event.date} • {event.time}
+                      </p>
+                    </div>
+                  </div>
+  
+                  <button
+                    class:list={[
+                      "open-event-modal-btn w-[85%] py-3 lg:py-3 xl:py-4 2xl:py-5 px-6 rounded-xl font-maes-sans font-black text-xl lg:text-xl xl:text-2xl transition-all duration-300 shadow-lg mx-auto mb-2 tracking-tight",
+                      event.status === 'OPEN' ? "bg-[#713334] text-white hover:scale-[1.02] active:scale-[0.98] cursor-pointer" : "bg-[#F099A6] text-[#713334] cursor-not-allowed opacity-90"
+                    ]}
+                    data-event-id={event.id}
+                    data-event-tema={event.tema}
+                    data-event-date={event.displayDate}
+                    disabled={event.status !== 'OPEN'}
+                  >
+                    {event.status === 'OPEN' ? ui.signUp : ui.comingSoon}
+                  </button>
+                </div>
+              );
+            })
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initEventGridModal } from "../../utils/modalHandler";
+  
+  // Initialize modal listeners for the cards
+  initEventGridModal();
+
+  const carousel = document.getElementById('intro-carousel');
+
+  const btn = document.getElementById('intro-swipe-btn');
+  const btnText = document.getElementById('intro-swipe-text');
+  const btnArrow = document.getElementById('intro-swipe-arrow');
+  let isAtEnd = false;
+
+  if (carousel && btn && btnText && btnArrow) {
+    btn.addEventListener('click', () => {
+      if (isAtEnd) {
+        carousel.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        const card = carousel.querySelector('.flex-col');
+        const cardWidth = card instanceof HTMLElement ? card.offsetWidth : 0;
+        const gap = 16; // gap-4 in tailwind
+        carousel.scrollBy({ 
+          left: cardWidth + gap, 
+          behavior: 'smooth' 
+        });
+      }
+    });
+
+    carousel.addEventListener('scroll', () => {
+      isAtEnd = carousel.scrollLeft + carousel.offsetWidth >= carousel.scrollWidth - 10;
+      const swipeText = btn.getAttribute('data-swipe') || '';
+      const backText = btn.getAttribute('data-back') || '';
+      if (btnText) btnText.innerText = isAtEnd ? backText : swipeText;
+      if (btnArrow) btnArrow.style.transform = isAtEnd ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+  }
+</script>
+
+<style>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  @keyframes swipe {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-10px); }
+  }
+  .animate-swipe {
+    animation: swipe 1.5s ease-in-out infinite;
+  }
+</style>

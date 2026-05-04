@@ -1,0 +1,80 @@
+---
+import content from "../../data/maes/content.json";
+const { partners } = content;
+---
+
+<section id="parceiros" class="py-2 md:py-12 relative bg-maes-wine">
+  <div class="maes-container relative z-10">
+    <div
+      class="bg-white rounded-[1.5rem] md:rounded-[3.5rem] p-6 md:p-14 shadow-xl border border-white/20"
+    >
+      <!-- Section: Patrocínio -->
+      <div
+        class="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-10 mb-8 md:mb-16"
+      >
+        <div class="md:w-48 pt-0 md:pt-4">
+          <h4
+            class="font-maes-sans font-bold text-sm md:text-xl text-maes-wine/70 text-center md:text-right uppercase tracking-widest"
+          >
+            Patrocínio:
+          </h4>
+        </div>
+        <div
+          class="grid grid-cols-4 md:flex md:flex-wrap justify-center md:justify-start items-center gap-3 md:gap-12 flex-1 w-full"
+        >
+          {
+            partners.sponsors.map((brand) => (
+              <div class="flex items-center justify-center transition-all duration-500 hover:scale-110">
+                <img
+                  src={brand.logo}
+                  alt={brand.name}
+                  class="h-14 md:h-16 lg:h-20 w-auto max-w-full object-contain"
+                  loading="lazy"
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Section: Apoio -->
+      <div
+        class="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-10"
+      >
+        <div class="md:w-48 pt-0 md:pt-3">
+          <h4
+            class="font-maes-sans font-bold text-sm md:text-xl text-maes-wine/70 text-center md:text-right uppercase tracking-widest"
+          >
+            Apoio:
+          </h4>
+        </div>
+        <div
+          class="grid grid-cols-4 sm:grid-cols-6 md:flex md:flex-wrap justify-center md:justify-start items-center gap-3 md:gap-x-8 md:gap-y-10 flex-1 w-full"
+        >
+          {
+            partners.support.map((brand) => (
+              <div class="flex items-center justify-center transition-all duration-500 hover:scale-105">
+                <img
+                  src={brand.logo}
+                  alt={brand.name}
+                  class="h-10 md:h-12 lg:h-14 w-auto max-w-full object-contain"
+                  loading="lazy"
+                />
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #parceiros {
+    background: transparent;
+  }
+
+  .maes-container {
+    overflow: visible !important;
+  }
+</style>

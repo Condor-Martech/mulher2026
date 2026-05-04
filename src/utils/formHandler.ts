@@ -11,7 +11,12 @@ export function initFormHandler() {
   const spinner = document.getElementById("submit-spinner");
   const feedback = document.getElementById("form-feedback");
 
-  if (!form) return;
+  console.log("Initializing Form Handler...");
+
+  if (!form) {
+    console.warn("Registration form not found!");
+    return;
+  }
 
   const inputs = form.querySelectorAll("input[required]");
 
@@ -31,23 +36,31 @@ export function initFormHandler() {
     if (!validator) return true;
 
     const isValid = validator(input.value, input);
-    const errorMsg = input.parentElement?.querySelector(".error-message");
+    
+    // Improved error message finding (checks parent then siblings)
+    let errorMsg = input.parentElement?.querySelector(".error-message");
+    if (!errorMsg) {
+      errorMsg = input.parentElement?.parentElement?.querySelector(".error-message");
+    }
 
-    if (input.dataset.touched === "true") {
+    const isMaes = window.location.pathname.includes('/maes/');
+    const primaryColor = isMaes ? "maes-primary" : "primary";
+
+    if (input.dataset.touched === "true" || (input.type === "checkbox" && !isValid)) {
       if (!isValid) {
         input.classList.add("border-red-500", "focus:ring-red-500");
         input.classList.remove(
-          "border-primary/20",
-          "focus:ring-primary/50",
-          "focus:border-primary",
+          `border-${primaryColor}/20`,
+          `focus:ring-${primaryColor}/50`,
+          `focus:border-${primaryColor}`,
         );
         if (errorMsg) errorMsg.classList.remove("hidden");
       } else {
         input.classList.remove("border-red-500", "focus:ring-red-500");
         input.classList.add(
-          "border-primary/20",
-          "focus:ring-primary/50",
-          "focus:border-primary",
+          `border-${primaryColor}/20`,
+          `focus:ring-${primaryColor}/50`,
+          `focus:border-${primaryColor}`,
         );
         if (errorMsg) errorMsg.classList.add("hidden");
       }
@@ -63,12 +76,22 @@ export function initFormHandler() {
         isFormValid = false;
       }
     });
-    if (submitBtn) submitBtn.disabled = !isFormValid;
+    
+    if (submitBtn) {
+      submitBtn.disabled = !isFormValid;
+      // Visual feedback for disabled button
+      if (submitBtn.disabled) {
+        submitBtn.classList.add("opacity-50", "cursor-not-allowed");
+      } else {
+        submitBtn.classList.remove("opacity-50", "cursor-not-allowed");
+      }
+    }
   };
 
   inputs.forEach((i) => {
     const input = i as HTMLInputElement;
-    input.addEventListener("input", () => {
+    
+    const onInputOrChange = () => {
       input.dataset.touched = "true";
       if (input.name === "telefone") {
         let v = input.value.replace(/\D/g, "");
@@ -84,17 +107,14 @@ export function initFormHandler() {
         input.value = v;
       }
       checkFormValidity();
-    });
+    };
+
+    input.addEventListener("input", onInputOrChange);
     input.addEventListener("blur", () => {
       input.dataset.touched = "true";
       checkFormValidity();
     });
-    input.addEventListener("change", () => {
-      if (input.type === "checkbox") {
-        input.dataset.touched = "true";
-      }
-      checkFormValidity();
-    });
+    input.addEventListener("change", onInputOrChange);
   });
 
   // initial check
@@ -109,7 +129,10 @@ export function initFormHandler() {
     const btnText = document.getElementById("submit-text");
 
     // 1. Mostrar estado "Loading"
-    if (submitBtn) submitBtn.disabled = true;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.classList.add("opacity-70");
+    }
     if (btnText) btnText.textContent = "Processando...";
     if (spinner) spinner.classList.remove("hidden");
 
@@ -119,8 +142,8 @@ export function initFormHandler() {
     // Capture source from URL (path /palestra/ implies crm by default)
     const urlParams = new URLSearchParams(window.location.search);
     const srcParam = urlParams.get('src');
-    const isPalestraPath = window.location.pathname.includes('/palestra/');
-    const source = srcParam ?? (isPalestraPath ? 'crm' : 'social');
+    const isRegistrationPath = window.location.pathname.includes('/palestra/') || window.location.pathname.includes('/programacao/');
+    const source = srcParam ?? (isRegistrationPath ? 'crm' : 'social');
 
     const feedbackModal = document.getElementById("feedback-modal") as HTMLDialogElement;
     const feedbackIcon = document.getElementById("feedback-icon");
@@ -129,42 +152,47 @@ export function initFormHandler() {
     
     // Función auxiliar para configurar y mostrar el modal
     const showFeedback = (type: 'success' | 'error' | 'warning', title: string, message: string) => {
+      const isMaes = window.location.pathname.includes('/maes/');
+      
       if (feedbackIcon && feedbackTitle && feedbackMessage) {
+        feedbackIcon.className = "mb-6 text-6xl" + (type === 'success' ? " animate-bounce" : "");
+        feedbackIcon.innerHTML = type === 'success' ? "🎉" : type === 'error' ? "❌" : "⚠️";
+        
         if (type === 'success') {
-          feedbackIcon.className = "mb-6 text-6xl text-green-500 animate-bounce";
-          feedbackIcon.innerHTML = "🎉";
-          feedbackTitle.className = "text-3xl font-black mb-4 text-green-600";
+          feedbackTitle.className = `text-3xl font-black mb-4 ${isMaes ? 'text-maes-primary' : 'text-green-600'}`;
         } else if (type === 'error') {
-          feedbackIcon.className = "mb-6 text-6xl text-red-500";
-          feedbackIcon.innerHTML = "❌";
-          feedbackTitle.className = "text-3xl font-black mb-4 text-red-600";
-        } else if (type === 'warning') {
-          feedbackIcon.className = "mb-6 text-6xl text-orange-500";
-          feedbackIcon.innerHTML = "⚠️";
-          feedbackTitle.className = "text-3xl font-black mb-4 text-orange-600";
+          feedbackTitle.className = `text-3xl font-black mb-4 ${isMaes ? 'text-maes-wine' : 'text-red-600'}`;
+        } else {
+          feedbackTitle.className = `text-3xl font-black mb-4 ${isMaes ? 'text-maes-primary' : 'text-orange-600'}`;
         }
         
         feedbackTitle.textContent = title;
         feedbackMessage.textContent = message;
       }
       
-      // Cerrar modal actual
-      if (modal) modal.close();
+      if (modal && typeof (modal as any).close === 'function') {
+        try { modal.close(); } catch(e) {}
+      }
       
-      // Mostrar nuevo modal
       if (feedbackModal) {
-        /* Pequeño timeout para permitir la animación de cierre del otro modal (opcional) */
+        console.log("Opening feedback modal:", type, title);
         setTimeout(() => {
           feedbackModal.showModal();
         }, 100);
+      } else {
+        console.error("Feedback modal not found in DOM!");
+        // Fallback if modal fails
+        alert(`${title}: ${message}`);
       }
     };
 
     try {
+      console.log("Submitting registration...", { data, source });
       const result = await registrationService.submitRegistration(data, source);
 
       if (!result.success) {
         const errorType = result.error;
+        console.warn("Registration failed:", errorType);
         
         if (errorType === 'ALREADY_REGISTERED') {
           showFeedback('warning', 'Inscrição Duplicada', 'Este CPF já está inscrito para este evento.');
@@ -178,13 +206,17 @@ export function initFormHandler() {
           throw new Error(errorType || "Unknown error");
         }
 
-        if (submitBtn) submitBtn.disabled = false;
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove("opacity-70");
+        }
         if (btnText) btnText.textContent = "Confirmar Inscrição";
         if (spinner) spinner.classList.add("hidden");
         return;
       }
 
       // 3. Manejo de Éxito
+      console.log("Registration successful!");
       showFeedback('success', 'Inscrição Confirmada!', 'Sua inscrição foi realizada com sucesso. Te esperamos lá!');
 
       if (btnText) btnText.textContent = "Concluído";
@@ -195,7 +227,10 @@ export function initFormHandler() {
       // 4. Manejo de Error de Conexión/Servidor
       showFeedback('error', 'Erro Técnico', 'Ocorreu um erro ao processar sua inscrição. Por favor, tente novamente mais tarde.');
 
-      if (submitBtn) submitBtn.disabled = false;
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("opacity-70");
+      }
       if (btnText) btnText.textContent = "Tentar Novamente";
       if (spinner) spinner.classList.add("hidden");
     }

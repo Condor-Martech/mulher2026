@@ -1,0 +1,44 @@
+---
+import { getMaesContent } from "../../services/maesService";
+
+const data = await getMaesContent();
+const { appSection } = data;
+---
+
+<section class="py-2 lg:py-8 bg-maes-wine">
+  <div class="maes-container flex justify-center">
+    <a
+      href="https://clubecondor.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="relative w-full max-w-[1280px] lg:max-w-[850px] xl:max-w-[1050px] 2xl:max-w-[1400px] flex items-center group transition-all hover:brightness-105"
+    >
+      <div class="relative z-10 flex flex-col md:flex-row items-center w-full">
+        <!-- Logo Clube Condor - Overlapping -->
+        <div class="shrink-0 relative z-20 mb-[-1.5rem] md:mb-0 md:-mr-12 lg:-mr-20 2xl:-mr-24">
+          <img
+            src={appSection.logo}
+            alt="Clube Condor"
+            class="h-24 md:h-36 lg:h-44 xl:h-48 2xl:h-52 w-auto drop-shadow-2xl transition-transform group-hover:scale-105"
+          />
+        </div>
+        
+        <!-- Blue Banner -->
+        <div
+          class="w-full md:flex-1 flex flex-col justify-center leading-[1.1] bg-gradient-to-r from-[#0060AA] to-[#0089D0] rounded-[18px] lg:rounded-[22px] pt-6 pb-4 px-6 md:pl-20 md:pr-6 lg:pl-32 lg:pr-12 md:py-1.5 lg:py-3 xl:py-4 2xl:py-6 maes-card-shadow border-2 border-white/10 text-center md:text-left"
+        >
+          <h2
+            class="text-white font-maes-sans font-black text-[20px] xs:text-[24px] lg:text-[1.8rem] xl:text-[2.2rem] 2xl:text-[2.6rem] tracking-tight leading-tight"
+          >
+            {appSection.titleLine1}
+          </h2>
+          <p
+            class="text-white/95 font-maes-sans font-light text-[15px] xs:text-lg lg:text-[1.3rem] xl:text-[1.6rem] 2xl:text-[1.9rem] tracking-tight leading-tight"
+          >
+            {appSection.titleLine2}
+          </p>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>

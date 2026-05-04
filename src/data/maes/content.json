@@ -1,0 +1,151 @@
+{
+  "hero": {
+    "title": [
+      "Cuidar, acolher e estar presente:",
+      "é isso que celebramos. E aqui,",
+      "esse cuidado é de todos."
+    ],
+    "subtitle": [
+      "Comemore com amor",
+      "e tenha a chance",
+      "de ganhar prêmios."
+    ],
+    "backgroundImage": "/assets/maes/bg-hero-maes.webp",
+    "familyImage": "/assets/maes/familia-maes.webp",
+    "logoMaes": "/assets/maes/logo-dia-das-maes.webp",
+    "logoPremia": "/assets/maes/logo-condor-premia.webp",
+    "logoMeioMilhao": "/assets/maes/selo-meio-milhao.png",
+    "tornEdge": "/assets/maes/torn-edge.png"
+  },
+  "intro": {
+    "tagline": "Especial Mães",
+    "title": "Reserve sua agenda e participe!",
+    "description": "Preparamos uma programação exclusiva para celebrar essa data tão especial com você.",
+    "address": {
+      "location": "Hiper Condor Nilo Peçanha",
+      "street": "R. Nilo Peçanha, 1000",
+      "city": "São Francisco, Curitiba"
+    }
+  },
+  "program": {
+    "title": "CONFIRA A PROGRAMAÇÃO",
+    "address": {
+      "name": "Hiper Condor Nilo Peçanha",
+      "street": "R. Nilo Peçanha, 1000",
+      "city": "São Francisco, Curitiba"
+    },
+    "events": [
+      {
+        "id": "degustacao-vinhos",
+        "title": "Degustação Guiada de Vinhos Chilenos",
+        "subtitle": "- Que Bella",
+        "lecturer": "Com TerraAustral",
+        "date": "13/05/2026",
+        "time": "19h30",
+        "image": "/assets/maes/mae-1.png"
+      },
+      {
+        "id": "cuidados-corpo",
+        "title": "Cuidados para o Corpo",
+        "subtitle": "",
+        "lecturer": "Com Flor de Ypê",
+        "date": "20/05/2026",
+        "time": "19h30",
+        "image": "/assets/maes/mae-1.png"
+      },
+      {
+        "id": "harmonizacao-chopp",
+        "title": "Degustação e Harmonização de Chopp",
+        "subtitle": "",
+        "lecturer": "Com Bella Roma",
+        "date": "27/05/2026",
+        "time": "19h30",
+        "image": "/assets/maes/mae-3.png"
+      }
+    ]
+  },
+  "personas": [
+    {
+      "name": "Mãe Multitarefa",
+      "description": "Entre um compromisso e outro, a mãe multitarefa merece uma pausa à altura. Com a TerrAustral, a degustação guiada Qué Bella convida a desacelerar e brindar cada um de seus momentos.",
+      "image": "/assets/maes/mae-multitarefa.png",
+      "partnerLogo": "/assets/maes/logo-terraustral.png",
+      "campaignLogo": "/assets/maes/logo-ninho.png"
+    },
+    {
+      "name": "Mãe Tradicional",
+      "description": "Para a mãe tradicional, cuidar é um gesto de amor. E também deve ser consigo mesma. Com Flor de Ypê, descubra rituais simples para o corpo que acolhem e renovam.",
+      "image": "/assets/maes/mae-tradicional.png",
+      "partnerLogo": "/assets/maes/logo-ype.png",
+      "campaignLogo": "/assets/maes/logo-ninho.png"
+    },
+    {
+      "name": "Mãe Moderna",
+      "description": "A mãe moderna reinventa sabores e experiências no seu ritmo. Com Bella Roma, a degustação e harmonização traz combinações leves, práticas e cheias de personalidade.",
+      "image": "/assets/maes/mae-moderna.png",
+      "partnerLogo": "/assets/maes/logo-bella-roma.png",
+      "campaignLogo": "/assets/maes/logo-ninho.png"
+    }
+  ],
+  "appSection": {
+    "titleLine1": "Baixe o app do Clube Condor",
+    "titleLine2": "aproveite todas as vantagens",
+    "logo": "/assets/maes/logo-clube-transparente.webp",
+    "background": "/assets/maes/app-banner-bg.webp"
+  },
+  "promoBanner": {
+    "image": "/assets/maes/banner-promocional-bottom.webp",
+    "oneYearTitle": "1 ANO de",
+    "oneYearSubtitle": "supermercado grátis.",
+    "vouchersTitle": "VALES-COMPRAS",
+    "vouchersSubtitle": "todos os dias."
+  },
+  "footer": {
+    "disclaimer": "*Poderá participar desta campanha promocional qualquer consumidor que efetuar uma compra de R$50,00 nas lojas Condor no período de 05/02/2025 a 03/02/2026, pessoa física, maior de 18 anos, que possua cadastro atualizado no Clube Condor a partir de 01/01/2025, con CPF e número de celular válidos, e que tenha confirmado sua participação por meio de SMS, WhatsApp, site, aplicativo ou e-mail. Promoção autorizada pela SPA/ME Nº 04.039681/2025. Consulte o regulamento completo em www.condor.com.br/semanaspremiadas. Imagens meramente ilustrativas."
+  },
+  "ui": {
+    "swipeToSeeMore": "Deslize para ver mais",
+    "backToStart": "Voltar ao início",
+    "nextPerson": "Ver próxima mãe",
+    "knowMore": "SAIBA MAIS",
+    "signUp": "INSCREVA-SE",
+    "comingSoon": "Em breve",
+    "defaultEventDescription": "Participe desta programação exclusiva!"
+  },
+  "nav": {
+    "links": [
+      { "label": "Home", "href": "#" },
+      { "label": "Trajeto", "href": "#trajeto" },
+      { "label": "Dúvidas", "href": "#duvidas" },
+      { "label": "Regulamento", "href": "#regulamento" }
+    ],
+    "brandTagline": "Condor com você"
+  },
+  "partners": {
+    "title": "MARCAS PARCEIRAS",
+    "sponsors": [
+      { "name": "Bella Roma", "logo": "/assets/maes/patrocinio/Logo Bella Roma 2.png" },
+      { "name": "TerraAustral", "logo": "/assets/maes/patrocinio/Terraustral_Versiones 2.png" },
+      { "name": "Ypê", "logo": "/assets/maes/patrocinio/logo ype 3.png" },
+      { "name": "Ninho", "logo": "/assets/maes/patrocinio/NINHO_BR_Nutrition_Mother'sDay_KV_3840x2160px 4.png" }
+    ],
+    "support": [
+      { "name": "Padaria Condor", "logo": "/assets/maes/patrocinio/Padaria Condor - Selo 1.png" },
+      { "name": "Ouro Fino", "logo": "/assets/maes/patrocinio/Camada 1.png" },
+      { "name": "Dove", "logo": "/assets/maes/patrocinio/Dove-Logo 1.png" },
+      { "name": "Girando Sol", "logo": "/assets/maes/patrocinio/GS-LOGO-CMYK 1.png" },
+      { "name": "SC Johnson", "logo": "/assets/maes/patrocinio/LOGO MARCA_SC JOSHNON 1.png" },
+      { "name": "Monster", "logo": "/assets/maes/patrocinio/monster-energy-logo 1.png" },
+      { "name": "Schweppes", "logo": "/assets/maes/patrocinio/Schweppes-logo 1.png" },
+      { "name": "Coca-Cola", "logo": "/assets/maes/patrocinio/coca 1.png" },
+      { "name": "Bom Ar", "logo": "/assets/maes/patrocinio/bom ar 1.png" },
+      { "name": "Galbani", "logo": "/assets/maes/patrocinio/LOGO GALBANI 1.png" },
+      { "name": "Melitta", "logo": "/assets/maes/patrocinio/Logo_Melitta_cor 1.png" },
+      { "name": "Beefeater", "logo": "/assets/maes/patrocinio/320x320px_Logo_Beefeater 1.png" },
+      { "name": "Sadia", "logo": "/assets/maes/patrocinio/Logo-sadia.svg 1.png" },
+      { "name": "Perdigão", "logo": "/assets/maes/patrocinio/perdigao-logo-0-1 1.png" },
+      { "name": "Rizolli", "logo": "/assets/maes/patrocinio/rizolli 1.png" },
+      { "name": "Tirol", "logo": "/assets/maes/patrocinio/TIROL.png" }
+    ]
+  }
+}

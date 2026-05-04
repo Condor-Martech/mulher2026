@@ -9,13 +9,13 @@ export const registrationService = {
     source: string
   ): Promise<RegistrationResult> {
     const registrationData: RegistrationData = {
-      p_event_id: formData.eventId,
-      p_nome: formData.nome,
-      p_email: formData.email,
-      p_cpf: (formData.cpf as string).replace(/\D/g, ''),
-      p_telefone: formData.telefone,
+      p_event_id: formData.eventId as string,
+      p_nome: formData.nome as string,
+      p_email: formData.email as string,
+      p_cpf: (formData.cpf as string).replace(/\D/g, ""),
+      p_telefone: (formData.telefone as string).replace(/\D/g, ""),
       p_source: source,
-      p_tema: ''
+      p_tema: (formData.eventTema as string) || "",
     };
 
     const performRegistration = async (retryCount = 0): Promise<RegistrationResult> => {

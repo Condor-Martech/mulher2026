@@ -1,0 +1,117 @@
+---
+import { getMaesContent } from "../../services/maesService";
+import MenuIcon from "../icons/Menu.astro";
+import CloseIcon from "../icons/Close.astro";
+
+const data = await getMaesContent();
+const { nav } = data;
+const { links } = nav;
+---
+
+<header
+  class="fixed top-4 lg:top-6 xl:top-8 left-0 right-0 z-50 flex justify-center md:px-6 pointer-events-none"
+>
+  <div
+    class="container mx-auto flex justify-center lg:justify-center pointer-events-auto relative"
+  >
+    <!-- Desktop Nav (Capsule style preserved) -->
+    <nav
+      id="maes-navbar-capsule"
+      class="hidden lg:flex rounded-full px-6 xl:px-8 2xl:px-14 py-3 xl:py-4 2xl:py-6 items-center gap-6 xl:gap-8 2xl:gap-16 bg-maes-card shadow-[0_10px_40px_-12px_rgba(113,51,52,0.35)] border border-maes-card/50"
+    >
+      {
+        links.map((link: any) => (
+          <a
+            href={link.href}
+            class="font-maes-sans font-semibold text-sm xl:text-base 2xl:text-lg tracking-wide text-maes-primary relative pb-1 transition-all hover:text-maes-primary/80 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[2px] 2xl:after:h-[3px] after:bg-[#713334] after:transition-all after:duration-300 after:w-0 hover:after:w-full"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <!-- Mobile Nav Toggle -->
+    <div class="lg:hidden w-full flex justify-end items-center pr-4">
+      <button
+        id="maes-mobile-menu-toggle"
+        class="mt-4 p-4 rounded-2xl bg-maes-primary text-white shadow-xl active:scale-95 transition-transform"
+        aria-label="Toggle Menu"
+      >
+        <MenuIcon class="w-9 h-9" />
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div
+    id="maes-mobile-menu"
+    class="fixed inset-0 bg-maes-card z-[60] flex flex-col items-center justify-center opacity-0 pointer-events-none transition-all duration-500 lg:hidden"
+  >
+    <!-- Background branding like Mulher project -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
+      <span
+        class="absolute -top-10 -left-10 text-[15rem] font-maes-script text-maes-primary rotate-12"
+        >Mães</span
+      >
+      <span
+        class="absolute -bottom-20 -right-20 text-[20rem] font-maes-script text-maes-primary -rotate-12"
+        >Condor</span
+      >
+    </div>
+
+    <button
+      id="maes-close-menu"
+      class="absolute top-8 right-8 p-3 rounded-2xl bg-maes-primary text-white shadow-lg active:scale-95 transition-transform"
+      aria-label="Close Menu"
+    >
+      <CloseIcon class="w-8 h-8" />
+    </button>
+
+    <div class="flex flex-col items-center space-y-10 relative z-10">
+      {
+        links.map((link: any) => (
+          <a
+            href={link.href}
+            class="maes-mobile-nav-link text-2xl font-maes-sans font-black uppercase tracking-widest text-maes-primary hover:scale-105 active:scale-95 transition-transform text-center px-4"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="absolute bottom-12 text-center opacity-40">
+      <p
+        class="text-[10px] uppercase font-maes-sans font-black tracking-[0.3em] text-maes-primary"
+      >
+        {nav.brandTagline}
+      </p>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById("maes-mobile-menu-toggle");
+  const close = document.getElementById("maes-close-menu");
+  const menu = document.getElementById("maes-mobile-menu");
+  const links = document.querySelectorAll(".maes-mobile-nav-link");
+
+  const toggleMenu = (show: boolean) => {
+    if (show) {
+      menu?.classList.remove("opacity-0", "pointer-events-none");
+      menu?.classList.add("opacity-100", "pointer-events-auto");
+      document.body.style.overflow = "hidden";
+    } else {
+      menu?.classList.add("opacity-0", "pointer-events-none");
+      menu?.classList.remove("opacity-100", "pointer-events-auto");
+      document.body.style.overflow = "";
+    }
+  };
+
+  toggle?.addEventListener("click", () => toggleMenu(true));
+  close?.addEventListener("click", () => toggleMenu(false));
+  links.forEach((link) => {
+    link.addEventListener("click", () => toggleMenu(false));
+  });
+</script>

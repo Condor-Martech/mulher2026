@@ -1,0 +1,60 @@
+---
+import footerData from "../../data/footer.json";
+import Facebook from "../icons/Facebook.astro";
+import Instagram from "../icons/Instagram.astro";
+import YouTube from "../icons/YouTube.astro";
+import X from "../icons/X.astro";
+import TikTok from "../icons/TikTok.astro";
+import LinkedIn from "../icons/LinkedIn.astro";
+
+const { socialLinks } = footerData;
+---
+
+<footer class="maes-footer text-maes-primary relative z-10">
+  <div class="maes-container flex flex-col md:flex-row items-center justify-between gap-8 md:gap-4">
+    <!-- Logo Signature -->
+    <div class="shrink-0">
+      <img
+        src="/assets/maes/Logo-Condor-com-sombra.png"
+        alt="Condor"
+        class="h-10 lg:h-14 w-auto"
+      />
+    </div>
+
+    <!-- Copyright Text -->
+    <p class="font-maes-sans text-maes-primary font-medium text-[11px] lg:text-[16px] text-center opacity-90 tracking-tight">
+      ©Condor 2026. Todos os direitos reservados.
+    </p>
+
+    <!-- Social Media Icons -->
+    <div class="flex items-center justify-center flex-wrap gap-3 lg:gap-4">
+      {
+        socialLinks.map((link) => (
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Siga-nos no ${link.name}`}
+            class="w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center rounded-full text-white transition-all duration-300 hover:scale-110 hover:-translate-y-1 shadow-lg"
+            style={`background: ${link.bg}; box-shadow: 0 4px 12px ${link.shadow};`}
+          >
+            {link.icon === "facebook" && <Facebook class="w-5 h-5 lg:w-6 lg:h-6" />}
+            {link.icon === "instagram" && <Instagram class="w-5 h-5 lg:w-6 lg:h-6" />}
+            {link.icon === "youtube" && <YouTube class="w-5 h-5 lg:w-6 lg:h-6" />}
+            {link.icon === "x" && <X class="w-4 h-4 lg:w-5 lg:h-5" />}
+            {link.icon === "tiktok" && <TikTok class="w-4 h-4 lg:w-5 lg:h-5" />}
+            {link.icon === "linkedin" && <LinkedIn class="w-4 h-4 lg:w-5 lg:h-5" />}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</footer>
+
+<style>
+  .maes-footer {
+    background-color: #FFD7D7 !important; /* The pink color requested */
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+</style>

@@ -1,0 +1,82 @@
+---
+import LayoutMaes from "../../layouts/LayoutMaes.astro";
+import HeroMaes from "../../components/maes/HeroMaes.astro";
+import IntroMaes from "../../components/maes/IntroMaes.astro";
+import SpecialProgramCard from "../../components/maes/SpecialProgramCard.astro";
+import PersonaListMaes from "../../components/maes/PersonaListMaes.astro";
+import AppBannerMaes from "../../components/maes/AppBannerMaes.astro";
+import PromoBannerMaes from "../../components/maes/PromoBannerMaes.astro";
+import CTASectionMaes from "../../components/maes/CTASectionMaes.astro";
+import DisclaimerMaes from "../../components/maes/DisclaimerMaes.astro";
+import FooterMaes from "../../components/maes/FooterMaes.astro";
+import PartnersMaes from "../../components/maes/PartnersMaes.astro";
+import EventModal from "../../components/EventModal.astro";
+import FeedbackModalMaes from "../../components/maes/FeedbackModalMaes.astro";
+
+
+const title = "Dia das Mães Condor 2026 | Celebre com Prêmios";
+---
+
+<LayoutMaes title={title}>
+  <main class="overflow-x-clip">
+    <!-- 1. Hero -->
+    <HeroMaes />
+
+    <!-- 2. Especial Mães + Programação card -->
+    <IntroMaes />
+
+    <!-- 3. ISSO TUDO E MUITO MAIS divider -->
+    <SpecialProgramCard />
+
+    <!-- 4. Persona cards -->
+    <PersonaListMaes />
+
+    <!-- 5. Clube Condor app banner -->
+    <AppBannerMaes />
+
+    <!-- 6. Condor Premia bottom promo banner -->
+    <PromoBannerMaes />
+
+    <!-- 7. Saiba mais CTA -->
+    <CTASectionMaes />
+
+    <!-- 8. Disclaimer -->
+    <DisclaimerMaes />
+
+    <!-- 9. Parceiros -->
+    <PartnersMaes />
+
+    <!-- 10. Footer -->
+    <FooterMaes />
+  </main>
+
+  <EventModal />
+  <FeedbackModalMaes />
+
+  <script>
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, observerOptions);
+
+    // Initial and dynamic observation
+    const observeElements = () => {
+      document.querySelectorAll('.reveal').forEach(el => {
+        observer.observe(el);
+      });
+    };
+
+    observeElements();
+    
+    // Support for dynamic content if needed
+    document.addEventListener('astro:page-load', observeElements);
+  </script>
+</LayoutMaes>
