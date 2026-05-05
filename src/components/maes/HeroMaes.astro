@@ -8,18 +8,18 @@ const { hero } = data;
 
 <section
   id="home"
-  class="relative w-full h-auto min-h-[680px] xs:min-h-[780px] sm:min-h-[700px] md:min-h-[800px] lg:min-h-[900px] xl:min-h-[1000px] 2xl:min-h-screen"
+  class="relative w-full h-auto min-h-[680px] xs:min-h-[780px] sm:min-h-[700px] md:min-h-[750px] lg:min-h-[820px] xl:min-h-[85vh] 2xl:min-h-[88vh] flex flex-col justify-between"
 >
   <NavbarMaes />
 
   <!-- Image container -->
-  <div class="relative">
+  <div class="absolute inset-0 z-0">
     <img
       src={hero.familyImage}
       alt=""
       loading="eager"
       fetchpriority="high"
-      class="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_85%]"
+      class="w-full h-full object-cover object-center lg:object-[center_40%]"
     />
 
     <!-- Mobile Overlay for legibility: Gradient instead of flat -->
@@ -28,95 +28,116 @@ const { hero } = data;
     >
     </div>
 
-    <!-- Content overlay -->
+    <!-- Bottom transition gradient to invite the next section -->
+    <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#713334]/40 to-transparent hidden lg:block"></div>
+  </div>
+
+  <!-- Content overlay -->
+  <div
+    class="relative z-10 flex flex-col flex-grow justify-center pt-20 xs:pt-24 sm:pt-32 lg:pt-24 2xl:pt-32"
+  >
     <div
-      class="relative z-10 flex flex-col justify-start pt-24 xs:pt-32 sm:pt-40"
+      class="w-full sm:max-w-[1536px] mx-auto px-1 sm:px-4 lg:px-12 hero-container"
     >
       <div
-        class="w-full sm:max-w-[1536px] mx-auto px-1 sm:px-4 lg:px-12 pb-20 sm:pb-32 hero-container"
+        class="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-4 sm:gap-8 lg:gap-8 2xl:gap-32 items-center md:items-end lg:items-end"
       >
+        <!-- Left: Logo + tagline -->
         <div
-          class="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-4 sm:gap-8 lg:gap-8 2xl:gap-32 items-center md:items-end lg:items-end"
+          class="md:col-span-7 lg:col-span-7 flex flex-col items-center md:items-start lg:items-start text-center md:text-left lg:text-left animate-maes-fade-in pt-0 md:pt-10 lg:pt-20 2xl:pt-28 xl:translate-x-10 min-[1400px]:translate-x-40"
         >
-          <!-- Left: Logo + tagline -->
+          <!-- Glassmorphism container for mobile -->
           <div
-            class="md:col-span-7 lg:col-span-7 flex flex-col items-center md:items-start lg:items-start text-center md:text-left lg:text-left animate-maes-fade-in pt-0 md:pt-4 lg:pt-10 2xl:pt-20 xl:translate-x-10 min-[1400px]:translate-x-40"
-          >
-            <!-- Glassmorphism container for mobile -->
-            <div
-              class="w-full flex flex-col items-center md:items-start bg-black/15 backdrop-blur-[8px] sm:bg-transparent sm:backdrop-blur-none px-4 py-3 sm:p-0 rounded-[2.5rem] border border-white/10 sm:border-none"
-            >
-              <img
-                src={hero.logoMaes}
-                alt="Dia das Mães Condor"
-                class="w-[75%] xs:w-[85%] sm:w-[50%] md:w-[85%] lg:w-[90%] xl:w-full max-w-[320px] xs:max-w-[380px] sm:max-w-[420px] md:max-w-[380px] lg:max-w-[440px] xl:max-w-[520px] 2xl:max-w-[580px] h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] hero-logo"
-              />
-              <div
-                class="mt-2 sm:mt-6 lg:mt-8 w-full sm:max-w-[620px] xl:max-w-[800px] 2xl:max-w-[720px]"
-              >
-                <p
-                  class="text-white font-maes-sans font-black text-[1.1rem] xs:text-[1.4rem] sm:text-3xl md:text-[1.2rem] lg:text-[1.5rem] xl:text-[1.7rem] 2xl:text-[1.9rem] leading-[1.15] drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] tracking-tight hero-title w-full"
-                >
-                  {
-                    hero.title.map((line: string, i: number) => (
-                      <Fragment>
-                        {line}
-                        {i < hero.title.length - 1 && <br />}
-                      </Fragment>
-                    ))
-                  }
-                </p>
-                <p
-                  class="mt-4 sm:mt-4 lg:mt-5 text-white font-maes-italic text-[2.1rem] xs:text-[2.8rem] sm:text-[3rem] md:text-[2.4rem] lg:text-[2.8rem] xl:text-[3.2rem] 2xl:text-[3.4rem] leading-[1] drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] max-w-none hero-subtitle w-full"
-                >
-                  {
-                    hero.subtitle.map((line: string, i: number) => (
-                      <Fragment>
-                        {line}
-                        {i < hero.subtitle.length - 1 && <br />}
-                      </Fragment>
-                    ))
-                  }
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right: Meio Milhão badge -->
-          <div
-            class="md:col-span-5 lg:col-span-5 flex justify-center md:justify-end lg:justify-end items-end animate-maes-fade-in mt-6 sm:mt-0"
+            class="w-full flex flex-col items-center md:items-start bg-black/15 backdrop-blur-[8px] sm:bg-transparent sm:backdrop-blur-none px-4 py-3 sm:p-0 rounded-[2.5rem] border border-white/10 sm:border-none"
           >
             <img
-              src={hero.logoMeioMilhao}
-              alt="R$ Meio Milhão Todo Mês"
-              class="w-[80%] sm:w-[60%] md:w-full lg:w-full max-w-[300px] sm:max-w-[420px] md:max-w-[320px] lg:max-w-[480px] xl:max-w-[480px] 2xl:max-w-[670px] h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)] sm:mt-0 sm:translate-y-0 lg:-translate-x-4 xl:-translate-x-20 min-[1400px]:-translate-x-40 lg:translate-y-4 xl:translate-y-10 2xl:translate-y-0 hero-badge -mt-10 xs:-mt-20 pb-10"
+              src={hero.logoMaes}
+              alt="Dia das Mães Condor"
+              class="w-[75%] xs:w-[85%] sm:w-[50%] md:w-[80%] lg:w-[80%] xl:w-[85%] 2xl:w-[85%] max-w-[320px] xs:max-w-[380px] sm:max-w-[420px] md:max-w-[340px] lg:max-w-[360px] xl:max-w-[400px] 2xl:max-w-[480px] h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] hero-logo"
             />
+            <div
+              class="mt-2 sm:mt-6 lg:mt-6 w-full sm:max-w-[620px] xl:max-w-[800px] 2xl:max-w-[720px]"
+            >
+              <p
+                class="text-white font-maes-sans font-black text-[1.1rem] xs:text-[1.4rem] sm:text-3xl md:text-[1.2rem] lg:text-[1.4rem] xl:text-[1.6rem] 2xl:text-[1.9rem] leading-[1.15] drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] tracking-tight hero-title w-full"
+              >
+                {
+                  hero.title.map((line: string, i: number) => (
+                    <Fragment>
+                      {line}
+                      {i < hero.title.length - 1 && <br />}
+                    </Fragment>
+                  ))
+                }
+              </p>
+              <p
+                class="mt-4 sm:mt-4 lg:mt-4 text-white font-maes-italic text-[2.1rem] xs:text-[2.8rem] sm:text-[3rem] md:text-[2.4rem] lg:text-[2.6rem] xl:text-[3rem] 2xl:text-[3.4rem] leading-[1] drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] max-w-none hero-subtitle w-full"
+              >
+                {
+                  hero.subtitle.map((line: string, i: number) => (
+                    <Fragment>
+                      {line}
+                      {i < hero.subtitle.length - 1 && <br />}
+                    </Fragment>
+                  ))
+                }
+              </p>
+            </div>
           </div>
+        </div>
+
+        <!-- Right: Meio Milhão badge -->
+        <div
+          class="md:col-span-5 lg:col-span-5 flex justify-center md:justify-end lg:justify-end items-end animate-maes-fade-in mt-6 sm:mt-0"
+        >
+          <img
+            src={hero.logoMeioMilhao}
+            alt="R$ Meio Milhão Todo Mês"
+            class="w-[80%] sm:w-[60%] md:w-full lg:w-[90%] xl:w-[90%] 2xl:w-full max-w-[300px] sm:max-w-[420px] md:max-w-[320px] lg:max-w-[440px] xl:max-w-[460px] 2xl:max-w-[670px] h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)] sm:mt-0 sm:translate-y-0 lg:-translate-x-4 xl:-translate-x-20 min-[1400px]:-translate-x-40 lg:translate-y-12 xl:translate-y-16 2xl:translate-y-10 hero-badge -mt-10 xs:-mt-20 pb-10 sm:pb-16 lg:pb-12 xl:pb-8"
+          />
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Scroll Indicator -->
+  <div class="relative z-10 w-full flex justify-center pb-6 sm:pb-8 lg:pb-8 pointer-events-none">
+    <a href="#trajeto" class="pointer-events-auto group flex flex-col items-center gap-2">
+      <span class="text-white/60 font-maes-sans font-bold text-[10px] tracking-[0.2em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Descubra</span>
+      <div class="w-8 h-10 rounded-full border-2 border-white/30 flex justify-center p-1.5 transition-colors group-hover:border-maes-accent">
+        <div class="w-1.5 h-1.5 bg-white rounded-full animate-hero-scroll group-hover:bg-maes-accent"></div>
+      </div>
+    </a>
+  </div>
 </section>
 
 <style>
+  @keyframes hero-scroll {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(16px); opacity: 0; }
+  }
+  .animate-hero-scroll {
+    animation: hero-scroll 2s ease-in-out infinite;
+  }
+
   /* Surgical fix for Laptop 1366x768 (xl breakpoint with low height) */
   @media (min-width: 1280px) and (max-height: 800px) {
     .hero-container {
-      padding-bottom: 5vw; /* Removed !important to allow larger screens to use their pb */
+      padding-bottom: 1vw;
     }
     .hero-logo {
-      max-width: 320px !important; /* Reduced from 380px */
+      max-width: 280px !important;
     }
     .hero-title {
-      font-size: 1.45rem !important; /* Smaller text */
+      font-size: 1.25rem !important;
     }
     .hero-subtitle {
-      font-size: 2.6rem !important; /* Smaller text */
+      font-size: 2.2rem !important;
     }
     .hero-badge {
-      max-width: 320px !important; /* Significantly reduced from 390px */
-      /* Move up 60px more as requested (from 0px to -60px) */
-      transform: translateX(-40px) translateY(-60px) !important;
+      max-width: 280px !important;
+      transform: translateX(-40px) translateY(20px) !important;
+      padding-bottom: 2rem !important;
     }
   }
 
