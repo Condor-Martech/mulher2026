@@ -6,9 +6,8 @@
       "esse cuidado é de todos."
     ],
     "subtitle": [
-      "Comemore com amor",
-      "e tenha a chance",
-      "de ganhar prêmios."
+      "Comemore com amor e tenha",
+      "a chance de ganhar prêmios."
     ],
     "backgroundImage": "/assets/maes/bg-hero-maes.webp",
     "familyImage": "/assets/maes/familia-maes.webp",
@@ -114,10 +113,10 @@
   },
   "nav": {
     "links": [
-      { "label": "Home", "href": "#" },
-      { "label": "Trajeto", "href": "#trajeto" },
-      { "label": "Dúvidas", "href": "#duvidas" },
-      { "label": "Regulamento", "href": "#regulamento" }
+      { "label": "Cadastro", "href": "#Cadastro" },
+      { "label": "Palestras", "href": "#programacao" },
+      { "label": "Condor Premia", "href": "https://premia.condor.com.br/" },
+      { "label": "Apoio e Patrocínio", "href": "#parceiros" }
     ],
     "brandTagline": "Condor com você"
   },
