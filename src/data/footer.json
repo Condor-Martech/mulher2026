@@ -18,22 +18,7 @@
       "shadow": "rgba(228,64,95,0.35)",
       "icon": "instagram"
     },
-    {
-      "id": "x",
-      "name": "X",
-      "url": "https://x.com/RedeCondor",
-      "bg": "#000000",
-      "shadow": "rgba(0,0,0,0.4)",
-      "icon": "x"
-    },
-    {
-      "id": "tiktok",
-      "name": "TikTok",
-      "url": "https://www.tiktok.com/@redecondor",
-      "bg": "#010101",
-      "shadow": "rgba(0,0,0,0.4)",
-      "icon": "tiktok"
-    },
+
     {
       "id": "youtube",
       "name": "YouTube",
