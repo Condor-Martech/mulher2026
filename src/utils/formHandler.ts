@@ -55,6 +55,30 @@ export function initFormHandler() {
       }
       return true;
     },
+    nascimento_filho: (val) => {
+      const isMaes = window.location.pathname.includes('/maes/');
+      if (!isMaes) return true;
+      const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+      const match = val.match(dateRegex);
+      if (!match) return false;
+      const [_, dayStr, monthStr, yearStr] = match;
+      const day = parseInt(dayStr, 10);
+      const month = parseInt(monthStr, 10);
+      const year = parseInt(yearStr, 10);
+      
+      const date = new Date(year, month - 1, day);
+      if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+        return false;
+      }
+      
+      const today = new Date();
+      let age = today.getFullYear() - year;
+      const m = today.getMonth() - (month - 1);
+      if (m < 0 || (m === 0 && today.getDate() < day)) {
+        age--;
+      }
+      return age >= 18;
+    },
     maioridade_filho: (val, el) => {
       const isMaes = window.location.pathname.includes('/maes/');
       if (!isMaes) return true;
@@ -136,6 +160,13 @@ export function initFormHandler() {
         v = v.replace(/(\d{3})(\d)/, "$1.$2");
         v = v.replace(/(\d{3})(\d)/, "$1.$2");
         v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+        input.value = v;
+      }
+      if (input.name === "nascimento_filho") {
+        let v = input.value.replace(/\D/g, "");
+        if (v.length > 8) v = v.slice(0, 8);
+        v = v.replace(/^(\d{2})(\d)/, "$1/$2");
+        v = v.replace(/^(\d{2})\/(\d{2})(\d)/, "$1/$2/$3");
         input.value = v;
       }
       checkFormValidity();
@@ -255,6 +286,7 @@ export function initFormHandler() {
       console.log("Registration successful!");
       showFeedback('success', 'Inscrição Confirmada!', 'Sua inscrição foi realizada com sucesso. Te esperamos lá!');
 
+      if (form) form.reset();
       if (btnText) btnText.textContent = "Concluído";
       if (spinner) spinner.classList.add("hidden");
 
