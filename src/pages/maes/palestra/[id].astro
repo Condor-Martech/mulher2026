@@ -78,12 +78,12 @@ if (isValidDate && dateObj) {
 
 <LayoutMaes title={tema || "Programa Especial"}>
 
-  <main class="h-screen w-full bg-maes-bg overflow-hidden relative flex items-center justify-center py-4 md:py-8 lg:py-12">
+  <main class="h-[100dvh] w-full bg-maes-bg overflow-hidden relative flex flex-col lg:flex-row items-center justify-center py-2 md:py-8 lg:py-12">
     <!-- Ambient elements -->
     <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-maes-card/20 to-transparent pointer-events-none"></div>
 
     <div class="maes-container relative z-10 w-full max-h-full overflow-y-auto hide-scrollbar">
-      <div class="max-w-4xl mx-auto flex flex-col lg:flex-row items-center lg:items-start gap-4 lg:gap-20 px-4 md:px-8">
+      <div class="max-w-4xl mx-auto flex flex-col lg:flex-row items-center lg:items-start gap-2 lg:gap-20 px-3 md:px-8 py-2">
         
         <!-- Info Column -->
         <div class="flex-1 text-center lg:text-left pt-2 lg:pt-0">
@@ -93,24 +93,24 @@ if (isValidDate && dateObj) {
               {tipo_evento}
             </span>
 
-            <h1 class="font-maes-sans font-black text-xl md:text-4xl lg:text-5xl xl:text-6xl text-maes-primary leading-tight mb-2 lg:mb-6 drop-shadow-sm">
+            <h1 class="font-maes-sans font-black text-[22px] xs:text-2xl md:text-4xl lg:text-5xl xl:text-6xl text-maes-primary leading-tight mb-1 lg:mb-6 drop-shadow-sm">
               {tema || "Carregando..."}
             </h1>
 
-            <div class="w-12 lg:w-20 h-1 bg-maes-wine rounded-full mb-4 lg:mb-10 mx-auto lg:mx-0"></div>
+            <div class="hidden lg:block w-12 lg:w-20 h-1 bg-maes-wine rounded-full mb-2 lg:mb-10 mx-auto lg:mx-0"></div>
 
-            <div class="space-y-2 lg:space-y-8 mb-4 lg:mb-0">
+            <div class="flex flex-row justify-center lg:flex-col lg:justify-start gap-4 lg:gap-8 mb-2 lg:mb-0">
               <div class="flex flex-col lg:block">
-                <p class="text-[9px] lg:text-[13px] font-black uppercase tracking-widest text-maes-wine/60 mb-0.5">Palestrante / Convidado</p>
-                <p class="text-base lg:text-2xl font-bold text-maes-primary leading-tight">{palestrante || "A confirmar"}</p>
+                <p class="text-[9px] lg:text-[13px] font-black uppercase tracking-widest text-maes-wine/60 mb-0.5">Palestrante</p>
+                <p class="text-sm lg:text-2xl font-bold text-maes-primary leading-tight">{palestrante || "A confirmar"}</p>
               </div>
 
               {isValidDate && (
                 <div class="flex flex-col lg:block">
-                  <p class="text-[9px] lg:text-[13px] font-black uppercase tracking-widest text-maes-wine/60 mb-0.5">Data & Horário</p>
-                  <p class="text-sm lg:text-xl font-bold text-maes-primary leading-tight">
+                  <p class="text-[9px] lg:text-[13px] font-black uppercase tracking-widest text-maes-wine/60 mb-0.5">Data & Hora</p>
+                  <p class="text-xs lg:text-xl font-bold text-maes-primary leading-tight">
                     {dayFormatted}, {dateFormatted}
-                    <span class="text-maes-wine"> · {timeFormatted}</span>
+                    <span class="text-maes-wine block lg:inline"> {timeFormatted}</span>
                   </p>
                 </div>
               )}
@@ -136,11 +136,11 @@ if (isValidDate && dateObj) {
           </div>
 
           <!-- Form Block -->
-          <div id="form-block" class="animate-maes-fade-in">
-            <div class="bg-white rounded-[24px] lg:rounded-[32px] border-2 border-maes-wine/5 p-5 lg:p-10 shadow-2xl relative overflow-hidden">
+          <div id="form-block" class="animate-maes-fade-in w-full">
+            <div class="bg-white rounded-[20px] lg:rounded-[32px] border-2 border-maes-wine/5 p-4 lg:p-10 shadow-2xl relative overflow-hidden">
               <div class="relative z-10">
                 <h3 class="font-maes-sans font-black text-lg lg:text-2xl text-maes-primary mb-0.5">Inscreva-se</h3>
-                <p class="text-maes-primary/60 text-[11px] lg:text-[13px] font-medium mb-4 lg:mb-8">
+                <p class="text-maes-primary/60 text-[11px] lg:text-[13px] font-medium mb-3 lg:mb-8">
                   Garanta sua participação.
                 </p>
 
