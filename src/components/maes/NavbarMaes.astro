@@ -23,6 +23,8 @@ const { links } = nav;
         links.map((link: any) => (
           <a
             href={link.href}
+            target={link.href.startsWith("http") ? "_blank" : undefined}
+            rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
             class="font-maes-sans font-semibold text-sm xl:text-base 2xl:text-lg tracking-wide text-maes-primary relative pb-1 transition-all hover:text-maes-primary/80 after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-[2px] 2xl:after:h-[3px] after:bg-[#713334] after:transition-all after:duration-300 after:w-0 hover:after:w-full"
           >
             {link.label}
@@ -73,6 +75,8 @@ const { links } = nav;
         links.map((link: any) => (
           <a
             href={link.href}
+            target={link.href.startsWith("http") ? "_blank" : undefined}
+            rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
             class="maes-mobile-nav-link text-2xl font-maes-sans font-black uppercase tracking-widest text-maes-primary hover:scale-105 active:scale-95 transition-transform text-center px-4"
           >
             {link.label}
