@@ -4,7 +4,7 @@ import eventsData from '../data/events.json';
 
 const STATUS_CONFIG: Record<EventStatus, EventStatusConfig> = eventsData.statusConfig as Record<EventStatus, EventStatusConfig>;
 
-export const getEventStatus = (event: Event): EventStatus => {
+export const getEventStatus = (event: Event, source?: 'social' | 'crm'): EventStatus => {
   const now = new Date();
   const eventDate = new Date(event.data_evento);
   const openingDate = event.data_abertura_inscricao ? new Date(event.data_abertura_inscricao) : null;
@@ -17,17 +17,27 @@ export const getEventStatus = (event: Event): EventStatus => {
     return 'SOON';
   }
 
+  let currentSource = source;
   if (typeof window !== 'undefined') {
     const urlParams = new URLSearchParams(window.location.search);
-    const srcParam = urlParams.get('src');
-    const isMaesPath = window.location.pathname.includes('/maes/');
-    const source = srcParam ?? (isMaesPath ? 'crm' : 'social');
     
-    if (source === 'crm' && event.current_crm !== undefined && event.qtd_crm && event.qtd_crm > 0) {
-      if (event.current_crm >= event.qtd_crm) return 'FULL';
-    } else if (source === 'social' && event.current_social !== undefined && event.qtd_social && event.qtd_social > 0) {
-      if (event.current_social >= event.qtd_social) return 'FULL';
+    // For testing purposes
+    const forceStatus = urlParams.get('force_status') as EventStatus | null;
+    if (forceStatus && ['OPEN', 'SOON', 'FULL', 'FINISHED'].includes(forceStatus)) {
+      return forceStatus;
     }
+
+    if (!currentSource) {
+      const srcParam = urlParams.get('src');
+      const isPalestraPath = window.location.pathname.includes('/palestra/');
+      currentSource = (srcParam as 'social' | 'crm') ?? (isPalestraPath ? 'crm' : 'social');
+    }
+  }
+    
+  if (currentSource === 'crm' && event.current_crm !== undefined && event.qtd_crm && event.qtd_crm > 0) {
+      if (event.current_crm >= event.qtd_crm) return 'FULL';
+  } else if (currentSource === 'social' && event.current_social !== undefined && event.qtd_social && event.qtd_social > 0) {
+      if (event.current_social >= event.qtd_social) return 'FULL';
   }
   
   return 'OPEN';
