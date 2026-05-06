@@ -12,10 +12,11 @@ import mulheresImg from "../assets/mulheres.png";
 interface Props {
   event: Event;
   inverted?: boolean;
+  source?: 'social' | 'crm';
 }
 
-const { event, inverted = false } = Astro.props;
-const status = getEventStatus(event);
+const { event, inverted = false, source = 'social' } = Astro.props;
+const status = getEventStatus(event, source);
 const config = getStatusConfig(status);
 
 const dateObj = event.data_evento ? new Date(event.data_evento) : null;

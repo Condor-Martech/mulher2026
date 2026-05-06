@@ -35,7 +35,7 @@
     },
     "events": [
       {
-        "id": "degustacao-vinhos",
+        "id": "degustacao-vinhos-maes",
         "title": "Degustação Guiada de Vinhos Chilenos",
         "subtitle": "- Que Bella",
         "lecturer": "Com TerraAustral",
@@ -44,7 +44,7 @@
         "image": "/assets/maes/mae-1.png"
       },
       {
-        "id": "cuidados-corpo",
+        "id": "cuidados-corpo-maes",
         "title": "Cuidados para o Corpo",
         "subtitle": "",
         "lecturer": "Com Flor de Ypê",
@@ -53,7 +53,7 @@
         "image": "/assets/maes/mae-1.png"
       },
       {
-        "id": "harmonizacao-chopp",
+        "id": "harmonizacao-chopp-maes",
         "title": "Degustação e Harmonização de Chopp",
         "subtitle": "",
         "lecturer": "Com Bella Roma",
@@ -100,7 +100,7 @@
     "vouchersSubtitle": "todos os dias."
   },
   "footer": {
-    "disclaimer": "*Poderá participar desta campanha promocional qualquer consumidor que efetuar uma compra de R$50,00 nas lojas Condor no período de 05/02/2025 a 03/02/2026, pessoa física, maior de 18 anos, que possua cadastro atualizado no Clube Condor a partir de 01/01/2025, con CPF e número de celular válidos, e que tenha confirmado sua participação por meio de SMS, WhatsApp, site, aplicativo ou e-mail. Promoção autorizada pela SPA/ME Nº 04.039681/2025. Consulte o regulamento completo em www.condor.com.br/semanaspremiadas. Imagens meramente ilustrativas."
+    "disclaimer": "*Poderá participar desta campanha promocional qualquer consumidor que efetuar uma compra de R$50,00 nas lojas Condor no período de 23/02/2026 a 19/02/2027, pessoa física, maior de 18 anos, que possua cadastro atualizado no Clube Condor, com CPF e número de celular válidos, e que tenha confirmado sua participação por meio de SMS, WhatsApp, site, aplicativo ou e-mail. Promoção autorizada pela SPA/ME N° 04.047913/2026. Consulte o regulamento completo em condor.com.br/premia."
   },
   "ui": {
     "swipeToSeeMore": "Deslize para ver mais",
