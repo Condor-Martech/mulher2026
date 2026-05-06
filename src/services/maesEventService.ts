@@ -34,9 +34,9 @@ export const getEventStatus = (event: Event, source?: 'social' | 'crm'): EventSt
     }
   }
     
-  if (currentSource === 'crm' && event.current_crm !== undefined && event.qtd_crm && event.qtd_crm > 0) {
+  if (currentSource === 'crm' && event.current_crm !== undefined && event.qtd_crm !== undefined && event.qtd_crm !== null) {
       if (event.current_crm >= event.qtd_crm) return 'FULL';
-  } else if (currentSource === 'social' && event.current_social !== undefined && event.qtd_social && event.qtd_social > 0) {
+  } else if (currentSource === 'social' && event.current_social !== undefined && event.qtd_social !== undefined && event.qtd_social !== null) {
       if (event.current_social >= event.qtd_social) return 'FULL';
   }
   
