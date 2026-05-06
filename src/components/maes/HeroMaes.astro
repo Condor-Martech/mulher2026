@@ -37,7 +37,7 @@ const { hero } = data;
     class="relative z-10 flex flex-col flex-grow justify-center pt-20 xs:pt-24 sm:pt-32 lg:pt-24 2xl:pt-32"
   >
     <div
-      class="w-full sm:max-w-[1536px] mx-auto px-1 sm:px-4 lg:px-12 hero-container"
+      class="w-full sm:max-w-[1536px] mx-auto px-1 sm:px-4 lg:px-12 hero-container xl:max-h-[800px]:pb-[1vw]"
     >
       <div
         class="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-4 sm:gap-8 lg:gap-8 2xl:gap-32 items-center md:items-end lg:items-end"
@@ -53,13 +53,13 @@ const { hero } = data;
             <img
               src={hero.logoMaes}
               alt="Dia das Mães Condor"
-              class="w-[75%] xs:w-[85%] sm:w-[50%] md:w-[70%] lg:w-[70%] xl:w-[75%] 2xl:w-[75%] max-w-[320px] xs:max-w-[380px] sm:max-w-[420px] md:max-w-[300px] lg:max-w-[320px] xl:max-w-[360px] 2xl:max-w-[420px] h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] hero-logo"
+              class="w-[85%] xs:w-[95%] sm:w-[60%] md:w-[80%] lg:w-[80%] xl:w-[85%] 2xl:w-[85%] max-w-[360px] xs:max-w-[440px] sm:max-w-[480px] md:max-w-[350px] lg:max-w-[380px] xl:max-w-[420px] 2xl:max-w-[500px] h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] hero-logo xl:max-h-[800px]:!max-w-[320px]"
             />
             <div
               class="mt-2 sm:mt-6 lg:mt-6 w-full sm:max-w-[700px] xl:max-w-[900px] 2xl:max-w-[850px]"
             >
               <p
-                class="text-white font-maes-sans font-black text-[1.1rem] xs:text-[1.4rem] sm:text-3xl md:text-[1.2rem] lg:text-[1.4rem] xl:text-[1.6rem] 2xl:text-[1.9rem] leading-[1.15] drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] tracking-tight hero-title w-full"
+                class="text-white font-maes-sans font-black text-[1.1rem] xs:text-[1.4rem] sm:text-3xl md:text-[1.2rem] lg:text-[1.4rem] xl:text-[1.6rem] 2xl:text-[1.9rem] leading-[1.15] drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] tracking-tight hero-title w-full xl:max-h-[800px]:!text-[1.25rem]"
               >
                 {
                   hero.title.map((line: string, i: number) => (
@@ -71,7 +71,7 @@ const { hero } = data;
                 }
               </p>
               <p
-                class="mt-4 sm:mt-4 lg:mt-4 text-white font-maes-italic text-[2.1rem] xs:text-[2.8rem] sm:text-[3rem] md:text-[2.4rem] lg:text-[2.6rem] xl:text-[3rem] 2xl:text-[3.4rem] leading-[1] drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] max-w-none hero-subtitle w-full flex flex-col"
+                class="mt-4 sm:mt-4 lg:mt-4 text-white font-maes-italic text-[2.1rem] xs:text-[2.8rem] sm:text-[3rem] md:text-[2.4rem] lg:text-[2.6rem] xl:text-[3rem] 2xl:text-[3.4rem] leading-[1] drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] max-w-none hero-subtitle w-full flex flex-col xl:max-h-[800px]:!text-[2.2rem]"
               >
                 {
                   hero.subtitle.map((line: string, i: number) => (
@@ -93,7 +93,7 @@ const { hero } = data;
           <img
             src={hero.logoMeioMilhao}
             alt="R$ Meio Milhão Todo Mês"
-            class="w-[80%] sm:w-[60%] md:w-full lg:w-[90%] xl:w-[90%] 2xl:w-full max-w-[300px] sm:max-w-[420px] md:max-w-[320px] lg:max-w-[440px] xl:max-w-[460px] 2xl:max-w-[670px] h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)] sm:mt-0 sm:translate-y-0 lg:-translate-x-4 xl:-translate-x-20 min-[1400px]:-translate-x-40 lg:translate-y-12 xl:translate-y-16 2xl:translate-y-10 hero-badge -mt-10 xs:-mt-20 pb-10 sm:pb-16 lg:pb-12 xl:pb-8"
+            class="w-[80%] sm:w-[60%] md:w-full lg:w-[90%] xl:w-[90%] 2xl:w-full max-w-[300px] sm:max-w-[420px] md:max-w-[320px] lg:max-w-[440px] xl:max-w-[460px] 2xl:max-w-[670px] h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)] sm:mt-0 sm:translate-y-0 lg:-translate-x-4 xl:-translate-x-20 min-[1400px]:-translate-x-40 lg:translate-y-12 xl:translate-y-16 2xl:translate-y-10 hero-badge -mt-10 xs:-mt-20 pb-10 sm:pb-16 lg:pb-12 xl:pb-8 xl:max-h-[800px]:!max-w-[280px] xl:max-h-[800px]:!-translate-x-10 xl:max-h-[800px]:!translate-y-5 xl:max-h-[800px]:!pb-8"
           />
         </div>
       </div>
@@ -118,32 +118,5 @@ const { hero } = data;
   }
   .animate-hero-scroll {
     animation: hero-scroll 2s ease-in-out infinite;
-  }
-
-  /* Surgical fix for Laptop 1366x768 (xl breakpoint with low height) */
-  @media (min-width: 1280px) and (max-height: 800px) {
-    .hero-container {
-      padding-bottom: 1vw;
-    }
-    .hero-logo {
-      max-width: 280px !important;
-    }
-    .hero-title {
-      font-size: 1.25rem !important;
-    }
-    .hero-subtitle {
-      font-size: 2.2rem !important;
-    }
-    .hero-badge {
-      max-width: 280px !important;
-      transform: translateX(-40px) translateY(20px) !important;
-      padding-bottom: 2rem !important;
-    }
-  }
-
-  @media (min-width: 1400px) {
-    .hero-badge {
-      /* Maintain spacing */
-    }
   }
 </style>

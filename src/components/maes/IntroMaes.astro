@@ -41,13 +41,12 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
 <section id="trajeto" class="relative pt-6 lg:pt-8 xl:pt-10 pb-0 lg:pb-8 bg-maes-wine px-0 xs:px-0 lg:px-7 xl:px-14 2xl:px-20 overflow-x-clip">
   <!-- Torn edge transition using CSS Mask for 100% color parity -->
   <div
-    class="absolute top-0 left-[calc(50%-50vw)] w-screen h-[120px] z-10 -translate-y-[70%] bg-maes-wine pointer-events-none select-none"
-    style="mask-image: url('/assets/maes/torn-edge.png'); mask-size: 100% 100%; -webkit-mask-image: url('/assets/maes/torn-edge.png'); -webkit-mask-size: 100% 100%;"
+    class="torn-mask absolute top-0 left-[calc(50%-50vw)] w-screen h-[120px] z-10 -translate-y-[70%] bg-maes-wine pointer-events-none select-none"
   ></div>
 
   <!-- Atmospheric Background Glows -->
   <div class="maes-glow-bg top-[10%] left-[-10%] opacity-20 pointer-events-none"></div>
-  <div class="maes-glow-bg bottom-[5%] right-[-5%] opacity-15 pointer-events-none" style="width: 600px; height: 600px;"></div>
+  <div class="maes-glow-bg bottom-[5%] right-[-5%] opacity-15 pointer-events-none w-[600px] h-[600px]"></div>
   <div class="maes-container px-0 relative z-10 lg:max-w-[940px] xl:max-w-[1260px] 2xl:max-w-[1440px] mx-auto">
     <!-- Outer Especial Mães card -->
     <div
@@ -155,7 +154,7 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
               return (
                 <div 
                   class="reveal flex flex-col gap-2 shrink-0 w-[82vw] sm:w-[350px] lg:w-auto snap-center relative"
-                  style={`transition-delay: ${idx * 150}ms`}
+                  style={`--delay: ${idx * 150}ms`}
                 >
                   <!-- Status Badge (Floating Outside) -->
                   <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
@@ -259,7 +258,13 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
       const swipeText = btn.getAttribute('data-swipe') || '';
       const backText = btn.getAttribute('data-back') || '';
       if (btnText) btnText.innerText = isAtEnd ? backText : swipeText;
-      if (btnArrow) btnArrow.style.transform = isAtEnd ? 'rotate(180deg)' : 'rotate(0deg)';
+      if (btnArrow) {
+        if (isAtEnd) {
+          btnArrow.classList.add('rotate-180');
+        } else {
+          btnArrow.classList.remove('rotate-180');
+        }
+      }
     });
   }
 </script>
@@ -281,5 +286,14 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
   }
   .animate-swipe {
     animation: swipe 1.5s ease-in-out infinite;
+  }
+  .torn-mask {
+    mask-image: url('/assets/maes/torn-edge.png'); 
+    mask-size: 100% 100%; 
+    -webkit-mask-image: url('/assets/maes/torn-edge.png'); 
+    -webkit-mask-size: 100% 100%;
+  }
+  .reveal {
+    transition-delay: var(--delay);
   }
 </style>

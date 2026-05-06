@@ -9,7 +9,7 @@ import LinkedIn from "../icons/LinkedIn.astro";
 const { socialLinks } = footerData;
 ---
 
-<footer class="maes-footer text-maes-primary relative z-10">
+<footer class="bg-[#ffd7d7] py-12 text-maes-primary relative z-10">
   <div
     class="maes-container flex flex-col md:flex-row items-center justify-between gap-8 md:gap-4"
   >
@@ -38,8 +38,8 @@ const { socialLinks } = footerData;
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Siga-nos no ${link.name}`}
-            class="w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center rounded-full text-white transition-all duration-300 hover:scale-110 hover:-translate-y-1 shadow-lg"
-            style={`background: ${link.bg}; box-shadow: 0 4px 12px ${link.shadow};`}
+            class="w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center rounded-full text-white transition-all duration-300 hover:scale-110 hover:-translate-y-1 social-link"
+            style={`--link-bg: ${link.bg}; --link-shadow: ${link.shadow};`}
           >
             {link.icon === "facebook" && (
               <Facebook class="w-5 h-5 lg:w-6 lg:h-6" />
@@ -61,9 +61,8 @@ const { socialLinks } = footerData;
 </footer>
 
 <style>
-  .maes-footer {
-    background-color: #ffd7d7 !important; /* The pink color requested */
-    padding-top: 3rem;
-    padding-bottom: 3rem;
+  .social-link {
+    background-color: var(--link-bg);
+    box-shadow: 0 4px 12px var(--link-shadow);
   }
 </style>

@@ -1,5 +1,6 @@
 ---
-import content from "../../data/maes/content.json";
+import { getMaesContent } from "../../services/maesService";
+const content = await getMaesContent();
 const { partners } = content;
 ---
 
@@ -23,12 +24,12 @@ const { partners } = content;
           class="grid grid-cols-4 md:flex md:flex-wrap justify-center md:justify-start items-center gap-3 md:gap-12 flex-1 w-full"
         >
           {
-            partners.sponsors.map((brand) => (
+            partners.sponsors.map((brand: { name: string; logo: string }) => (
               <div class="flex items-center justify-center transition-all duration-500 hover:scale-110">
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  class="h-14 md:h-16 lg:h-20 w-auto max-w-full object-contain"
+                  class="h-16 md:h-20 lg:h-24 w-auto max-w-full object-contain"
                   loading="lazy"
                 />
               </div>
@@ -52,12 +53,12 @@ const { partners } = content;
           class="grid grid-cols-4 sm:grid-cols-6 md:flex md:flex-wrap justify-center md:justify-start items-center gap-3 md:gap-x-8 md:gap-y-10 flex-1 w-full"
         >
           {
-            partners.support.map((brand) => (
+            partners.support.map((brand: { name: string; logo: string }) => (
               <div class="flex items-center justify-center transition-all duration-500 hover:scale-105">
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  class="h-10 md:h-12 lg:h-14 w-auto max-w-full object-contain"
+                  class="h-12 md:h-14 lg:h-16 w-auto max-w-full object-contain"
                   loading="lazy"
                 />
               </div>

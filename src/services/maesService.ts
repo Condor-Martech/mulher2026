@@ -1,7 +1,7 @@
 import localContentData from "../data/maes/content.json";
 
 const S3_JSON_URL = "https://s3.cndr.me/lp-content/maes/content.json";
-const S3_ASSETS_BASE = "https://s3.cndr.me/lp-content/maes/assets/";
+const S3_ASSETS_BASE = "https://s3.cndr.me/lp-content/maes/";
 
 /**
  * Transforms relative asset paths to absolute S3 URLs.
@@ -9,7 +9,13 @@ const S3_ASSETS_BASE = "https://s3.cndr.me/lp-content/maes/assets/";
 const transformData = (obj: any): any => {
   if (typeof obj === 'string') {
     if (obj.startsWith('/assets/maes/')) {
-      return obj.replace('/assets/maes/', S3_ASSETS_BASE);
+      const timestamp = Date.now();
+      const newUrl = obj.replace('/assets/maes/', S3_ASSETS_BASE) + `?v=${timestamp}`;
+      // Log specific URLs to verify them in the terminal
+      if (obj.includes('TIROL') || obj.includes('Melitta')) {
+        console.log(`[MaesService] Transformando: ${obj} -> ${newUrl}`);
+      }
+      return newUrl;
     }
     return obj;
   }
@@ -30,23 +36,19 @@ const transformData = (obj: any): any => {
  * Fetches Maes content from S3 with a local fallback.
  */
 export const getMaesContent = async () => {
-  const isDev = import.meta.env.DEV;
-  
-  // In development, we might want to stick to local assets to verify our changes
-  // or if we know S3 hasn't been synced yet.
-  if (isDev) {
-    return localContentData;
-  }
-
   try {
-    const response = await fetch(S3_JSON_URL);
+    const response = await fetch(`${S3_JSON_URL}?t=${Date.now()}`);
     if (response.ok) {
       const remoteData = await response.json();
-      return transformData(remoteData);
+      const transformed = transformData(remoteData);
+      console.log("[MaesService] Contenido cargado desde Minio correctamente");
+      return transformed;
     }
+    console.warn(`[MaesService] Error en fetch de Minio: ${response.status} ${response.statusText}`);
   } catch (error) {
-    console.error("Error fetching remote Maes content from S3:", error);
+    console.error("[MaesService] Error conectando con Minio:", error);
   }
   
-  return localContentData;
+  console.log("[MaesService] Usando fallback local transformado");
+  return transformData(localContentData);
 };
