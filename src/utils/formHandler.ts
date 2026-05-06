@@ -27,7 +27,39 @@ export function initFormHandler() {
     nome: (val) => val.trim().length > 2,
     email: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
     telefone: (val) => val.replace(/\D/g, "").length >= 10,
-    cpf: (val) => val.replace(/\D/g, "").length === 11,
+    cpf: (val) => {
+      const cpf = val.replace(/\D/g, "");
+      if (cpf.length !== 11) return false;
+      const isMaes = window.location.pathname.includes('/maes/');
+      if (isMaes) {
+        const cpfFilhoInput = document.getElementById("cpf_filho") as HTMLInputElement;
+        if (cpfFilhoInput && cpfFilhoInput.value.replace(/\D/g, "") === cpf && cpf !== "") {
+          return false;
+        }
+      }
+      return true;
+    },
+    nome_filho: (val) => {
+      const isMaes = window.location.pathname.includes('/maes/');
+      if (!isMaes) return true; // Solo requerido en madres
+      return val.trim().length > 2;
+    },
+    cpf_filho: (val) => {
+      const isMaes = window.location.pathname.includes('/maes/');
+      if (!isMaes) return true;
+      const cpfFilho = val.replace(/\D/g, "");
+      if (cpfFilho.length !== 11) return false;
+      const cpfInput = document.getElementById("cpf") as HTMLInputElement;
+      if (cpfInput && cpfInput.value.replace(/\D/g, "") === cpfFilho && cpfFilho !== "") {
+        return false;
+      }
+      return true;
+    },
+    maioridade_filho: (val, el) => {
+      const isMaes = window.location.pathname.includes('/maes/');
+      if (!isMaes) return true;
+      return el.checked;
+    },
     lgpd: (val, el) => el.checked,
   };
 
@@ -99,7 +131,7 @@ export function initFormHandler() {
         v = v.replace(/(\d)(\d{4})$/, "$1-$2");
         input.value = v;
       }
-      if (input.name === "cpf") {
+      if (input.name === "cpf" || input.name === "cpf_filho") {
         let v = input.value.replace(/\D/g, "");
         v = v.replace(/(\d{3})(\d)/, "$1.$2");
         v = v.replace(/(\d{3})(\d)/, "$1.$2");
@@ -194,8 +226,12 @@ export function initFormHandler() {
         const errorType = result.error;
         console.warn("Registration failed:", errorType);
         
-        if (errorType === 'ALREADY_REGISTERED') {
-          showFeedback('warning', 'Inscrição Duplicada', 'Este CPF já está inscrito para este evento.');
+        if (errorType === 'SAME_CPF') {
+          showFeedback('warning', 'CPFs Iguais', 'O CPF do titular não pode ser o mesmo do acompanhante.');
+        } else if (errorType === 'ALREADY_REGISTERED') {
+          showFeedback('warning', 'Inscrição Duplicada', 'Um dos CPFs informados já está inscrito para um evento desta campanha.');
+        } else if (errorType === 'UNDERAGE_CHILD') {
+          showFeedback('error', 'Requisito de Idade', 'O(a) filho(a) deve ser maior de 18 anos para participar deste evento.');
         } else if (errorType === 'QUOTA_FULL') {
           showFeedback('error', 'Vagas Esgotadas', 'Desculpe, as inscrições para esta fonte (CRM/Social) estão esgotadas.');
         } else if (errorType === 'NOT_OPEN_YET') {

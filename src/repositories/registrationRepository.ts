@@ -8,6 +8,9 @@ export interface RegistrationData {
   p_telefone: string;
   p_source: string;
   p_tema?: string;
+  p_nome_filho?: string;
+  p_cpf_filho?: string;
+  p_maioridade_filho?: boolean;
 }
 
 export interface RegistrationResult {

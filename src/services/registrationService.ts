@@ -16,6 +16,9 @@ export const registrationService = {
       p_telefone: (formData.telefone as string).replace(/\D/g, ""),
       p_source: source,
       p_tema: (formData.eventTema as string) || "",
+      p_nome_filho: formData.nome_filho as string,
+      p_cpf_filho: (formData.cpf_filho as string)?.replace(/\D/g, ""),
+      p_maioridade_filho: !!formData.maioridade_filho,
     };
 
     const performRegistration = async (retryCount = 0): Promise<RegistrationResult> => {
