@@ -9,7 +9,7 @@ const { intro, program, ui } = data;
 // Map static events from JSON to database events to preserve design and filter non-existent ones
 const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) => {
   const dbEvent = events.find(e => e.id === staticEvent.id);
-  const status = dbEvent ? getEventStatus(dbEvent) : 'SOON';
+  const status = dbEvent ? getEventStatus(dbEvent, 'social') : 'SOON';
   const statusConfig = getStatusConfig(status);
   
   // Format DB date if available, otherwise use static
@@ -23,6 +23,8 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
     ...dbEvent,
     status,
     statusLabel: statusConfig.label,
+    statusButton: statusConfig.button,
+    statusDisabled: statusConfig.disabled,
     statusColor: status === 'OPEN' ? 'bg-maes-accent text-maes-primary shadow-[0_8px_20px_-4px_rgba(255,206,0,0.4)]' : 
                  status === 'SOON' ? 'bg-maes-accent text-maes-primary shadow-[0_8px_20px_-4px_rgba(255,206,0,0.4)]' : 
                  'bg-gray-400 text-white shadow-none',
@@ -165,7 +167,10 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
                     </div>
                   </div>
 
-                  <div class="relative rounded-[32px] p-2 lg:p-3 xl:p-5 flex flex-col items-center justify-between text-center min-h-[300px] lg:min-h-0 lg:aspect-square group transition-all duration-500 hover:scale-[1.02] shadow-[0_20px_50px_-15px_rgba(113,51,52,0.35)] border-2 border-maes-primary/10 overflow-visible gap-4 lg:gap-2">
+                  <div class:list={[
+                    "relative rounded-[32px] p-2 lg:p-3 xl:p-5 flex flex-col items-center justify-between text-center min-h-[300px] lg:min-h-0 lg:aspect-square group transition-all duration-500 shadow-[0_20px_50px_-15px_rgba(113,51,52,0.35)] border-2 border-maes-primary/10 overflow-visible gap-4 lg:gap-2",
+                    event.status === 'FINISHED' || event.status === 'FULL' ? "grayscale-[0.8] opacity-80" : "hover:scale-[1.02]"
+                  ]}>
                     <!-- Background Image with Overlay -->
                     <div class="absolute inset-0 z-0 rounded-[30px] overflow-hidden">
                       <img src={event.displayImage} alt={event.tema} class="w-full h-full object-cover" />
@@ -201,15 +206,15 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
   
                   <button
                     class:list={[
-                      "open-event-modal-btn w-[85%] py-3 lg:py-3 xl:py-4 2xl:py-5 px-6 rounded-xl font-maes-sans font-black text-xl lg:text-xl xl:text-2xl transition-all duration-300 shadow-lg mx-auto mb-2 tracking-tight",
-                      event.status === 'OPEN' ? "bg-[#713334] text-white hover:scale-[1.02] active:scale-[0.98] cursor-pointer" : "bg-[#F099A6] text-[#713334] cursor-not-allowed opacity-90"
+                      "open-event-modal-btn w-[85%] py-3 lg:py-3 xl:py-4 2xl:py-5 px-6 rounded-xl font-maes-sans font-bold text-xl lg:text-xl xl:text-2xl transition-all duration-300 shadow-lg mx-auto mb-2 tracking-tight",
+                      !event.statusDisabled ? "bg-[#713334] text-white hover:scale-[1.02] active:scale-[0.98] cursor-pointer" : "bg-[#F099A6] text-[#713334] cursor-not-allowed opacity-90"
                     ]}
                     data-event-id={event.id}
                     data-event-tema={event.tema}
                     data-event-date={event.displayDate}
-                    disabled={event.status !== 'OPEN'}
+                    disabled={event.statusDisabled}
                   >
-                    {event.status === 'OPEN' ? ui.signUp : ui.comingSoon}
+                    {event.statusButton}
                   </button>
                 </div>
               );
