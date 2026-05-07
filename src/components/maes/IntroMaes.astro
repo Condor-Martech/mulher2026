@@ -38,7 +38,7 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
 });
 ---
 
-<section id="trajeto" class="relative pt-6 lg:pt-8 xl:pt-10 pb-0 lg:pb-8 bg-maes-wine px-0 xs:px-0 lg:px-7 xl:px-14 2xl:px-20 overflow-x-clip">
+<section id="trajeto" class="relative pt-1.5 lg:pt-8 xl:pt-10 pb-0 lg:pb-8 bg-maes-wine px-0 xs:px-0 lg:px-7 xl:px-14 2xl:px-20 overflow-x-clip">
   <!-- Torn edge transition using CSS Mask for 100% color parity -->
   <div
     class="torn-mask absolute top-0 left-[calc(50%-50vw)] w-screen h-[120px] z-10 -translate-y-[40%] xl:-translate-y-[12%] 2xl:-translate-y-[40%] bg-maes-wine pointer-events-none select-none"
@@ -50,29 +50,29 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
   <div class="maes-container px-0 relative z-10 lg:max-w-[940px] xl:max-w-[1260px] 2xl:max-w-[1440px] mx-auto">
     <!-- Outer Especial Mães card -->
     <div
-      class="reveal rounded-[24px] lg:rounded-[32px] px-0 pt-3 pb-2 xs:px-5 xs:pt-3 xs:pb-2 lg:px-4 lg:py-4 xl:p-5 maes-card-shadow bg-maes-card border-2 border-maes-card/50"
+      class="reveal rounded-[24px] lg:rounded-[32px] px-0 pt-1.5 pb-2 xs:px-5 xs:pt-1.5 xs:pb-2 lg:px-4 lg:py-4 xl:p-5 maes-card-shadow bg-maes-card border-2 border-maes-card/50"
     >
       <!-- Header: Especial Mães | Reserve sua agenda -->
-      <div class="grid grid-cols-1 md:grid-cols-[1fr_2px_1fr] lg:grid-cols-[1fr_2px_1.2fr] gap-0 md:gap-0 items-center">
+      <div class="grid grid-cols-1 lg:grid-cols-[1fr_2px_1fr] xl:grid-cols-[1fr_2px_1.2fr] gap-0 items-center">
         <!-- Left: Logo/Title -->
         <div
-          class="flex justify-center md:justify-end md:pr-14 pt-10 md:pt-14"
+          class="flex justify-center lg:justify-end lg:pr-14 pt-2.5 lg:pt-14"
         >
           <h2
-            class="font-maes-script text-maes-primary text-[60px] xs:text-[72px] sm:text-[108px] md:text-[110px] lg:text-[115px] xl:text-[150px] 2xl:text-[180px] leading-[1.1] md:leading-[0.8] text-center md:text-right pt-8 md:pt-12 pb-1 lg:pb-2"
+            class="font-maes-script text-maes-primary text-[60px] xs:text-[72px] sm:text-[108px] md:text-[110px] lg:text-[115px] xl:text-[135px] 2xl:text-[145px] leading-[1.1] lg:leading-[1.1] tracking-tight skew-x-[-6deg] text-center lg:text-right pt-2 lg:pt-12 pb-1 lg:pb-2"
           >
-            Especial<br />
-            Mães
+            <span class="block pr-0 lg:pr-16">Especial</span>
+            <span class="block">Mães</span>
           </h2>
         </div>
 
         <!-- Desktop Divider -->
-        <div class="hidden md:block w-[2px] h-[140px] bg-maes-primary/20 self-center"></div>
+        <div class="hidden lg:block w-[2px] h-[140px] bg-maes-primary/20 self-center"></div>
 
         <!-- Right: Info -->
-        <div class="flex flex-col items-center md:items-start gap-6 md:pl-14 lg:pl-10">
+        <div class="flex flex-col items-center lg:items-start gap-6 lg:pl-14 xl:pl-10">
           <h3
-            class="font-maes-sans font-extrabold text-maes-primary text-2xl sm:text-3xl lg:text-[36px] xl:text-[46px] leading-[1.1] text-center md:text-left max-w-[320px] md:max-w-[420px] lg:max-w-none"
+            class="font-maes-sans font-extrabold text-maes-primary text-2xl sm:text-3xl lg:text-[36px] xl:text-[46px] leading-[1.1] text-center lg:text-left max-w-[320px] md:max-w-[420px] lg:max-w-none"
           >
             Reserve sua<br />agenda e participe!
           </h3>
@@ -100,7 +100,7 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
       <!-- Inner Programação card (Removed background/border on mobile for 'peek-a-boo' effect) -->
       <div
         id="programacao"
-        class="mt-4 lg:mt-14 xl:mt-24 rounded-[24px] lg:rounded-[32px] px-0 pt-6 pb-2 sm:p-6 lg:px-6 lg:py-10 xl:p-12 lg:bg-maes-card-inner/30 lg:border-2 lg:border-maes-card/20"
+        class="mt-2 lg:mt-6 xl:mt-12 rounded-[24px] lg:rounded-[32px] px-0 pt-6 pb-2 sm:p-6 lg:px-6 lg:py-10 xl:p-12 lg:bg-maes-card-inner/30 lg:border-2 lg:border-maes-card/20"
       >
         <!-- Title Section with lines -->
         <div class="flex items-center justify-center gap-6 mb-10 lg:mb-14">
@@ -111,7 +111,7 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
           <div class="hidden lg:block h-[3px] grow bg-maes-primary/20 rounded-full max-w-[180px]"></div>
         </div>
         <!-- Swipe indicator for mobile (Colorized with Maes Accent) -->
-        <div class="md:hidden flex justify-center mb-4">
+        <div class="lg:hidden flex justify-center mb-4">
           <button 
             id="intro-swipe-btn"
             aria-label={ui.swipeToSeeMore}
