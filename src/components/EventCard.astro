@@ -29,11 +29,11 @@ if (isValidDate && dateObj) {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
-    timeZone: "UTC",
+    timeZone: "America/Sao_Paulo",
   });
   const formattedDay = new Intl.DateTimeFormat("pt-BR", {
     weekday: "long",
-    timeZone: "UTC",
+    timeZone: "America/Sao_Paulo",
   }).format(dateObj);
   const capitalizedDay = formattedDay
     .split("-")
@@ -43,7 +43,7 @@ if (isValidDate && dateObj) {
     .toLocaleTimeString("pt-BR", {
       hour: "2-digit",
       minute: "2-digit",
-      timeZone: "UTC",
+      timeZone: "America/Sao_Paulo",
     })
     .replace(":", "h");
   dateTimeText = `${formattedDate} | ${capitalizedDay} | ${formattedTime}`;

@@ -15,7 +15,7 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
   // Format DB date if available, otherwise use static
   const eventDate = dbEvent ? new Date(dbEvent.data_evento) : new Date();
   const formattedDate = dbEvent 
-    ? `${eventDate.toLocaleDateString('pt-BR')} - ${eventDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'h')}`
+    ? `${eventDate.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })} • ${eventDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }).replace(':', 'h')}`
     : `${staticEvent.date} - ${staticEvent.time}`;
 
   return {
@@ -41,7 +41,7 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
 <section id="trajeto" class="relative pt-6 lg:pt-8 xl:pt-10 pb-0 lg:pb-8 bg-maes-wine px-0 xs:px-0 lg:px-7 xl:px-14 2xl:px-20 overflow-x-clip">
   <!-- Torn edge transition using CSS Mask for 100% color parity -->
   <div
-    class="torn-mask absolute top-0 left-[calc(50%-50vw)] w-screen h-[120px] z-10 -translate-y-[70%] bg-maes-wine pointer-events-none select-none"
+    class="torn-mask absolute top-0 left-[calc(50%-50vw)] w-screen h-[120px] z-10 -translate-y-[40%] xl:-translate-y-[12%] 2xl:-translate-y-[40%] bg-maes-wine pointer-events-none select-none"
   ></div>
 
   <!-- Atmospheric Background Glows -->
@@ -56,10 +56,10 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
       <div class="grid grid-cols-1 md:grid-cols-[1fr_2px_1fr] lg:grid-cols-[1fr_2px_1.2fr] gap-0 md:gap-0 items-center">
         <!-- Left: Logo/Title -->
         <div
-          class="flex justify-center md:justify-end md:pr-14"
+          class="flex justify-center md:justify-end md:pr-14 pt-10 md:pt-14"
         >
           <h2
-            class="font-maes-script text-maes-primary text-[60px] xs:text-[72px] sm:text-[108px] md:text-[110px] lg:text-[115px] xl:text-[150px] 2xl:text-[180px] leading-[1.1] md:leading-[0.8] text-center md:text-right py-1 lg:py-2"
+            class="font-maes-script text-maes-primary text-[60px] xs:text-[72px] sm:text-[108px] md:text-[110px] lg:text-[115px] xl:text-[150px] 2xl:text-[180px] leading-[1.1] md:leading-[0.8] text-center md:text-right pt-8 md:pt-12 pb-1 lg:pb-2"
           >
             Especial<br />
             Mães
@@ -173,7 +173,7 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
                   ]}>
                     <!-- Background Image with Overlay -->
                     <div class="absolute inset-0 z-0 rounded-[30px] overflow-hidden">
-                      <img src={event.displayImage} alt={event.tema} class="w-full h-full object-cover" />
+                      <img src={event.displayImage} alt={event.tema} width="400" height="400" class="w-full h-full object-cover" />
                       <div class="absolute inset-0 bg-white/15" />
                     </div>
   
@@ -208,7 +208,7 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
                     {event.status !== 'FINISHED' && (
                       <div class="w-full z-10 flex flex-col items-center pb-2 lg:pb-4">
                         <p class="font-maes-sans font-black text-maes-primary text-xl lg:text-base xl:text-[20px] 2xl:text-[24px] tracking-tight">
-                          {event.date} • {event.time}
+                          {event.displayDate}
                         </p>
                       </div>
                     )}

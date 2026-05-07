@@ -54,11 +54,11 @@ const eventsWithMetadata = events.map(event => {
           <div class="p-8">
             <div class="flex items-center gap-3 mb-4">
               <span class="px-3 py-1 bg-white text-maes-primary text-xs font-bold rounded-lg shadow-sm">
-                {new Date(event.data_evento).toLocaleDateString('pt-BR')}
+                {new Date(event.data_evento).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })}
               </span>
               <span class="text-gray-400 text-xs">•</span>
               <span class="text-gray-500 text-xs font-medium">
-                {new Date(event.data_evento).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'h')}
+                {new Date(event.data_evento).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }).replace(':', 'h')}
               </span>
             </div>
             

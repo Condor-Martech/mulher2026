@@ -53,7 +53,7 @@ let dateTimeText = "A Definir";
 if (isValidDate && dateObj) {
   dayFormatted = new Intl.DateTimeFormat("pt-BR", {
     weekday: "long",
-    timeZone: "UTC",
+    timeZone: "America/Sao_Paulo",
   }).format(dateObj);
   dayFormatted = dayFormatted.charAt(0).toUpperCase() + dayFormatted.slice(1);
 
@@ -61,14 +61,14 @@ if (isValidDate && dateObj) {
     day: "2-digit",
     month: "long",
     year: "numeric",
-    timeZone: "UTC",
+    timeZone: "America/Sao_Paulo",
   });
 
   timeFormatted = dateObj
     .toLocaleTimeString("pt-BR", {
       hour: "2-digit",
       minute: "2-digit",
-      timeZone: "UTC",
+      timeZone: "America/Sao_Paulo",
     })
     .replace(":", "h");
 
