@@ -39,9 +39,9 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
 ---
 
 <section id="trajeto" class="relative pt-1.5 lg:pt-8 xl:pt-10 pb-0 lg:pb-8 bg-maes-wine px-0 xs:px-0 lg:px-7 xl:px-14 2xl:px-20 overflow-x-clip">
-  <!-- Torn edge transition using CSS Mask for 100% color parity -->
+  <!-- Torn edge transition using arbitrary Tailwind properties for 100% color parity -->
   <div
-    class="torn-mask absolute top-0 left-[calc(50%-50vw)] w-screen h-[120px] z-10 -translate-y-[40%] xl:-translate-y-[12%] 2xl:-translate-y-[40%] bg-maes-wine pointer-events-none select-none"
+    class="absolute top-0 left-[calc(50%-50vw)] w-screen h-[120px] z-10 -translate-y-[40%] xl:-translate-y-[12%] 2xl:-translate-y-[40%] bg-maes-wine pointer-events-none select-none [mask-image:url('/assets/maes/torn-edge.png')] [mask-size:100%_100%] [-webkit-mask-image:url('/assets/maes/torn-edge.png')] [-webkit-mask-size:100%_100%]"
   ></div>
 
   <!-- Atmospheric Background Glows -->
@@ -279,32 +279,3 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
     });
   }
 </script>
-
-<style>
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .hide-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-  }
-
-  @keyframes swipe {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(-10px); }
-  }
-  .animate-swipe {
-    animation: swipe 1.5s ease-in-out infinite;
-  }
-  .torn-mask {
-    mask-image: url('/assets/maes/torn-edge.png'); 
-    mask-size: 100% 100%; 
-    -webkit-mask-image: url('/assets/maes/torn-edge.png'); 
-    -webkit-mask-size: 100% 100%;
-  }
-  .reveal {
-    transition-delay: var(--delay);
-  }
-</style>

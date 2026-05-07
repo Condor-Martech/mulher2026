@@ -38,7 +38,7 @@ const { socialLinks } = footerData;
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Siga-nos no ${link.name}`}
-            class="w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center rounded-full text-white transition-all duration-300 hover:scale-110 hover:-translate-y-1 social-link"
+            class="w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center rounded-full text-white transition-all duration-300 hover:scale-110 hover:-translate-y-1 bg-[var(--link-bg)] shadow-[0_4px_12px_var(--link-shadow)]"
             style={`--link-bg: ${link.bg}; --link-shadow: ${link.shadow};`}
           >
             {link.icon === "facebook" && (
@@ -59,10 +59,3 @@ const { socialLinks } = footerData;
     </div>
   </div>
 </footer>
-
-<style>
-  .social-link {
-    background-color: var(--link-bg);
-    box-shadow: 0 4px 12px var(--link-shadow);
-  }
-</style>
