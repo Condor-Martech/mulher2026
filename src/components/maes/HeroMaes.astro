@@ -8,7 +8,7 @@ const { hero } = data;
 
 <section
   id="home"
-  class="relative w-full h-[92vh] min-h-[820px] xs:min-h-[850px] sm:min-h-[700px] md:min-h-[750px] lg:min-h-[820px] flex flex-col justify-between"
+  class="relative w-full h-[92vh] min-h-[800px] xs:min-h-[950px] sm:min-h-[700px] md:min-h-[750px] lg:min-h-[820px] flex flex-col justify-between overflow-hidden"
 >
   <NavbarMaes />
 
@@ -39,13 +39,13 @@ const { hero } = data;
 
   <!-- Content overlay -->
   <div
-    class="relative z-10 flex flex-col flex-grow justify-center pt-28 xs:pt-32 sm:pt-22 md:pt-28 lg:pt-32 2xl:pt-12 pb-44 xs:pb-48 sm:pb-32 md:pb-10 lg:pb-12 xl:pb-40 2xl:pb-72"
+    class="relative z-10 flex flex-col flex-grow justify-center pt-28 xs:pt-32 sm:pt-22 md:pt-28 lg:pt-32 2xl:pt-12 pb-40 xs:pb-52 sm:pb-32 md:pb-10 lg:pb-12 xl:pb-40 2xl:pb-72"
   >
     <div
-      class="w-full sm:max-w-[1536px] mx-auto px-1 sm:px-4 lg:px-12 hero-container"
+      class="w-full sm:max-w-[1536px] mx-auto px-2 sm:px-4 lg:px-12 maes-container"
     >
       <div
-        class="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-4 sm:gap-8 lg:gap-8 2xl:gap-32 items-center md:items-end lg:items-end"
+        class="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-0 sm:gap-8 lg:gap-8 2xl:gap-32 items-center sm:items-end"
       >
         <!-- Left: Logo + tagline -->
         <div
@@ -53,7 +53,7 @@ const { hero } = data;
         >
           <!-- Glassmorphism container for mobile -->
           <div
-            class="w-full flex flex-col items-center md:items-start bg-black/15 backdrop-blur-[8px] sm:bg-transparent sm:backdrop-blur-none px-4 py-3 sm:p-0 rounded-[2.5rem] border border-white/10 sm:border-none"
+            class="w-full flex flex-col items-center md:items-start bg-black/15 backdrop-blur-[8px] sm:bg-transparent sm:backdrop-blur-none px-2 py-3 sm:p-0 rounded-[2.5rem] border border-white/10 sm:border-none"
           >
             <img
               src={hero.logoMaes}
@@ -61,9 +61,9 @@ const { hero } = data;
               class="w-[85%] xs:w-[95%] sm:w-[60%] md:w-[80%] lg:w-[80%] xl:w-[85%] 2xl:w-[85%] max-w-[320px] xs:max-w-[400px] sm:max-w-[440px] md:max-w-[320px] lg:max-w-[340px] xl:max-w-[380px] 2xl:max-w-[420px] h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] hero-logo"
             />
             <div
-              class="mt-2 sm:mt-6 lg:mt-6 w-full sm:max-w-[700px] xl:max-w-[900px] 2xl:max-w-[850px]"
+              class="mt-1 sm:mt-6 lg:mt-6 w-full sm:max-w-[700px] xl:max-w-[900px] 2xl:max-w-[850px]"
             >
-              <p
+              <h1
                 class="text-white font-maes-sans font-black text-[1.05rem] xs:text-[1.25rem] sm:text-3xl md:text-[1.2rem] lg:text-[1.4rem] xl:text-[1.6rem] 2xl:text-[1.9rem] leading-[1.15] drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] tracking-tight hero-title w-full"
               >
                 {
@@ -74,9 +74,9 @@ const { hero } = data;
                     </Fragment>
                   ))
                 }
-              </p>
+              </h1>
               <p
-                class="mt-4 sm:mt-4 lg:mt-4 text-white font-maes-italic text-[1.6rem] xs:text-[2.2rem] sm:text-[3rem] md:text-[2.4rem] lg:text-[2.6rem] xl:text-[3rem] 2xl:text-[3.4rem] leading-[1] drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] max-w-none hero-subtitle w-full flex flex-col xl:pb-14"
+                class="mt-2 sm:mt-4 lg:mt-4 text-white font-maes-italic text-[1.9rem] xs:text-[2.4rem] sm:text-[3rem] md:text-[2.4rem] lg:text-[2.6rem] xl:text-[3rem] 2xl:text-[3.4rem] leading-[1] drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] max-w-none hero-subtitle w-full flex flex-col xl:pb-14"
               >
                 {
                   hero.subtitle.map((line: string, i: number) => (
@@ -93,12 +93,12 @@ const { hero } = data;
 
         <!-- Right: Meio Milhão badge -->
         <div
-          class="md:col-span-5 lg:col-span-5 flex justify-center md:justify-end lg:justify-end items-end animate-maes-fade-in mt-4 sm:mt-0"
+          class="md:col-span-5 lg:col-span-5 flex justify-center md:justify-end lg:justify-end items-center sm:items-end animate-maes-fade-in mt-0"
         >
           <img
             src={hero.logoMeioMilhao}
             alt="R$ Meio Milhão Todo Mês"
-            class="w-[80%] sm:w-[60%] md:w-full lg:w-[90%] xl:w-[90%] 2xl:w-full max-w-[280px] sm:max-w-[380px] md:max-w-[300px] lg:max-w-[400px] xl:max-w-[420px] 2xl:max-w-[500px] h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)] sm:mt-0 sm:translate-y-0 lg:-translate-x-4 xl:-translate-x-20 min-[1400px]:-translate-x-40 lg:translate-y-4 xl:translate-y-6 2xl:translate-y-2 hero-badge mt-2 pb-12 sm:pb-16 lg:pb-12 xl:pb-16"
+            class="w-[80%] sm:w-[60%] md:w-full lg:w-[90%] xl:w-[90%] 2xl:w-full max-w-[280px] sm:max-w-[380px] md:max-w-[300px] lg:max-w-[400px] xl:max-w-[420px] 2xl:max-w-[500px] h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)] sm:mt-0 sm:translate-y-0 lg:-translate-x-4 xl:-translate-x-20 min-[1400px]:-translate-x-40 lg:translate-y-4 xl:translate-y-6 2xl:translate-y-2 hero-badge mt-0 pb-4 sm:pb-16 lg:pb-12 xl:pb-16"
           />
         </div>
       </div>
@@ -128,19 +128,3 @@ const { hero } = data;
     </a>
   </div>
 </section>
-
-<style>
-  @keyframes hero-scroll {
-    0% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(16px);
-      opacity: 0;
-    }
-  }
-  .animate-hero-scroll {
-    animation: hero-scroll 2s ease-in-out infinite;
-  }
-</style>
