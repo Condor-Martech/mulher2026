@@ -8,7 +8,7 @@ const { hero } = data;
 
 <section
   id="home"
-  class="relative w-full h-auto min-h-[680px] xs:min-h-[780px] sm:min-h-[700px] md:min-h-[750px] lg:min-h-[820px] xl:min-h-[85vh] 2xl:min-h-[88vh] flex flex-col justify-between"
+  class="relative w-full h-[92vh] min-h-[820px] xs:min-h-[850px] sm:min-h-[700px] md:min-h-[750px] lg:min-h-[820px] flex flex-col justify-between"
 >
   <NavbarMaes />
 
@@ -17,6 +17,8 @@ const { hero } = data;
     <img
       src={hero.familyImage}
       alt=""
+      width="1920"
+      height="1080"
       loading="eager"
       fetchpriority="high"
       class="w-full h-full object-cover object-[center_30%] lg:object-[center_20%]"
@@ -24,20 +26,23 @@ const { hero } = data;
 
     <!-- Mobile Overlay for legibility: Gradient instead of flat -->
     <div
-      class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/60 sm:hidden z-0"
+      class="absolute inset-0 bg-gradient-to-b from-black/5 via-black/40 to-black/60 sm:hidden z-0"
     >
     </div>
 
     <!-- Bottom transition gradient to invite the next section -->
-    <div class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#713334]/40 to-transparent hidden lg:block"></div>
+    <div
+      class="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#713334]/40 to-transparent hidden lg:block"
+    >
+    </div>
   </div>
 
   <!-- Content overlay -->
   <div
-    class="relative z-10 flex flex-col flex-grow justify-center pt-20 xs:pt-24 sm:pt-32 lg:pt-24 2xl:pt-32"
+    class="relative z-10 flex flex-col flex-grow justify-center pt-28 xs:pt-32 sm:pt-22 md:pt-28 lg:pt-32 2xl:pt-12 pb-44 xs:pb-48 sm:pb-32 md:pb-10 lg:pb-12 xl:pb-40 2xl:pb-72"
   >
     <div
-      class="w-full sm:max-w-[1536px] mx-auto px-1 sm:px-4 lg:px-12 hero-container xl:max-h-[800px]:pb-[1vw]"
+      class="w-full sm:max-w-[1536px] mx-auto px-1 sm:px-4 lg:px-12 hero-container"
     >
       <div
         class="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-4 sm:gap-8 lg:gap-8 2xl:gap-32 items-center md:items-end lg:items-end"
@@ -53,13 +58,13 @@ const { hero } = data;
             <img
               src={hero.logoMaes}
               alt="Dia das Mães Condor"
-              class="w-[85%] xs:w-[95%] sm:w-[60%] md:w-[80%] lg:w-[80%] xl:w-[85%] 2xl:w-[85%] max-w-[360px] xs:max-w-[440px] sm:max-w-[480px] md:max-w-[350px] lg:max-w-[380px] xl:max-w-[420px] 2xl:max-w-[500px] h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] hero-logo xl:max-h-[800px]:!max-w-[320px]"
+              class="w-[85%] xs:w-[95%] sm:w-[60%] md:w-[80%] lg:w-[80%] xl:w-[85%] 2xl:w-[85%] max-w-[320px] xs:max-w-[400px] sm:max-w-[440px] md:max-w-[320px] lg:max-w-[340px] xl:max-w-[380px] 2xl:max-w-[420px] h-auto drop-shadow-[0_20px_40px_rgba(0,0,0,0.3)] hero-logo"
             />
             <div
               class="mt-2 sm:mt-6 lg:mt-6 w-full sm:max-w-[700px] xl:max-w-[900px] 2xl:max-w-[850px]"
             >
               <p
-                class="text-white font-maes-sans font-black text-[1.1rem] xs:text-[1.4rem] sm:text-3xl md:text-[1.2rem] lg:text-[1.4rem] xl:text-[1.6rem] 2xl:text-[1.9rem] leading-[1.15] drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] tracking-tight hero-title w-full xl:max-h-[800px]:!text-[1.25rem]"
+                class="text-white font-maes-sans font-black text-[1.05rem] xs:text-[1.25rem] sm:text-3xl md:text-[1.2rem] lg:text-[1.4rem] xl:text-[1.6rem] 2xl:text-[1.9rem] leading-[1.15] drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)] tracking-tight hero-title w-full"
               >
                 {
                   hero.title.map((line: string, i: number) => (
@@ -71,7 +76,7 @@ const { hero } = data;
                 }
               </p>
               <p
-                class="mt-4 sm:mt-4 lg:mt-4 text-white font-maes-italic text-[2.1rem] xs:text-[2.8rem] sm:text-[3rem] md:text-[2.4rem] lg:text-[2.6rem] xl:text-[3rem] 2xl:text-[3.4rem] leading-[1] drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] max-w-none hero-subtitle w-full flex flex-col xl:max-h-[800px]:!text-[2.2rem]"
+                class="mt-4 sm:mt-4 lg:mt-4 text-white font-maes-italic text-[1.6rem] xs:text-[2.2rem] sm:text-[3rem] md:text-[2.4rem] lg:text-[2.6rem] xl:text-[3rem] 2xl:text-[3.4rem] leading-[1] drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] max-w-none hero-subtitle w-full flex flex-col xl:pb-14"
               >
                 {
                   hero.subtitle.map((line: string, i: number) => (
@@ -88,12 +93,12 @@ const { hero } = data;
 
         <!-- Right: Meio Milhão badge -->
         <div
-          class="md:col-span-5 lg:col-span-5 flex justify-center md:justify-end lg:justify-end items-end animate-maes-fade-in mt-6 sm:mt-0"
+          class="md:col-span-5 lg:col-span-5 flex justify-center md:justify-end lg:justify-end items-end animate-maes-fade-in mt-4 sm:mt-0"
         >
           <img
             src={hero.logoMeioMilhao}
             alt="R$ Meio Milhão Todo Mês"
-            class="w-[80%] sm:w-[60%] md:w-full lg:w-[90%] xl:w-[90%] 2xl:w-full max-w-[300px] sm:max-w-[420px] md:max-w-[320px] lg:max-w-[440px] xl:max-w-[460px] 2xl:max-w-[670px] h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)] sm:mt-0 sm:translate-y-0 lg:-translate-x-4 xl:-translate-x-20 min-[1400px]:-translate-x-40 lg:translate-y-12 xl:translate-y-16 2xl:translate-y-10 hero-badge -mt-10 xs:-mt-20 pb-10 sm:pb-16 lg:pb-12 xl:pb-8 xl:max-h-[800px]:!max-w-[280px] xl:max-h-[800px]:!-translate-x-10 xl:max-h-[800px]:!translate-y-5 xl:max-h-[800px]:!pb-8"
+            class="w-[80%] sm:w-[60%] md:w-full lg:w-[90%] xl:w-[90%] 2xl:w-full max-w-[280px] sm:max-w-[380px] md:max-w-[300px] lg:max-w-[400px] xl:max-w-[420px] 2xl:max-w-[500px] h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.45)] sm:mt-0 sm:translate-y-0 lg:-translate-x-4 xl:-translate-x-20 min-[1400px]:-translate-x-40 lg:translate-y-4 xl:translate-y-6 2xl:translate-y-2 hero-badge mt-2 pb-12 sm:pb-16 lg:pb-12 xl:pb-16"
           />
         </div>
       </div>
@@ -101,11 +106,24 @@ const { hero } = data;
   </div>
 
   <!-- Scroll Indicator -->
-  <div class="relative z-10 w-full flex justify-center pb-6 sm:pb-8 lg:pb-8 pointer-events-none">
-    <a href="#trajeto" class="pointer-events-auto group flex flex-col items-center gap-2">
-      <span class="text-white/60 font-maes-sans font-bold text-[10px] tracking-[0.2em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300">Descubra</span>
-      <div class="w-8 h-10 rounded-full border-2 border-white/30 flex justify-center p-1.5 transition-colors group-hover:border-maes-accent">
-        <div class="w-1.5 h-1.5 bg-white rounded-full animate-hero-scroll group-hover:bg-maes-accent"></div>
+  <div
+    class="relative z-10 w-full flex justify-center pb-6 sm:pb-8 lg:pb-8 pointer-events-none"
+  >
+    <a
+      href="#trajeto"
+      class="pointer-events-auto group flex flex-col items-center gap-2"
+    >
+      <span
+        class="text-white/60 font-maes-sans font-bold text-[10px] tracking-[0.2em] uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >Descubra</span
+      >
+      <div
+        class="w-8 h-10 rounded-full border-2 border-white/30 flex justify-center p-1.5 transition-colors group-hover:border-maes-accent"
+      >
+        <div
+          class="w-1.5 h-1.5 bg-white rounded-full animate-hero-scroll group-hover:bg-maes-accent"
+        >
+        </div>
       </div>
     </a>
   </div>
@@ -113,8 +131,14 @@ const { hero } = data;
 
 <style>
   @keyframes hero-scroll {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(16px); opacity: 0; }
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(16px);
+      opacity: 0;
+    }
   }
   .animate-hero-scroll {
     animation: hero-scroll 2s ease-in-out infinite;

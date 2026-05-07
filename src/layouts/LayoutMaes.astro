@@ -24,10 +24,28 @@ const { gtmId } = settings;
       </script>
     )}
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#713334" />
     <meta name="generator" content={Astro.generator} />
+    
     <title>{title}</title>
+    <meta name="description" content="Participe do Especial Mães Condor! Reserve sua agenda para palestras exclusivas e concorra a Meio Milhão todo mês." />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content="Participe do Especial Mães Condor! Reserve sua agenda para palestras exclusivas." />
+    <meta property="og:image" content="/assets/maes/og-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content="Participe do Especial Mães Condor! Reserve sua agenda para palestras exclusivas." />
+    <meta property="twitter:image" content="/assets/maes/og-image.png" />
     
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -28,6 +28,8 @@ const { personas, ui } = data;
                 <img
                   src={persona.image}
                   alt={persona.name}
+                  width="500"
+                  height="600"
                   class="w-full h-full object-cover object-top block transition-transform duration-1000 hover:scale-105"
                 />
               </div>
@@ -45,6 +47,8 @@ const { personas, ui } = data;
                     <img 
                       src={persona.partnerLogo} 
                       alt="Partner Logo" 
+                      width="120"
+                      height="60"
                       class="h-14 lg:h-10 w-auto object-contain opacity-90"
                     />
                   )}
@@ -52,6 +56,8 @@ const { personas, ui } = data;
                     <img 
                       src={persona.campaignLogo || "/assets/maes/logo-clube-transparente.webp"} 
                       alt="Campaign Logo" 
+                      width="120"
+                      height="60"
                       class="h-18 lg:h-12 w-auto object-contain opacity-90"
                     />
                   )}
