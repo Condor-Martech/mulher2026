@@ -216,6 +216,13 @@ const eventsWithMetadata = events.map(event => {
         console.error('[EventGrid] Hydration failed:', e);
       }
     }
+    });
+  } catch (e) {
+    console.error('[EventGrid] Outer hydration failed:', e);
+  }
+}
+
+
 
     // Run when DOM is ready
     if (document.readyState === 'loading') {
