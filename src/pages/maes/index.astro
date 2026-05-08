@@ -13,8 +13,7 @@ import PartnersMaes from "../../components/maes/PartnersMaes.astro";
 import EventModal from "../../components/EventModal.astro";
 import FeedbackModalMaes from "../../components/maes/FeedbackModalMaes.astro";
 
-
-const title = "Dia das Mães Condor 2026 | Celebre com Prêmios";
+const title = "Dia das Mães Condor 2026";
 ---
 
 <LayoutMaes title={title}>
@@ -39,7 +38,6 @@ const title = "Dia das Mães Condor 2026 | Celebre com Prêmios";
 
     <!-- 7. Saiba mais CTA -->
 
-
     <!-- 8. Disclaimer -->
     <DisclaimerMaes />
 
@@ -56,27 +54,27 @@ const title = "Dia das Mães Condor 2026 | Celebre com Prêmios";
   <script>
     const observerOptions = {
       threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
+      rootMargin: "0px 0px -50px 0px",
     };
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('active');
+          entry.target.classList.add("active");
         }
       });
     }, observerOptions);
 
     // Initial and dynamic observation
     const observeElements = () => {
-      document.querySelectorAll('.reveal').forEach(el => {
+      document.querySelectorAll(".reveal").forEach((el) => {
         observer.observe(el);
       });
     };
 
     observeElements();
-    
+
     // Support for dynamic content if needed
-    document.addEventListener('astro:page-load', observeElements);
+    document.addEventListener("astro:page-load", observeElements);
   </script>
 </LayoutMaes>
