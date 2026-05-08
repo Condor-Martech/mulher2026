@@ -128,41 +128,99 @@ const eventsWithMetadata = events.map(event => {
       const inscricoes = await inscricoesRes.json();
 
       palestras.forEach((p: any) => {
-        const card = document.querySelector(`[data-event-id="${p.id}"]`);
-        if (!card) return;
+    async function hydrateEvents() {
+      console.log('[EventGrid] Starting hydration...');
+      const grid = document.getElementById('event-grid-maes');
+      if (!grid) {
+        console.warn('[EventGrid] Grid element not found');
+        return;
+      }
 
-        const crmCount    = (inscricoes as any[]).filter((i: any) => i.event_id === p.id && i.source === 'crm').length;
-        const socialCount = (inscricoes as any[]).filter((i: any) => i.event_id === p.id && i.source !== 'crm').length;
-        const status      = computeStatus(p, crmCount, socialCount);
-        const cfg         = STATUS[status];
+      const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+      const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
-        const badge = card.querySelector('[data-badge]') as HTMLElement | null;
-        if (badge) {
-          badge.textContent = cfg.label;
-          badge.style.backgroundColor = cfg.bg;
-          badge.style.color = cfg.color;
-        }
+      if (!supabaseUrl || !supabaseKey) {
+        console.error('[EventGrid] Missing Supabase environment variables. Check your CI/CD secrets.');
+        return;
+      }
 
-        const cta = card.querySelector('[data-cta]') as HTMLElement | null;
-        if (cta) {
-          const svg = cta.querySelector('svg');
-          cta.textContent = cfg.ctaText;
-          if (svg) cta.appendChild(svg);
-          if (cfg.disabled) {
-            cta.style.opacity = '0.5';
-            cta.style.pointerEvents = 'none';
-            cta.style.cursor = 'not-allowed';
-          } else {
-            cta.style.opacity = '1';
-            cta.style.pointerEvents = 'auto';
-            cta.style.cursor = 'pointer';
+      try {
+        const response = await fetch(
+          `${supabaseUrl}/rest/v1/maes_events?select=id,registrations_count,max_capacity,status`,
+          {
+            headers: {
+              'apikey': supabaseKey,
+              'Authorization': `Bearer ${supabaseKey}`
+            }
           }
-        }
-      });
-    } catch (e) {
-      console.warn('[EventGrid] hydration failed:', e);
-    }
-  }
+        );
 
-  document.addEventListener('DOMContentLoaded', hydrateEvents);
-</script>
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        
+        const events = await response.json();
+        console.log('[EventGrid] Data fetched:', events);
+        
+        const eventsMap = events.reduce((acc: any, event: any) => {
+          acc[event.id] = event;
+          return acc;
+        }, {});
+
+        // Update all cards
+        const cards = grid.querySelectorAll('[data-event-id]');
+        cards.forEach((card) => {
+          const eventId = card.getAttribute('data-event-id');
+          const event = eventsMap[eventId || ''];
+          
+          if (!event) return;
+
+          // Logic to determine status
+          let finalStatus = event.status;
+          if (finalStatus === 'open' && event.registrations_count >= event.max_capacity) {
+            finalStatus = 'full';
+          }
+
+          // Update Badge
+          const badge = card.querySelector('[data-badge]');
+          if (badge) {
+            if (finalStatus === 'full') {
+              badge.textContent = 'ESGOTADO';
+              badge.className = 'absolute -top-3 left-1/2 -translate-x-1/2 bg-[#713334] text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg whitespace-nowrap z-20';
+            } else if (finalStatus === 'soon') {
+              badge.textContent = 'INSCRIÇÕES EM BREVE';
+              badge.className = 'absolute -top-3 left-1/2 -translate-x-1/2 bg-[#FFCE00] text-[#713334] px-4 py-1 rounded-full text-xs font-bold shadow-lg whitespace-nowrap z-20';
+            } else {
+              badge.textContent = 'INSCRIÇÕES ABERTAS';
+              badge.className = 'absolute -top-3 left-1/2 -translate-x-1/2 bg-[#FFCE00] text-[#713334] px-4 py-1 rounded-full text-xs font-bold shadow-lg whitespace-nowrap z-20';
+            }
+          }
+
+          // Update CTA Button
+          const cta = card.querySelector('[data-cta]');
+          if (cta) {
+            if (finalStatus === 'full') {
+              cta.textContent = 'Esgotado';
+              (cta as HTMLButtonElement).disabled = true;
+              cta.className = 'w-[85%] py-3 lg:py-3 xl:py-4 2xl:py-5 px-6 rounded-xl font-maes-sans font-bold text-xl lg:text-xl xl:text-2xl transition-all duration-300 shadow-lg mx-auto mb-2 tracking-tight bg-gray-400 text-white cursor-not-allowed opacity-70';
+            } else if (finalStatus === 'soon') {
+              cta.textContent = 'Em Breve';
+              (cta as HTMLButtonElement).disabled = true;
+              cta.className = 'w-[85%] py-3 lg:py-3 xl:py-4 2xl:py-5 px-6 rounded-xl font-maes-sans font-bold text-xl lg:text-xl xl:text-2xl transition-all duration-300 shadow-lg mx-auto mb-2 tracking-tight bg-[#E9969F] text-white cursor-not-allowed opacity-70';
+            } else {
+              cta.textContent = 'Inscreva-se';
+              (cta as HTMLButtonElement).disabled = false;
+              cta.className = 'open-event-modal-btn w-[85%] py-3 lg:py-3 xl:py-4 2xl:py-5 px-6 rounded-xl font-maes-sans font-bold text-xl lg:text-xl xl:text-2xl transition-all duration-300 shadow-lg mx-auto mb-2 tracking-tight bg-[#713334] text-white hover:scale-[1.02] active:scale-[0.98] cursor-pointer';
+            }
+          }
+        });
+      } catch (e) {
+        console.error('[EventGrid] Hydration failed:', e);
+      }
+    }
+
+    // Run when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', hydrateEvents);
+    } else {
+      hydrateEvents();
+    }
+  </script>
