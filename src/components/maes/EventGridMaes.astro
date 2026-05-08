@@ -37,10 +37,10 @@ const eventsWithMetadata = events.map(event => {
     
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
       {eventsWithMetadata.map((event: any) => (
-        <div class="group relative bg-maes-bg rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-maes-primary/5">
+        <div data-event-id={event.id} class="group relative bg-maes-bg rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-maes-primary/5">
           <!-- Image & Badge -->
           <div class="aspect-[4/3] overflow-hidden relative">
-            <div class={`absolute top-4 left-4 z-10 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-lg ${event.statusColor}`}>
+            <div data-badge class={`absolute top-4 left-4 z-10 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-lg ${event.statusColor}`}>
               {event.statusLabel}
             </div>
             <img 
@@ -70,7 +70,7 @@ const eventsWithMetadata = events.map(event => {
               {event.description}
             </p>
             
-            <a href={event.link_inscripcion} class="inline-flex items-center text-maes-primary font-bold hover:gap-2 transition-all">
+            <a data-cta href={event.link_inscripcion} class="inline-flex items-center text-maes-primary font-bold hover:gap-2 transition-all">
               {ui.signUp}
               <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -82,3 +82,87 @@ const eventsWithMetadata = events.map(event => {
     </div>
   </div>
 </section>
+
+<script>
+  const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+  const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+  const CAMPAIGN_ID = 'dia-das-maes-2026';
+
+  type StatusKey = 'OPEN' | 'SOON' | 'FULL' | 'FINISHED';
+  const STATUS: Record<StatusKey, { label: string; bg: string; color: string; ctaText: string; disabled: boolean }> = {
+    OPEN:     { label: 'Inscrições Abertas', bg: '#713334', color: '#fff', ctaText: 'Inscreva-se', disabled: false },
+    SOON:     { label: 'Em Breve',           bg: '#FFCE00', color: '#000', ctaText: 'Em Breve',    disabled: true  },
+    FULL:     { label: 'Vagas Esgotadas',    bg: '#9ca3af', color: '#fff', ctaText: 'Esgotado',    disabled: true  },
+    FINISHED: { label: 'Encerrado',          bg: '#9ca3af', color: '#fff', ctaText: 'Encerrado',   disabled: true  },
+  };
+
+  function computeStatus(p: any, crmCount: number, socialCount: number): StatusKey {
+    const now = new Date();
+    const eventDate = new Date(p.data_evento);
+    const openDate = p.data_abertura_inscricao ? new Date(p.data_abertura_inscricao) : null;
+
+    if (!p.active || now > eventDate) return 'FINISHED';
+    if (!openDate || now < openDate) return 'SOON';
+
+    const params = new URLSearchParams(window.location.search);
+    const src = params.get('src') ?? (window.location.pathname.includes('/palestra/') ? 'crm' : 'social');
+
+    if (src === 'crm' && p.qtd_crm != null && crmCount >= p.qtd_crm) return 'FULL';
+    if (src === 'social' && p.qtd_social != null && socialCount >= p.qtd_social) return 'FULL';
+
+    return 'OPEN';
+  }
+
+  async function hydrateEvents() {
+    try {
+      const headers = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
+
+      const [palestrasRes, inscricoesRes] = await Promise.all([
+        fetch(`${SUPABASE_URL}/rest/v1/palestras?active=eq.true&campanha_id=eq.${CAMPAIGN_ID}&select=id,data_evento,data_abertura_inscricao,active,qtd_crm,qtd_social`, { headers }),
+        fetch(`${SUPABASE_URL}/rest/v1/inscricoes?campanha_id=eq.${CAMPAIGN_ID}&select=event_id,source`, { headers }),
+      ]);
+
+      if (!palestrasRes.ok || !inscricoesRes.ok) return;
+
+      const palestras = await palestrasRes.json();
+      const inscricoes = await inscricoesRes.json();
+
+      palestras.forEach((p: any) => {
+        const card = document.querySelector(`[data-event-id="${p.id}"]`);
+        if (!card) return;
+
+        const crmCount    = (inscricoes as any[]).filter((i: any) => i.event_id === p.id && i.source === 'crm').length;
+        const socialCount = (inscricoes as any[]).filter((i: any) => i.event_id === p.id && i.source !== 'crm').length;
+        const status      = computeStatus(p, crmCount, socialCount);
+        const cfg         = STATUS[status];
+
+        const badge = card.querySelector('[data-badge]') as HTMLElement | null;
+        if (badge) {
+          badge.textContent = cfg.label;
+          badge.style.backgroundColor = cfg.bg;
+          badge.style.color = cfg.color;
+        }
+
+        const cta = card.querySelector('[data-cta]') as HTMLElement | null;
+        if (cta) {
+          const svg = cta.querySelector('svg');
+          cta.textContent = cfg.ctaText;
+          if (svg) cta.appendChild(svg);
+          if (cfg.disabled) {
+            cta.style.opacity = '0.5';
+            cta.style.pointerEvents = 'none';
+            cta.style.cursor = 'not-allowed';
+          } else {
+            cta.style.opacity = '1';
+            cta.style.pointerEvents = 'auto';
+            cta.style.cursor = 'pointer';
+          }
+        }
+      });
+    } catch (e) {
+      console.warn('[EventGrid] hydration failed:', e);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', hydrateEvents);
+</script>
