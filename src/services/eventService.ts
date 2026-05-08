@@ -5,7 +5,7 @@ import eventsData from '../data/events.json';
 const STATUS_CONFIG: Record<EventStatus, EventStatusConfig> = eventsData.statusConfig as Record<EventStatus, EventStatusConfig>;
 
 
-export const getEventStatus = (event: Event): EventStatus => {
+export const getEventStatus = (event: Event, source?: 'social' | 'crm'): EventStatus => {
   // --- DEBUG OVERRIDES (Only for local testing) ---
   if (typeof window !== 'undefined') {
     const urlParams = new URLSearchParams(window.location.search);
