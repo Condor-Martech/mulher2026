@@ -33,7 +33,7 @@ const transformData = (obj: any): any => {
 };
 
 /**
- * Fetches Maes content from S3 with a local fallback.
+ * Fetches Maes content from S3 with a local fallback. Used at build time.
  */
 export const getMaesContent = async () => {
   try {
@@ -48,7 +48,22 @@ export const getMaesContent = async () => {
   } catch (error) {
     console.error("[MaesService] Error conectando con Minio:", error);
   }
-  
+
   console.log("[MaesService] Usando fallback local transformado");
   return transformData(localContentData);
+};
+
+/**
+ * Fetches Maes content from Minio for runtime client-side hydration.
+ * Returns null on failure so callers can keep the server-rendered shell intact.
+ */
+export const fetchMaesContentClient = async (): Promise<any | null> => {
+  try {
+    const response = await fetch(`${S3_JSON_URL}?t=${Date.now()}`, { cache: "no-store" });
+    if (!response.ok) return null;
+    const remoteData = await response.json();
+    return transformData(remoteData);
+  } catch {
+    return null;
+  }
 };

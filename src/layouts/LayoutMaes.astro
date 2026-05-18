@@ -60,5 +60,20 @@ const { gtmId } = settings;
       </noscript>
     )}
     <slot />
+    <script>
+      import { fetchMaesContentClient } from "../services/maesService";
+      import { hydrateContent } from "../utils/contentHydration";
+
+      const run = async () => {
+        const remote = await fetchMaesContentClient();
+        if (remote) hydrateContent(remote);
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", run);
+      } else {
+        run();
+      }
+    </script>
   </body>
 </html>

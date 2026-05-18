@@ -86,11 +86,14 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
               </svg>
             </div>
             <div class="text-maes-primary font-maes-sans">
-              <p class="font-extrabold text-lg lg:text-[19px] xl:text-[21px] leading-tight">
+              <p
+                data-content="intro.address.location"
+                class="font-extrabold text-lg lg:text-[19px] xl:text-[21px] leading-tight"
+              >
                 {intro.address.location}
               </p>
               <p class="text-sm lg:text-[16px] xl:text-[18px] leading-tight mt-1 font-medium opacity-90">
-                {intro.address.street}<br />{intro.address.city}
+                <span data-content="intro.address.street">{intro.address.street}</span><br /><span data-content="intro.address.city">{intro.address.city}</span>
               </p>
             </div>
           </div>
@@ -105,7 +108,10 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
         <!-- Title Section with lines -->
         <div class="flex items-center justify-center gap-6 mb-10 lg:mb-14">
           <div class="hidden lg:block h-[3px] grow bg-maes-primary/20 rounded-full max-w-[180px]"></div>
-          <h4 class="font-maes-sans font-black text-maes-primary text-2xl lg:text-[36px] xl:text-[42px] tracking-tight uppercase text-center">
+          <h4
+            data-content="program.title"
+            class="font-maes-sans font-black text-maes-primary text-2xl lg:text-[36px] xl:text-[42px] tracking-tight uppercase text-center"
+          >
             {program.title}
           </h4>
           <div class="hidden lg:block h-[3px] grow bg-maes-primary/20 rounded-full max-w-[180px]"></div>
@@ -152,16 +158,22 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
             eventsWithMetadata.map((event: any, idx: number) => {
               // Dynamic button colors based on image reference
               return (
-                <div 
+                <div
                   class="reveal flex flex-col gap-2 shrink-0 w-[82vw] sm:w-[350px] lg:w-auto snap-center relative"
                   style={`--delay: ${idx * 150}ms`}
+                  data-event-id={event.id}
+                  data-event-status={event.status}
                 >
                   <!-- Status Badge (Floating Outside) -->
                   <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
-                    <div class:list={[
-                      "px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-[0.1em] border-2 border-white/50 whitespace-nowrap",
-                      event.statusColor
-                    ]}>
+                    <div
+                      data-event-badge
+                      data-applied-badge-colors={event.statusColor}
+                      class:list={[
+                        "px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-[0.1em] border-2 border-white/50 whitespace-nowrap",
+                        event.statusColor
+                      ]}
+                    >
                       {event.statusLabel}
                     </div>
                   </div>
@@ -215,6 +227,8 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
                   </div>
   
                   <button
+                    data-event-button
+                    data-applied-button-colors={!event.statusDisabled ? "bg-[#713334] text-white hover:scale-[1.02] active:scale-[0.98]" : "bg-[#F099A6] text-[#713334] opacity-90"}
                     class:list={[
                       "open-event-modal-btn w-[85%] py-3 lg:py-3 xl:py-4 2xl:py-5 px-6 rounded-xl font-maes-sans font-bold text-xl lg:text-xl xl:text-2xl transition-all duration-300 shadow-lg mx-auto mb-2 tracking-tight",
                       !event.statusDisabled ? "bg-[#713334] text-white hover:scale-[1.02] active:scale-[0.98] cursor-pointer" : "bg-[#F099A6] text-[#713334] cursor-not-allowed opacity-90"
@@ -224,7 +238,7 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
                     data-event-date={event.displayDate}
                     disabled={event.statusDisabled}
                   >
-                    {event.statusButton}
+                    <span data-event-button-text>{event.statusButton}</span>
                   </button>
                 </div>
               );
@@ -238,9 +252,36 @@ const eventsWithMetadata = program.events.map((staticEvent: any, idx: number) =>
 
 <script>
   import { initEventGridModal } from "../../utils/modalHandler";
-  
-  // Initialize modal listeners for the cards
+  import { initEventHydration } from "../../utils/eventHydration";
+
   initEventGridModal();
+
+  initEventHydration({
+    campanhaId: "dia-das-maes-2026",
+    containerSelector: "#intro-carousel",
+    source: "social",
+    badgeColors: {
+      OPEN: "bg-maes-accent text-maes-primary shadow-[0_8px_20px_-4px_rgba(255,206,0,0.4)]",
+      SOON: "bg-maes-accent text-maes-primary shadow-[0_8px_20px_-4px_rgba(255,206,0,0.4)]",
+      FULL: "bg-gray-400 text-white shadow-none",
+      FINISHED: "bg-gray-400 text-white shadow-none",
+    },
+    buttonColors: {
+      OPEN: "bg-[#713334] text-white hover:scale-[1.02] active:scale-[0.98]",
+      SOON: "bg-[#F099A6] text-[#713334] opacity-90",
+      FULL: "bg-[#F099A6] text-[#713334] opacity-90",
+      FINISHED: "bg-[#F099A6] text-[#713334] opacity-90",
+    },
+    onCardUpdate: (card, status) => {
+      const button = card.querySelector<HTMLButtonElement>("[data-event-button]");
+      if (!button) return;
+      if (status === "OPEN") {
+        button.classList.add("open-event-modal-btn");
+      } else {
+        button.classList.remove("open-event-modal-btn");
+      }
+    },
+  });
 
   const carousel = document.getElementById('intro-carousel');
 

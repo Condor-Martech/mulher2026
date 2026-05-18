@@ -144,50 +144,41 @@ const getDisruptionClass = (index: number) => {
 
 <script>
   import { initEventGridModal } from "../utils/modalHandler";
-  import {
-    getEventStatus,
-    getStatusConfig,
-    fetchEvents,
-  } from "../services/eventService";
+  import { initEventHydration } from "../utils/eventHydration";
   import eventsData from "../data/events.json";
 
-  const updateStatuses = async () => {
-    // Detect source from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const source = urlParams.get("src") || "social";
-
-    // We need the latest event data (mock)
-    const events = await fetchEvents();
-
-    // Update each card
-    const cards = document.querySelectorAll(".open-event-modal-btn");
-    cards.forEach((btn) => {
-      const el = btn as HTMLButtonElement;
-      const eventId = el.getAttribute("data-event-id");
-      const event = events.find((e) => e.id === eventId);
-
-      if (event) {
-        const status = getEventStatus(event);
-        const config = getStatusConfig(status);
-
-        // Update button text and disabled state
-        el.textContent = config.button;
-        el.disabled = config.disabled;
-
-        // Update badge if found in parent
-        const card = el.closest(".group");
-        const badge = card?.querySelector(".badge-label"); // Need to ensure Badge has this class
-        if (badge) {
-          badge.textContent = config.label;
-          // Note: classes are harder to update dynamically without removing all and adding new ones
-          // but for basic mock it might be enough to update the text.
-        }
-      }
-    });
-  };
+  const statusConfig = eventsData.statusConfig as Record<
+    "OPEN" | "SOON" | "FULL" | "FINISHED",
+    { class: string }
+  >;
 
   document.addEventListener("DOMContentLoaded", () => {
     initEventGridModal();
-    updateStatuses();
+  });
+
+  initEventHydration({
+    campanhaId: "mes-da-mulher-2026",
+    containerSelector: "#programacao",
+    badgeColors: {
+      OPEN: `${statusConfig.OPEN.class} shadow-lg backdrop-blur-md`,
+      SOON: `${statusConfig.SOON.class} shadow-lg backdrop-blur-md`,
+      FULL: `${statusConfig.FULL.class} shadow-lg backdrop-blur-md`,
+      FINISHED: `${statusConfig.FINISHED.class} shadow-lg backdrop-blur-md`,
+    },
+    buttonColors: {
+      OPEN: "!bg-primary !text-white shadow-lg shadow-primary/20 hover:bg-primary-hover",
+      SOON: "!bg-gray-200 !text-gray-500 shadow-none",
+      FULL: "!bg-gray-200 !text-gray-500 shadow-none",
+      FINISHED: "!bg-gray-200 !text-gray-500 shadow-none",
+    },
+    onCardUpdate: (card, status) => {
+      const button = card.querySelector<HTMLButtonElement>("[data-event-button]");
+      if (!button) return;
+      if (status === "OPEN") {
+        button.classList.add("open-event-modal-btn");
+      } else {
+        button.classList.remove("open-event-modal-btn");
+      }
+    },
   });
 </script>

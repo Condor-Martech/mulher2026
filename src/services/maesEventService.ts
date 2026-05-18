@@ -1,50 +1,25 @@
-import type { Event, EventStatus, EventStatusConfig } from '../types/event';
-import { registrationRepository } from '../repositories/registrationRepository';
-import eventsData from '../data/events.json';
+import type { Event, EventStatus } from '../types/event';
+import {
+  computeEventStatus,
+  getStatusConfig,
+  resolveSourceFromUrl,
+} from '../utils/eventStatus';
 
-const STATUS_CONFIG: Record<EventStatus, EventStatusConfig> = eventsData.statusConfig as Record<EventStatus, EventStatusConfig>;
+export { getStatusConfig };
 
 export const getEventStatus = (event: Event, source?: 'social' | 'crm'): EventStatus => {
-  const now = new Date();
-  const eventDate = new Date(event.data_evento);
-  const openingDate = event.data_abertura_inscricao ? new Date(event.data_abertura_inscricao) : null;
-
-  if (event.is_active === false || event.campanha_active === false || now > eventDate) {
-    return 'FINISHED';
-  }
-
-  if (!event.data_abertura_inscricao || (openingDate && now < openingDate)) {
-    return 'SOON';
-  }
-
-  let currentSource = source;
   if (typeof window !== 'undefined') {
     const urlParams = new URLSearchParams(window.location.search);
-    
-    // For testing purposes
-    const forceStatus = urlParams.get('force_status') as EventStatus | null;
+    const forceStatus = urlParams.get('force_status') as EventStatus;
     if (forceStatus && ['OPEN', 'SOON', 'FULL', 'FINISHED'].includes(forceStatus)) {
       return forceStatus;
     }
-
-    if (!currentSource) {
-      const srcParam = urlParams.get('src');
-      const isPalestraPath = window.location.pathname.includes('/palestra/');
-      currentSource = (srcParam as 'social' | 'crm') ?? (isPalestraPath ? 'crm' : 'social');
-    }
   }
-    
-  if (currentSource === 'crm' && event.current_crm !== undefined && event.qtd_crm !== undefined && event.qtd_crm !== null) {
-      if (event.current_crm >= event.qtd_crm) return 'FULL';
-  } else if (currentSource === 'social' && event.current_social !== undefined && event.qtd_social !== undefined && event.qtd_social !== null) {
-      if (event.current_social >= event.qtd_social) return 'FULL';
-  }
-  
-  return 'OPEN';
-};
 
-export const getStatusConfig = (status: EventStatus): EventStatusConfig => {
-  return STATUS_CONFIG[status];
+  const resolvedSource =
+    source ?? (typeof window !== 'undefined' ? resolveSourceFromUrl(window.location) : undefined);
+
+  return computeEventStatus(event, { source: resolvedSource });
 };
 
 export const fetchMaesEvents = async (): Promise<Event[]> => {

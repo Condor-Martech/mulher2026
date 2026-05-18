@@ -1,58 +1,27 @@
-import type { Event, EventStatus, EventStatusConfig } from '../types/event';
+import type { Event, EventStatus } from '../types/event';
 import { registrationRepository } from '../repositories/registrationRepository';
-import eventsData from '../data/events.json';
+import {
+  computeEventStatus,
+  getStatusConfig,
+  resolveSourceFromUrl,
+} from '../utils/eventStatus';
 
-const STATUS_CONFIG: Record<EventStatus, EventStatusConfig> = eventsData.statusConfig as Record<EventStatus, EventStatusConfig>;
-
+export { getStatusConfig };
 
 export const getEventStatus = (event: Event, source?: 'social' | 'crm'): EventStatus => {
-  // --- DEBUG OVERRIDES (Only for local testing) ---
   if (typeof window !== 'undefined') {
     const urlParams = new URLSearchParams(window.location.search);
     const forceStatus = urlParams.get('force_status') as EventStatus;
     const forceEventId = urlParams.get('force_event');
-
-    if (forceStatus) {
-      if (!forceEventId || forceEventId === event.id) {
-        return forceStatus;
-      }
+    if (forceStatus && (!forceEventId || forceEventId === event.id)) {
+      return forceStatus;
     }
   }
-  // ------------------------------------------------
 
-  const now = new Date();
-  const eventDate = new Date(event.data_evento);
-  const openingDate = event.data_abertura_inscricao ? new Date(event.data_abertura_inscricao) : null;
+  const resolvedSource =
+    source ?? (typeof window !== 'undefined' ? resolveSourceFromUrl(window.location) : undefined);
 
-  // 1. Check if event is finished explicitly or by date
-  if (event.is_active === false || event.campanha_active === false || now > eventDate) {
-    return 'FINISHED';
-  }
-
-  // 2. Check if registration is not yet open or opening date is not defined
-  if (!event.data_abertura_inscricao || (openingDate && now < openingDate)) {
-    return 'SOON';
-  }
-
-  // 3. Check for quotas (Mock implementation detects from URL if in browser)
-  if (typeof window !== 'undefined') {
-    const urlParams = new URLSearchParams(window.location.search);
-    const srcParam = urlParams.get('src');
-    const isPalestraPath = window.location.pathname.includes('/palestra/');
-    const source = srcParam ?? (isPalestraPath ? 'crm' : 'social');
-    
-    if (source === 'crm' && event.current_crm !== undefined && event.qtd_crm && event.qtd_crm > 0) {
-      if (event.current_crm >= event.qtd_crm) return 'FULL';
-    } else if (source === 'social' && event.current_social !== undefined && event.qtd_social && event.qtd_social > 0) {
-      if (event.current_social >= event.qtd_social) return 'FULL';
-    }
-  }
-  
-  return event.link_inscripcion ? 'OPEN' : 'SOON';
-};
-
-export const getStatusConfig = (status: EventStatus): EventStatusConfig => {
-  return STATUS_CONFIG[status];
+  return computeEventStatus(event, { source: resolvedSource });
 };
 
 export const fetchEvents = async (apiUrl?: string): Promise<Event[]> => {
