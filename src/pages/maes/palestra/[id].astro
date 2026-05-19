@@ -6,41 +6,50 @@ import SpinnerIcon from "../../../components/icons/SpinnerIcon.astro";
 import EventRegistrationForm from "../../../components/EventRegistrationForm.astro";
 import { supabase } from "../../../lib/supabase";
 
-export async function getStaticPaths() {
-  const { data: palestras, error } = await supabase
-    .from("palestras")
-    .select("*")
-    .eq("active", true)
-    .eq("campanha_id", "dia-das-maes-2026");
+const { id } = Astro.params;
 
-  if (error || !palestras) {
-    console.error("Static paths error:", error);
-    return [];
-  }
-
-  return palestras.map((p: any) => ({
-    params: { id: p.id },
-    props: {
-      eventId: p.id,
-      tema: p.nome,
-      palestrante: p.palestrante,
-      data_evento: p.data_evento,
-      tipo_evento: p.tipo_evento || "Programa Especial",
-      qtd_crm: p.qtd_crm ?? 0,
-    },
-  }));
+if (!id) {
+  return new Response(null, { status: 404, statusText: "Not Found" });
 }
 
-interface Props {
-  eventId: string;
-  tema: string;
-  palestrante: string;
-  data_evento: string;
-  tipo_evento: string;
-  qtd_crm: number;
+const { data: palestra, error } = await supabase
+  .from("palestras")
+  .select("*")
+  .eq("id", id)
+  .eq("active", true)
+  .eq("campanha_id", "dia-das-maes-2026")
+  .maybeSingle();
+
+if (error || !palestra) {
+  return new Response(null, { status: 404, statusText: "Not Found" });
 }
 
-const { eventId, tema, palestrante, data_evento, tipo_evento, qtd_crm } = Astro.props;
+const eventId = palestra.id;
+const tema = palestra.nome;
+const palestrante = palestra.palestrante;
+const data_evento = palestra.data_evento;
+const tipo_evento = palestra.tipo_evento || "Programa Especial";
+
+const urlSrc = Astro.url.searchParams.get("src");
+const source = urlSrc === "social" ? "social" : "crm";
+const quota = source === "crm"
+  ? (palestra.qtd_crm ?? 0)
+  : (palestra.qtd_social ?? 0);
+
+let isFull = false;
+if (quota > 0) {
+  const { count } = await supabase
+    .from("inscricoes")
+    .select("*", { count: "exact", head: true })
+    .eq("event_id", eventId)
+    .eq("source", source);
+  isFull = count != null && count >= quota;
+}
+
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=30, stale-while-revalidate=60",
+);
 
 const dateObj = data_evento ? new Date(data_evento) : null;
 const isValidDate = dateObj && !isNaN(dateObj.getTime());
@@ -121,7 +130,7 @@ if (isValidDate && dateObj) {
         <!-- Registration Column -->
         <div class="w-full lg:w-[400px] xl:w-[450px] shrink-0 pb-6 lg:pb-0">
           <!-- Sold Out State -->
-          <div id="vagas-esgotadas-block" class="hidden animate-maes-fade-in" data-event-id={eventId}>
+          <div id="vagas-esgotadas-block" class:list={["animate-maes-fade-in", { hidden: !isFull }]}>
             <div class="bg-white/80 backdrop-blur-md rounded-[24px] lg:rounded-[32px] border-2 border-maes-wine/10 p-6 text-center shadow-xl">
               <div class="w-12 h-12 rounded-full bg-maes-wine/10 flex items-center justify-center mx-auto mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-maes-wine" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
@@ -136,7 +145,7 @@ if (isValidDate && dateObj) {
           </div>
 
           <!-- Form Block -->
-          <div id="form-block" class="animate-maes-fade-in w-full">
+          <div id="form-block" class:list={["animate-maes-fade-in w-full", { hidden: isFull }]}>
             <div class="bg-white rounded-[20px] lg:rounded-[32px] border-2 border-maes-wine/5 p-4 lg:p-10 shadow-2xl relative overflow-hidden">
               <div class="relative z-10">
                 <h3 class="font-maes-sans font-black text-lg lg:text-2xl text-maes-primary mb-0.5">Inscreva-se</h3>
@@ -162,43 +171,3 @@ if (isValidDate && dateObj) {
   <FeedbackModalMaes />
 </LayoutMaes>
 
-<script>
-  import { supabase } from "../../../lib/supabase";
-
-  document.addEventListener("DOMContentLoaded", async () => {
-    const vagasEl = document.getElementById("vagas-esgotadas-block");
-    const eventId = vagasEl?.dataset.eventId;
-
-    if (!eventId) return;
-
-    try {
-      const { data: palestra, error: palestrasError } = await supabase
-        .from("palestras")
-        .select("qtd_crm, qtd_social")
-        .eq("id", eventId)
-        .single();
-
-      if (!palestrasError) {
-        // Simple logic for sold out check
-        const urlParams = new URLSearchParams(window.location.search);
-        const source = urlParams.get('src') || 'crm'; // Default to CRM in this page as per requirement
-        const quota = source === 'crm' ? palestra.qtd_crm : palestra.qtd_social;
-
-        if (quota > 0) {
-          const { count, error: countError } = await supabase
-            .from("inscricoes")
-            .select("*", { count: "exact", head: true })
-            .eq("event_id", eventId)
-            .eq("source", source);
-
-          if (!countError && count !== null && count >= quota) {
-            document.getElementById("form-block")?.classList.add("hidden");
-            vagasEl?.classList.remove("hidden");
-          }
-        }
-      }
-    } catch (e) {
-      console.error("Failed to check quota:", e);
-    }
-  });
-</script>

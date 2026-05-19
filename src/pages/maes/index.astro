@@ -13,6 +13,11 @@ import EventModal from "../../components/EventModal.astro";
 import FeedbackModalMaes from "../../components/maes/FeedbackModalMaes.astro";
 
 const title = "Dia das Mães Condor 2026";
+
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=30, stale-while-revalidate=60",
+);
 ---
 
 <LayoutMaes title={title}>

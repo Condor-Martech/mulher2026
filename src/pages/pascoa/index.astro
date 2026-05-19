@@ -12,6 +12,11 @@ import FooterCondor from "../../components/pascoa/layout/FooterCondor.astro";
 import { getPascoaContent } from "../../services/pascoaService";
 
 const contentData = await getPascoaContent();
+
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=60, stale-while-revalidate=120",
+);
 ---
 
 <Layout title="Páscoa Condor">

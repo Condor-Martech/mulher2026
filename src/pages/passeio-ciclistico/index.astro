@@ -9,6 +9,11 @@ import FAQ from "../../components/pc/FAQ.astro";
 import Regulations from "../../components/pc/Regulations.astro";
 import Footer from "../../components/pc/Footer.astro";
 import Sponsors from "../../components/pc/Sponsors.astro";
+
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=300, stale-while-revalidate=600",
+);
 ---
 
 <Layout title="Passeio Ciclístico 2026">

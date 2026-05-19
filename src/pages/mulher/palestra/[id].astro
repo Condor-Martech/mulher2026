@@ -5,37 +5,44 @@ import FeedbackModal from "../../../components/FeedbackModal.astro";
 import SpinnerIcon from "../../../components/icons/SpinnerIcon.astro";
 import { supabase } from "../../../lib/supabase";
 
-export async function getStaticPaths() {
-  const { data: palestras, error } = await supabase
-    .from("palestras")
-    .select("*")
-    .eq("active", true);
+const { id } = Astro.params;
 
-  if (error || !palestras) return [];
-
-  return palestras.map((p: any) => ({
-    params: { id: p.id },
-    props: {
-      eventId: p.id,
-      tema: p.nome,
-      palestrante: p.palestrante,
-      data_evento: p.data_evento,
-      tipo_evento: p.tipo_evento || "Palestra",
-      qtd_crm: p.qtd_crm ?? 0,
-    },
-  }));
+if (!id) {
+  return new Response(null, { status: 404, statusText: "Not Found" });
 }
 
-interface Props {
-  eventId: string;
-  tema: string;
-  palestrante: string;
-  data_evento: string;
-  tipo_evento: string;
-  qtd_crm: number;
+const { data: palestra, error } = await supabase
+  .from("palestras")
+  .select("*")
+  .eq("id", id)
+  .eq("active", true)
+  .maybeSingle();
+
+if (error || !palestra) {
+  return new Response(null, { status: 404, statusText: "Not Found" });
 }
 
-const { eventId, tema, palestrante, data_evento, tipo_evento, qtd_crm } = Astro.props;
+const eventId = palestra.id;
+const tema = palestra.nome;
+const palestrante = palestra.palestrante;
+const data_evento = palestra.data_evento;
+const tipo_evento = palestra.tipo_evento || "Palestra";
+const qtd_crm = palestra.qtd_crm ?? 0;
+
+let crmFull = false;
+if (qtd_crm > 0) {
+  const { count } = await supabase
+    .from("inscricoes")
+    .select("*", { count: "exact", head: true })
+    .eq("event_id", eventId)
+    .eq("source", "crm");
+  crmFull = count != null && count >= qtd_crm;
+}
+
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=30, stale-while-revalidate=60",
+);
 
 const dateObj = data_evento ? new Date(data_evento) : null;
 const isValidDate = dateObj && !isNaN(dateObj.getTime());
@@ -114,8 +121,7 @@ if (isValidDate && dateObj) {
       </div>
 
       {/* ── VAGAS ESGOTADAS ── */}
-      <div id="vagas-esgotadas-block" class="hidden animate-slide-up" style="animation-delay:0.18s"
-        data-event-id={eventId} data-qtd-crm={qtd_crm}>
+      <div id="vagas-esgotadas-block" class:list={["animate-slide-up", { hidden: !crmFull }]} style="animation-delay:0.18s">
         <div class="glass-white rounded-3xl shadow-[0_24px_64px_rgba(244,63,94,0.13)] overflow-hidden border border-white/70 p-4">
           <div class="bg-gradient-to-br from-primary/8 to-rose-50/80 py-16 px-6 text-center">
             <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
@@ -135,7 +141,7 @@ if (isValidDate && dateObj) {
       </div>
 
       {/* ── FORM CARD ── */}
-      <div id="form-block" class="animate-slide-up" style="animation-delay:0.18s">
+      <div id="form-block" class:list={["animate-slide-up", { hidden: crmFull }]} style="animation-delay:0.18s">
         <div class="glass-white rounded-3xl shadow-[0_24px_64px_rgba(244,63,94,0.13)] overflow-hidden border border-white/70 p-4">
 
           {/* Card header */}
@@ -214,41 +220,9 @@ if (isValidDate && dateObj) {
 
 <script>
   import { initFormHandler } from "../../../utils/formHandler";
-  import { supabase } from "../../../lib/supabase";
 
-  document.addEventListener("DOMContentLoaded", async () => {
+  document.addEventListener("DOMContentLoaded", () => {
     initFormHandler();
-
-    const vagasEl = document.getElementById("vagas-esgotadas-block");
-    const eventId = vagasEl?.dataset.eventId;
-
-    if (!eventId) return;
-
-    try {
-      // Fetch qtd_crm from DB at runtime (not relying on build-time baked value)
-      const { data: palestra, error: palestrasError } = await supabase
-        .from("palestras")
-        .select("qtd_crm")
-        .eq("id", eventId)
-        .single();
-
-      const qtdCrm = palestra?.qtd_crm ?? 0;
-
-      if (!palestrasError && qtdCrm > 0) {
-        const { count, error: countError } = await supabase
-          .from("inscricoes")
-          .select("*", { count: "exact", head: true })
-          .eq("event_id", eventId)
-          .eq("source", "crm");
-
-        if (!countError && count !== null && count >= qtdCrm) {
-          document.getElementById("form-block")?.classList.add("hidden");
-          vagasEl?.classList.remove("hidden");
-        }
-      }
-    } catch (e) {
-      console.error("Failed to check CRM quota:", e);
-    }
   });
 </script>
 
