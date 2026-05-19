@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.5",
     "@astrojs/react": "^4.4.2",
     "@supabase/supabase-js": "^2.98.0",
     "@tailwindcss/vite": "^4.2.1",
@@ -25,5 +26,11 @@
     "@playwright/test": "^1.58.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   }
 }
