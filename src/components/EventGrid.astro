@@ -144,41 +144,8 @@ const getDisruptionClass = (index: number) => {
 
 <script>
   import { initEventGridModal } from "../utils/modalHandler";
-  import { initEventHydration } from "../utils/eventHydration";
-  import eventsData from "../data/events.json";
-
-  const statusConfig = eventsData.statusConfig as Record<
-    "OPEN" | "SOON" | "FULL" | "FINISHED",
-    { class: string }
-  >;
 
   document.addEventListener("DOMContentLoaded", () => {
     initEventGridModal();
-  });
-
-  initEventHydration({
-    campanhaId: "mes-da-mulher-2026",
-    containerSelector: "#programacao",
-    badgeColors: {
-      OPEN: `${statusConfig.OPEN.class} shadow-lg backdrop-blur-md`,
-      SOON: `${statusConfig.SOON.class} shadow-lg backdrop-blur-md`,
-      FULL: `${statusConfig.FULL.class} shadow-lg backdrop-blur-md`,
-      FINISHED: `${statusConfig.FINISHED.class} shadow-lg backdrop-blur-md`,
-    },
-    buttonColors: {
-      OPEN: "!bg-primary !text-white shadow-lg shadow-primary/20 hover:bg-primary-hover",
-      SOON: "!bg-gray-200 !text-gray-500 shadow-none",
-      FULL: "!bg-gray-200 !text-gray-500 shadow-none",
-      FINISHED: "!bg-gray-200 !text-gray-500 shadow-none",
-    },
-    onCardUpdate: (card, status) => {
-      const button = card.querySelector<HTMLButtonElement>("[data-event-button]");
-      if (!button) return;
-      if (status === "OPEN") {
-        button.classList.add("open-event-modal-btn");
-      } else {
-        button.classList.remove("open-event-modal-btn");
-      }
-    },
   });
 </script>
