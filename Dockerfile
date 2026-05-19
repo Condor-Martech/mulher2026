@@ -1,46 +1,53 @@
 # ==================================
-# Etapa 1: Construcción (Builder)
+# Stage 1: Build
 # ==================================
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
-# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar configuración de dependencias
-COPY package.json package-lock.json* ./
+# Enable pnpm via corepack
+RUN corepack enable
 
-# Instalar las dependencias (ci es más rápido y seguro en pipelines)
-# Nota: Usamos install normal ya que no hay lockfile garantizado en el entorno
-RUN npm install
+# Allow build scripts for sharp/esbuild (pnpm v10 blocks them by default)
+ENV PNPM_CONFIG_DANGEROUSLY_ALLOW_ALL_BUILDS=true
 
-# Copiar todo el código fuente del proyecto
+# Copy package files for layer caching
+COPY package.json pnpm-lock.yaml .npmrc ./
+
+# Install dependencies and rebuild sharp for the target platform
+RUN pnpm install --frozen-lockfile && pnpm rebuild sharp
+
+# Copy source code
 COPY . .
 
-# Build-time environment variables (passed via --build-arg)
+# Build-time env vars (baked into the client bundle via import.meta.env)
 ARG PUBLIC_SUPABASE_URL
 ARG PUBLIC_SUPABASE_ANON_KEY
 ENV PUBLIC_SUPABASE_URL=$PUBLIC_SUPABASE_URL
 ENV PUBLIC_SUPABASE_ANON_KEY=$PUBLIC_SUPABASE_ANON_KEY
 
-# Compilar Astro para producción (generar carpeta dist/)
-RUN npm run build
+# Build for production (generates dist/client + dist/server)
+RUN pnpm build
 
 # ==================================
-# Etapa 2: Servidor (Runner)
+# Stage 2: Runner
 # ==================================
-FROM nginx:alpine AS runner
+FROM node:22-alpine AS runner
 
-# Remover configuración por defecto de Nginx
-RUN rm -rf /usr/share/nginx/html/* /etc/nginx/conf.d/default.conf
+WORKDIR /app
 
-# Copiar la compilación desde la etapa builder hacia la raíz de Nginx
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/public ./public
 
-# Copiar configuración customizada de Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 4321
+ENV HOST=0.0.0.0
+ENV PORT=4321
 
-# Exponer el puerto 80 para el tráfico HTTP
-EXPOSE 80
+# Runtime env vars — server-side code (lib/supabase.ts) reads these at request time
+ARG PUBLIC_SUPABASE_URL
+ARG PUBLIC_SUPABASE_ANON_KEY
+ENV PUBLIC_SUPABASE_URL=$PUBLIC_SUPABASE_URL
+ENV PUBLIC_SUPABASE_ANON_KEY=$PUBLIC_SUPABASE_ANON_KEY
 
-# Comando para iniciar Nginx
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "./dist/server/entry.mjs"]
