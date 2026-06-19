@@ -1,0 +1,42 @@
+---
+/**
+ * Partial único de analytics (OpenPanel). Se incluye en el <head> de ambas layouts.
+ *
+ * - `globalProperties` se computan server-side desde Astro.url → viajan con cada
+ *   evento, incluido el screen_view automático (resuelve el timing).
+ * - `trackOutgoingLinks={false}`: los outbounds de negocio se miden con eventos
+ *   nombrados (data-track) para evitar doble conteo (docs/tracking-plan.md §6.2).
+ * - Degradación con gracia: sin PUBLIC_OPENPANEL_CLIENT_ID no se renderiza nada.
+ */
+import { OpenPanelComponent } from "@openpanel/astro";
+import { getAnalyticsGlobals } from "../lib/analyticsContext";
+
+const clientId = import.meta.env.PUBLIC_OPENPANEL_CLIENT_ID;
+const apiUrl =
+  import.meta.env.PUBLIC_OPENPANEL_API_URL || "https://opapi.cndr.me";
+const scriptUrl = import.meta.env.PUBLIC_OPENPANEL_SCRIPT_URL || undefined;
+
+const globalProperties = getAnalyticsGlobals(
+  Astro.url,
+  Astro.request.headers.get("referer"),
+);
+---
+
+{
+  clientId && (
+    <OpenPanelComponent
+      clientId={clientId}
+      apiUrl={apiUrl}
+      scriptUrl={scriptUrl}
+      trackScreenViews={true}
+      trackAttributes={true}
+      trackOutgoingLinks={false}
+      globalProperties={globalProperties}
+    />
+  )
+}
+
+<script>
+  import { initScrollDepth } from "../lib/scrollDepth";
+  initScrollDepth();
+</script>

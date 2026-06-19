@@ -55,3 +55,16 @@ import Accordion from "./Accordion.astro";
   <div class="mt-10 w-full border-t-2 border-dashed border-white/50 opacity-30">
   </div>
 </section>
+
+<script>
+  import { track } from "../../lib/track";
+
+  document.querySelectorAll<HTMLDetailsElement>("#faq details").forEach((d) => {
+    d.addEventListener("toggle", () => {
+      if (!d.open) return;
+      const question =
+        d.querySelector("summary span")?.textContent?.trim() || "";
+      track("faq_opened", { question });
+    });
+  });
+</script>

@@ -121,7 +121,7 @@ if (isValidDate && dateObj) {
       </div>
 
       {/* ── VAGAS ESGOTADAS ── */}
-      <div id="vagas-esgotadas-block" class:list={["animate-slide-up", { hidden: !crmFull }]} style="animation-delay:0.18s">
+      <div id="vagas-esgotadas-block" data-event-id={eventId} class:list={["animate-slide-up", { hidden: !crmFull }]} style="animation-delay:0.18s">
         <div class="glass-white rounded-3xl shadow-[0_24px_64px_rgba(244,63,94,0.13)] overflow-hidden border border-white/70 p-4">
           <div class="bg-gradient-to-br from-primary/8 to-rose-50/80 py-16 px-6 text-center">
             <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
@@ -220,9 +220,17 @@ if (isValidDate && dateObj) {
 
 <script>
   import { initFormHandler } from "../../../utils/formHandler";
+  import { track } from "../../../lib/track";
 
   document.addEventListener("DOMContentLoaded", () => {
     initFormHandler();
+
+    const esgotado = document.getElementById("vagas-esgotadas-block");
+    if (esgotado && !esgotado.classList.contains("hidden")) {
+      track("vagas_esgotadas_viewed", {
+        event_id: esgotado.dataset.eventId || "",
+      });
+    }
   });
 </script>
 

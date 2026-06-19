@@ -1,3 +1,5 @@
+import { track } from "../lib/track";
+
 export function initModalHandler() {
   const modal = document.getElementById("event-modal") as HTMLDialogElement;
   const closeBtn = document.getElementById("close-modal-btn");
@@ -91,6 +93,8 @@ export function initEventGridModal() {
         if (dateEl) dateEl.textContent = `Data: ${dateText || ""}`;
         if (idInput) idInput.value = id || "";
         if (temaInput) temaInput.value = tema || "";
+
+        track("event_modal_opened", { event_id: id || "" });
 
         modal.showModal();
       });

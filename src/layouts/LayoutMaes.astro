@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import "../styles/maes.css";
 import settings from "../data/settings.json";
+import Analytics from "../components/Analytics.astro";
 
 interface Props {
   title: string;
@@ -23,6 +24,7 @@ const { gtmId } = settings;
         })(window,document,'script','dataLayer',gtmId);
       </script>
     )}
+    <Analytics />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/favicon-64.png" sizes="64x64" />

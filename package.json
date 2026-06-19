@@ -1,7 +1,7 @@
 {
   "name": "web",
   "type": "module",
-  "version": "v1.0.28",
+  "version": "v1.0.29",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -12,6 +12,7 @@
     "@astrojs/node": "^9.5.5",
     "@astrojs/react": "^4.4.2",
     "@astrojs/vercel": "^9.0.5",
+    "@openpanel/astro": "^1.4.1",
     "@supabase/supabase-js": "^2.98.0",
     "@tailwindcss/vite": "^4.2.1",
     "@types/react": "^19.2.14",

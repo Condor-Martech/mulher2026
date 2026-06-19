@@ -74,6 +74,8 @@ const socialLinks = [
               target="_blank"
               rel="noopener noreferrer"
               aria-label={link.name}
+              data-track="social_link_clicked"
+              data-network={link.name.toLowerCase()}
               class="flex items-center justify-center w-8 h-8 rounded-full bg-white text-brand-white hover:bg-brand-primary hover:text-brand-white transition-all duration-300 shadow-md"
               set:html={link.icon.replace(
                 "currentColor",

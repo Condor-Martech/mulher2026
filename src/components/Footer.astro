@@ -58,6 +58,9 @@ const { galeriaCta } = settings;
             href={galeriaCta.url}
             target="_blank"
             rel="noopener noreferrer"
+            data-track="cta_clicked"
+            data-placement="footer"
+            data-label="galeria"
             class="text-primary font-bold text-xs uppercase tracking-widest hover:underline decoration-2 underline-offset-4 transition-all"
           >
             {galeriaCta.label}
@@ -85,6 +88,8 @@ const { galeriaCta } = settings;
             target="_blank"
             rel="noopener noreferrer"
             aria-label={link.name}
+            data-track="social_link_clicked"
+            data-network={link.icon}
             class="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full text-white border border-white/20 transition-all duration-300 hover:scale-115 hover:-translate-y-1 hover:brightness-110 shadow-lg"
             style={`background: ${link.bg}; box-shadow: 0 4px 12px ${link.shadow};`}
             role="listitem"

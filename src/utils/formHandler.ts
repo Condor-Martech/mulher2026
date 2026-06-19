@@ -1,4 +1,5 @@
 import { registrationService } from "../services/registrationService";
+import { track } from "../lib/track";
 
 export function initFormHandler() {
   const modal = document.getElementById("event-modal") as HTMLDialogElement;
@@ -19,6 +20,21 @@ export function initFormHandler() {
   }
 
   const inputs = form.querySelectorAll("input[required]");
+
+  // Analytics: el primer focus en el form = inicio del funnel (una sola vez).
+  form.addEventListener(
+    "focusin",
+    () => {
+      const eventId = (new FormData(form).get("eventId") as string) || "";
+      const srcParam = new URLSearchParams(window.location.search).get("src");
+      const isRegPath =
+        window.location.pathname.includes("/palestra/") ||
+        window.location.pathname.includes("/programacao/");
+      const source = srcParam ?? (isRegPath ? "crm" : "social");
+      track("registration_started", { event_id: eventId, source });
+    },
+    { once: true },
+  );
 
   const validators: Record<
     string,
@@ -208,6 +224,23 @@ export function initFormHandler() {
     const isRegistrationPath = window.location.pathname.includes('/palestra/') || window.location.pathname.includes('/programacao/');
     const source = srcParam ?? (isRegistrationPath ? 'crm' : 'social');
 
+    // Analytics: dedup de fallos (un solo registration_failed por envío).
+    let failureTracked = false;
+    const trackFailure = (errorType: string) => {
+      if (failureTracked) return;
+      failureTracked = true;
+      track("registration_failed", {
+        event_id: data.eventId as string,
+        source,
+        error_type: errorType,
+      });
+    };
+
+    track("registration_submitted", {
+      event_id: data.eventId as string,
+      source,
+    });
+
     const feedbackModal = document.getElementById("feedback-modal") as HTMLDialogElement;
     const feedbackIcon = document.getElementById("feedback-icon");
     const feedbackTitle = document.getElementById("feedback-title");
@@ -256,7 +289,8 @@ export function initFormHandler() {
       if (!result.success) {
         const errorType = result.error;
         console.warn("Registration failed:", errorType);
-        
+        trackFailure(errorType ?? "unknown");
+
         if (errorType === 'SAME_CPF') {
           showFeedback('warning', 'CPFs Iguais', 'O CPF do titular não pode ser o mesmo do acompanhante.');
         } else if (errorType === 'ALREADY_REGISTERED') {
@@ -284,6 +318,10 @@ export function initFormHandler() {
 
       // 3. Manejo de Éxito
       console.log("Registration successful!");
+      track("registration_succeeded", {
+        event_id: data.eventId as string,
+        source,
+      });
       showFeedback('success', 'Inscrição Confirmada!', 'Sua inscrição foi realizada com sucesso. Te esperamos lá!');
 
       if (form) form.reset();
@@ -292,6 +330,7 @@ export function initFormHandler() {
 
     } catch (err) {
       console.error("DEBUG SUBMIT ERROR:", err);
+      trackFailure("technical");
       // 4. Manejo de Error de Conexión/Servidor
       showFeedback('error', 'Erro Técnico', 'Ocorreu um erro ao processar sua inscrição. Por favor, tente novamente mais tarde.');
 

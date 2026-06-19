@@ -38,6 +38,8 @@ const { socialLinks } = footerData;
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Siga-nos no ${link.name}`}
+            data-track="social_link_clicked"
+            data-network={link.icon}
             class="w-8 h-8 lg:w-10 lg:h-10 flex items-center justify-center rounded-full text-white transition-all duration-300 hover:scale-110 hover:-translate-y-1 bg-[var(--link-bg)] shadow-[0_4px_12px_var(--link-shadow)]"
             style={`--link-bg: ${link.bg}; --link-shadow: ${link.shadow};`}
           >

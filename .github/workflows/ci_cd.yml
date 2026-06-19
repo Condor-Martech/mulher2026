@@ -58,6 +58,7 @@ jobs:
           build-args: |
             PUBLIC_SUPABASE_URL=${{ secrets.PUBLIC_SUPABASE_URL }}
             PUBLIC_SUPABASE_ANON_KEY=${{ secrets.PUBLIC_SUPABASE_ANON_KEY }}
+            PUBLIC_OPENPANEL_CLIENT_ID=${{ secrets.PUBLIC_OPENPANEL_CLIENT_ID }}
 
       - name: Generate build summary
         run: |
