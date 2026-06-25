@@ -1,0 +1,31 @@
+---
+import recipes from "../../data/sabores/recipes.json";
+import content from "../../data/sabores/content.json";
+const blog = content.blog;
+---
+
+<section id="blog" class="content-section bg-transparent scroll-reveal relative overflow-hidden">
+  <div class="ambient-copper-glow"></div>
+
+  <div class="container mx-auto px-6 max-w-[90rem] relative z-10">
+    <div class="section-title-group">
+      <span class="section-pretitle">{blog.pretitle}</span>
+      <h2 class="section-main-title">{blog.title}</h2>
+      <p class="section-subtitle">{blog.subtitle}</p>
+    </div>
+
+    <div class="recipe-grid">
+      {recipes.map((recipe) => (
+        <article class="recipe-card">
+          <img src={recipe.image} alt={recipe.title} class="recipe-image" />
+          <div class="recipe-overlay"></div>
+          <div class="recipe-content">
+            <span class="recipe-tag">{recipe.tag}</span>
+            <h3 class="recipe-title">{recipe.title}</h3>
+            <span class="recipe-btn">Acessar Receita</span>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,128 @@
+---
+import type { Event } from "../../types/event";
+import SaboresEventCard from "./SaboresEventCard.astro";
+import SaboresEventModal from "./SaboresEventModal.astro";
+import SaboresFeedbackModal from "./SaboresFeedbackModal.astro";
+import content from "../../data/sabores/content.json";
+
+interface Props {
+  events: Event[];
+}
+const { events } = Astro.props;
+const eventsCopy = content.events;
+
+// Agrupación POR CIUDAD (decisión de gerencia). Cada tab = una ciudad; dentro,
+// los eventos quedan ordenados por fecha (las 5 quartas de julho).
+const REGION_NAMES: Record<string, string> = {
+  curitiba: "Curitiba",
+  maringa: "Maringá",
+  pontagrossa: "Ponta Grossa",
+};
+const REGION_ORDER = ["curitiba", "maringa", "pontagrossa"];
+const keyOf = (e: Event) =>
+  (e.region ?? "").toLowerCase().replace(/\s+/g, "") || "outros";
+
+const byCity = new Map<string, Event[]>();
+for (const e of events) {
+  const k = keyOf(e);
+  if (!byCity.has(k)) byCity.set(k, []);
+  byCity.get(k)!.push(e);
+}
+
+const cities = [...byCity.keys()]
+  .sort((a, b) => {
+    const ia = REGION_ORDER.indexOf(a);
+    const ib = REGION_ORDER.indexOf(b);
+    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+  })
+  .map((key) => {
+    const list = byCity
+      .get(key)!
+      .slice()
+      .sort(
+        (a, b) =>
+          new Date(a.data_evento).getTime() - new Date(b.data_evento).getTime(),
+      );
+    return {
+      key,
+      name: REGION_NAMES[key] ?? list[0]?.region ?? "Outros",
+      count: list.length,
+      list,
+    };
+  });
+---
+
+<section
+  id="programacao"
+  class="content-section bg-transparent relative overflow-hidden"
+>
+  <div class="container mx-auto px-6 max-w-[90rem] relative z-10">
+    <div class="section-title-group">
+      <span class="section-pretitle">{eventsCopy.pretitle}</span>
+      <h2 class="section-main-title">{eventsCopy.title}</h2>
+      <p class="section-subtitle">{eventsCopy.subtitle}</p>
+    </div>
+
+    {
+      events.length === 0 ? (
+        <div class="mx-auto max-w-xl rounded-3xl border border-gold/20 bg-chocolate-dark/40 backdrop-blur-md px-8 py-12 text-center">
+          <p class="font-display italic text-2xl text-gold mb-3">
+            Programação em breve
+          </p>
+          <p class="text-latte/70">
+            Estamos finalizando as datas. Volte logo para garantir a sua vaga.
+          </p>
+        </div>
+      ) : (
+        <Fragment>
+          {/* Filtro = badges redondeados de ciudad (sin contenedor envolvente) */}
+          <div class="city-filter" role="tablist">
+            {cities.map((c, i) => (
+              <button
+                type="button"
+                role="tab"
+                data-city-tab={c.key}
+                aria-selected={i === 0 ? "true" : "false"}
+                class:list={["city-badge", { active: i === 0 }]}
+              >
+                {c.name}
+                <span class="badge-count">{c.count}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Indicador de deslizar — badge solo visible en carrusel (<1280px) */}
+          <div class="carousel-hint" aria-hidden="true">
+            <span class="carousel-hint-pill">
+              <span>Deslize para ver mais</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 6l6 6-6 6M13 6l6 6-6 6" />
+              </svg>
+            </span>
+          </div>
+
+          {/* Solo las cards del evento, sueltas sobre la página */}
+          {cities.map((c, i) => (
+            <div
+              data-city-panel={c.key}
+              role="tabpanel"
+              class:list={["city-panel events-grid", { "hidden-panel": i !== 0 }]}
+            >
+              {c.list.map((event) => (
+                <SaboresEventCard event={event} />
+              ))}
+            </div>
+          ))}
+        </Fragment>
+      )
+    }
+  </div>
+
+  <SaboresEventModal />
+  <SaboresFeedbackModal />
+</section>
+
+<script>
+  import { initSaboresEvents } from "../../utils/saboresRegistration";
+  initSaboresEvents();
+</script>

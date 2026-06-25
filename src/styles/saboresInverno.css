@@ -1,0 +1,1104 @@
+/* ============================================================================
+   Sabores de Inverno 2026 — design system (1 CSS por campaña, patrón maes.css).
+   Tailwind v4. Cargado SOLO por LayoutSaboresInverno.astro (bundle aislado:
+   sus tokens @theme no sangran a mulher/maes/pascoa).
+   Rutas de assets reescritas a /assets/sabores-de-inverno/ (convención del repo).
+   ============================================================================ */
+@import "tailwindcss";
+
+
+/* ═══════════════════════ tokens ═══════════════════════ */
+@theme {
+  /* Rich Winter Warm Colors (Extracted from 2026 Key Visual V02 MOD01) */
+  --color-chocolate-dark: #1A0D08;     /* Espresso dark shadows for deep premium contrast */
+  --color-chocolate-medium: #3f1d11;   /* Warm dark terracotta */
+  --color-chocolate-light: #5d2712;    /* Rich wood rust */
+  --color-caramel: #B25421;            /* Vibrant rustic copper (from the "de" graphic tag) */
+  --color-gold: #EAA824;               /* Golden extrudado (from premium cheese, bread & stamp borders) */
+  --color-wine: #5A0612;               /* Cabernet wine red accent (from wine bottle, glass & grapes) */
+  --color-cream: #FBF9F6;              /* Card cream base */
+  --color-beige-dark: #E2DCD5;         /* Card border shades */
+  --color-latte: #DFD3C3;              /* Deep warm creamy sand (aged toasted parchment) */
+  --color-toasted: #D5C0AB;            /* Cozy almond warm toasted tone */
+  
+  /* Condor Brand Colors */
+  --color-brand-blue: #0055A5;
+  --color-brand-red: #E31C24;
+  --color-brand-blue-hover: #004485;
+  --color-brand-red-hover: #C2161D;
+
+  /* Typography Pairing */
+  --font-sans: 'Inter', sans-serif;
+  --font-display: 'Playfair Display', serif;
+  --font-script: 'Great Vibes', cursive;
+
+  /* Typography Extensions */
+  --text-2xs: 0.625rem; /* 10px */
+  --text-2xs--line-height: 1rem;
+
+  /* Premium Soft Rounded Borders */
+  --radius-4xl: 2rem;
+  --radius-5xl: 2.5rem;
+
+  /* Border Width Extensions */
+  --border-width-thick: 2.5px;
+  --border-width-3: 3px;
+
+  /* Sizing */
+  --width-card-mobile: 85vw;
+
+  /* Custom Z-Index */
+  --z-index-dialog: 100;
+
+  /* Premium Shadows & Custom Glows */
+  --shadow-gold-glow: 0 4px 14px 0 rgba(234, 168, 36, 0.39);
+  --shadow-gold-hover: 0 25px 50px -12px rgba(234, 168, 36, 0.25);
+  --shadow-blue-glow: 0 4px 14px 0 rgba(0, 85, 165, 0.39);
+  --shadow-premium: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+  --shadow-premium-dark: 0 20px 50px -10px rgba(0, 0, 0, 0.8);
+  
+  /* Warm Copper Tagline Shadow Glow */
+  --shadow-copper-glow: 0 10px 30px rgba(178, 84, 33, 0.25);
+  
+  /* Tridimensional Gold Extrude Effect */
+  --shadow-gold-3d: 0 1px 0 #B87C10, 0 2px 0 #A8700D, 0 3px 0 #98640A, 0 4px 10px rgba(0, 0, 0, 0.4);
+
+  /* Tailwind v4 Natively Integrated Keyframes & Animations */
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes modal-enter {
+    0% { opacity: 0; transform: scale(0.96) translateY(10px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes subtle-zoom {
+    0% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-modal-enter: modal-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-subtle-zoom: subtle-zoom 1.5s ease-out forwards;
+}
+
+/* ═══════════════════════ animations ═══════════════════════ */
+/* ============================================================================
+   ANIMATION CLASSES & UTILITIES (Tailwind v4 Optimized)
+   ============================================================================ */
+
+.animate-marquee {
+  @apply flex w-max;
+  
+  /* Native CSS hover pause */
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+/* Reduced motion preference respect */
+@media (prefers-reduced-motion: reduce) {
+  .hero-img, 
+  .animate-marquee, 
+  .marquee-track, 
+  .recipe-image {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ═══════════════════════ base ═══════════════════════ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    @apply text-latte font-sans antialiased overflow-x-hidden w-full;
+    background-color: #2B1D14;
+  }
+
+  body {
+    @apply min-h-screen overflow-x-hidden w-full relative text-latte;
+    /* Toasted Mocha dark base for organic glassmorphism feel */
+    background-color: #2B1D14;
+    background-image:
+      radial-gradient(120% 80% at 50% 30%, rgba(100, 60, 40, 0.15), transparent 60%),
+      radial-gradient(120% 90% at 100% 100%, rgba(20, 10, 5, 0.45), transparent 55%),
+      linear-gradient(180deg, #32231A 0%, #2B1D14 50%, #1A110B 100%);
+    background-repeat: no-repeat;
+  }
+
+  /* Fine Organic Grain Texture Overlay */
+  .bg-grain {
+    position: relative;
+  }
+  
+  .bg-grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    z-index: 1;
+  }
+}
+
+/* ═══════════════════════ totem ═══════════════════════ */
+/* Organic curves & decorative totems */
+.totem-divider {
+  @apply relative w-full h-12 overflow-hidden pointer-events-none;
+}
+
+.totem-wave {
+  @apply absolute bottom-0 left-0 w-full h-auto fill-current text-chocolate-medium;
+}
+
+.totem-frame {
+  @apply border-2 border-gold/10 rounded-3xl p-6 shadow-sm;
+}
+
+/* ═══════════════════════ utilities ═══════════════════════ */
+/* ============================================================================
+   TAILWIND CSS V4 UTILITY DIRECTIVES (MOD01 Design Overhaul)
+   ============================================================================ */
+
+/* Utility to completely hide browser scrollbars */
+@utility hide-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Elegant visual separators between large layout blocks */
+@utility section-divider {
+  @apply h-px bg-linear-to-r from-transparent via-caramel to-transparent opacity-15 my-12 mx-auto w-11/12 max-w-[90rem] relative z-10;
+}
+
+/* Premium ambient light glow (copper gradient) for editorial sections */
+@utility ambient-copper-glow {
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4/5 h-3/4 pointer-events-none z-0;
+  @apply bg-[radial-gradient(circle,rgba(140,90,60,0.06)_0%,transparent_75%)];
+}
+
+/* ============================================================================
+   MOD01 BRAND TEXTURE & GLOW UTILITIES
+   ============================================================================ */
+
+/* Rustic dark cutting-board wood grain overlay */
+@utility bg-tabua {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.08;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    background-image: url("/assets/sabores-de-inverno/tabua.png");
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+  }
+}
+
+/* Physical braided hemp rope visual divider */
+@utility divider-corda {
+  @apply block w-full h-8 relative my-12 z-10 pointer-events-none;
+  background-image: url("/assets/sabores-de-inverno/Corda.png");
+  background-repeat: repeat-x;
+  background-size: contain;
+  background-position: center;
+}
+
+/* High-contrast tagline warm copper drop-shadow blur glow */
+@utility text-warm-glow {
+  filter: drop-shadow(0 4px 10px rgba(178, 84, 33, 0.5));
+}
+
+/* 3D Extruded Metallic Gold Heading Style */
+@utility text-gold-3d {
+  color: var(--color-gold);
+  text-shadow: var(--shadow-gold-3d);
+}
+/* ═══════════════════════ components/navbar ═══════════════════════ */
+/* Floating Navigation Header (Pill Style) */
+.floating-header {
+  @apply fixed top-8 left-0 right-0 z-50 flex justify-center md:px-6 pointer-events-none w-full;
+}
+
+.floating-nav {
+  @apply pointer-events-auto flex items-center justify-center lg:justify-start gap-3 sm:gap-6 md:gap-8 lg:gap-10
+         px-4 sm:px-6 md:px-8 lg:px-10 py-2.5 lg:py-4 rounded-full bg-chocolate-dark/70 backdrop-blur-2xl
+         border border-gold/25 shadow-[0_4px_32px_rgba(0,0,0,0.5),0_0_0_1px_rgba(234,168,36,0.1)_inset] transition-all duration-300;
+}
+
+.nav-link {
+  @apply text-latte/80 hover:text-latte transition-all duration-200 py-1 
+         text-xs font-extrabold uppercase tracking-widest 
+         border-b-2 border-transparent hover:border-gold 
+         transform hover:-translate-y-0.5 cursor-pointer;
+}
+
+/* ═══════════════════════ components/button ═══════════════════════ */
+/* Global Premium Buttons */
+.btn-primary {
+  @apply px-8 py-4 bg-brand-red hover:bg-brand-red-hover text-white text-xs lg:text-sm font-display font-bold uppercase tracking-widest
+         rounded-full shadow-lg shadow-brand-red/25 transform hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer;
+}
+
+.btn-secondary {
+  @apply px-6 py-2.5 rounded-full border border-white/10 hover:border-gold/50 bg-white/5 text-white hover:text-gold 
+         font-display font-bold text-xs uppercase tracking-wider transition-all duration-300 cursor-pointer;
+}
+
+.btn-active {
+  @apply px-6 py-2.5 rounded-full border border-gold bg-gold text-chocolate-dark 
+         font-display font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-lg cursor-pointer;
+}
+
+/* ═══════════════════════ components/dialog ═══════════════════════ */
+/* Premium Dynamic Modals - Glassmorphic Dark */
+.custom-dialog {
+  @apply fixed inset-0 z-dialog m-auto w-[calc(100%-2rem)] sm:w-full max-w-[480px] rounded-3xl overflow-visible
+         text-latte p-0
+         backdrop:bg-chocolate-dark/80 backdrop:backdrop-blur-md;
+  /* On-brand dark "digital ticket" — gold accents read with high contrast on this */
+  background: linear-gradient(160deg, #2C1A11 0%, #160B06 100%);
+  border: 1px solid rgba(234, 168, 36, 0.28);
+  box-shadow:
+    0 35px 90px -20px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06); /* subtle top highlight (skeuomorphic) */
+  animation: modal-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.custom-dialog-header {
+  @apply p-6 sm:p-8 relative bg-[#1F110B] rounded-t-3xl overflow-hidden;
+  border-bottom: 1px solid rgba(234,168,36,0.2);
+  /* Ambient glow matching TicketCard header */
+  background-image:
+    radial-gradient(ellipse at top right, rgba(120,20,10,0.5) 0%, transparent 60%),
+    radial-gradient(ellipse at bottom left, rgba(180,100,20,0.2) 0%, transparent 60%);
+}
+
+.custom-dialog-close {
+  @apply absolute top-4 sm:top-6 right-4 sm:right-6 text-latte/65 hover:text-latte hover:bg-white/10 p-2 rounded-full transition-all duration-200 cursor-pointer z-30;
+}
+
+.custom-dialog-title {
+  @apply text-xl sm:text-2xl lg:text-3xl font-display italic font-bold leading-tight text-gold;
+}
+
+.custom-dialog-body {
+  @apply p-6 sm:p-8 flex flex-col gap-5 bg-transparent rounded-b-3xl;
+}
+
+.form-label {
+  @apply text-[0.7rem] font-bold uppercase tracking-wider text-gold mb-2 block;
+}
+
+.form-input {
+  @apply w-full px-4 py-3 rounded-xl bg-[#FBF9F6] border border-toasted/60 text-chocolate-dark text-sm font-medium
+         focus:outline-none focus:ring-2 focus:ring-gold/70 focus:border-gold transition-all placeholder:text-chocolate-dark/40;
+  /* Recessed "carved paper" field (skeuomorphic) */
+  box-shadow: inset 0 2px 4px rgba(20, 9, 5, 0.16), 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* ============================================================================
+   DIALOG SEMANTIC AGNOSTIC TOKENS (Tailwind v4 Nested Layouts)
+   ============================================================================ */
+
+.dialog-pretitle {
+  @apply text-gold font-bold text-2xs uppercase tracking-wider mb-2;
+}
+
+.dialog-ticket-info-card {
+  @apply mt-4 grid grid-cols-1 gap-3.5 p-5 rounded-2xl relative z-10;
+  /* Dark recessed panel — gold labels + cream values read with high contrast */
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(234, 168, 36, 0.15);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 -12px 26px rgba(0, 0, 0, 0.3);
+}
+
+.dialog-meta-row {
+  @apply flex items-center gap-3;
+}
+
+.dialog-meta-icon {
+  @apply text-gold bg-gold/15 p-2 rounded-lg border border-gold/30 shrink-0 flex items-center justify-center;
+  box-shadow: 0 0 12px rgba(234, 168, 36, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  &.date-icon,
+  &.loc-icon {
+    @apply mt-1 sm:mt-0;
+  }
+}
+
+.dialog-meta-content {
+  @apply flex flex-col justify-center;
+}
+
+.dialog-meta-label {
+  @apply text-gold font-bold text-[0.68rem] uppercase tracking-[0.15em] mb-1;
+}
+
+.dialog-meta-value {
+  @apply text-latte text-[0.95rem] font-semibold leading-snug;
+
+  /* Tema = the event name → make it the clear focal point of the ticket head */
+  &.theme {
+    @apply text-lg sm:text-xl font-black font-display tracking-wide leading-tight text-latte;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.dialog-divider {
+  @apply h-px w-full bg-gradient-to-r from-gold/25 via-gold/10 to-transparent my-1;
+}
+
+.dialog-meta-grid {
+  @apply flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6;
+}
+
+/* Simulated ticket cut dashed separator line */
+.dialog-ticket-divider {
+  @apply mx-6 sm:mx-8 h-px border-t-2 border-dashed border-gold/25 relative my-1;
+}
+
+.dialog-cutout-left,
+.dialog-cutout-right {
+  @apply absolute top-1/2 -translate-y-1/2 w-6 h-8 z-20;
+  /* Punched-hole look against the dark dialog */
+  background: #120804;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+.dialog-cutout-left {
+  @apply -left-[1.6rem] sm:-left-[2.1rem] rounded-r-full border-r border-toasted/50;
+}
+
+.dialog-cutout-right {
+  @apply -right-[1.6rem] sm:-right-[2.1rem] rounded-l-full border-l border-toasted/50;
+}
+
+.form-grid-2 {
+  @apply grid grid-cols-2 gap-4;
+}
+
+/* Marca (brand) — the actual brand logo on a light "plate" so every logo
+   (including dark-colored ones) stays visible on the dark dialog */
+.dialog-brand-chip {
+  @apply w-max rounded-lg bg-white px-3 py-2 shadow-sm border border-black/5;
+}
+
+.dialog-brand-logo {
+  @apply h-6 sm:h-7 w-auto max-w-[150px] object-contain;
+}
+
+.dialog-submit-btn {
+  @apply w-full mt-2 px-8 py-4 font-display font-black uppercase tracking-widest rounded-full
+         transition-all duration-300 cursor-pointer text-[#1F110B]
+         bg-gradient-to-b from-[#F3B53A] via-gold to-[#D89A1E]
+         hover:from-gold hover:to-[#C98E16]
+         hover:scale-[1.02] active:scale-95;
+  /* Raised, pressable button (skeuomorphic): top highlight + bottom inner shadow + glow */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 4px rgba(120, 70, 10, 0.4),
+    0 6px 22px rgba(234, 168, 36, 0.4);
+}
+
+/* ═══════════════════════ sections/hero ═══════════════════════ */
+/* Hero Section — faithful layered banner */
+/* Shadow language: warm ink rgba(26,13,8) (= --color-chocolate-dark), straight-down (x=0 —
+   BG.png has competing light sources: fireplace left + bright window right), blur scales with
+   element size+height. seal 32 > title 22 ≈ board 22 > heart-B 16 ≈ logo 16 > Z-ON 14 > button 12. */
+.hero-section {
+  /* Changed back to min-h to prevent clipping the bottom content, but keeping it 100vh as base */
+  @apply relative w-full overflow-hidden flex flex-col justify-center;
+  background-color: transparent;
+  @apply min-h-[85svh] lg:min-h-[85vh];
+}
+
+/* Layer 0 — natural background photo; bottom fades organically into the page */
+.hero-bg-img {
+  @apply absolute inset-0 w-full h-full object-cover object-center z-0 select-none pointer-events-none;
+  animation: subtle-zoom 30s ease-out infinite alternate;
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 90%);
+  mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 90%);
+}
+
+.hero-top-vignette {
+  @apply absolute inset-0 z-[5] pointer-events-none bg-gradient-to-b from-[#1A0D08]/55 via-[#1A0D08]/10 to-transparent;
+}
+
+/* Layer 1 — content container (left branding / right cluster) */
+.hero-content {
+  @apply relative z-20 flex flex-col lg:flex-row justify-between items-center
+         px-6 lg:px-20 xl:px-32 pt-24 lg:pt-12 xl:pt-12 pb-12 lg:pb-16
+         max-w-[1700px] mx-auto w-full lg:-mt-10;
+}
+
+/* ---------- LEFT BLOCK ---------- */
+.hero-left-block {
+  @apply flex flex-col items-center gap-4 lg:gap-6 w-full lg:w-auto opacity-0;
+  animation: fade-in-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+}
+
+.hero-title {
+  @apply flex flex-col items-center;
+  filter: drop-shadow(0 12px 22px rgba(26, 13, 8, 0.55));
+}
+
+.ht-sabores {
+  @apply w-56 sm:w-72 lg:w-[380px] xl:w-[460px] h-auto;
+}
+
+.ht-line2 {
+  @apply flex items-start gap-2 lg:gap-3 -mt-2 lg:-mt-4;
+}
+
+.ht-de {
+  @apply w-12 sm:w-14 lg:w-20 xl:w-24 h-auto mt-1 lg:mt-3;
+}
+
+.ht-inverno {
+  @apply w-48 sm:w-64 lg:w-[340px] xl:w-[410px] h-auto;
+}
+
+.hero-logo {
+  @apply w-56 sm:w-72 lg:w-[24rem] xl:w-[28rem] h-auto;
+  filter: drop-shadow(0 10px 20px rgba(26, 13, 8, 0.5));
+}
+
+.hero-sign {
+  @apply relative inline-flex items-center justify-center mt-1 lg:mt-3 transition-transform hover:scale-105 duration-500;
+}
+
+.hero-sign-wood {
+  @apply w-64 sm:w-80 lg:w-[460px] xl:w-[540px] h-auto;
+  filter:
+    drop-shadow(0 4px 4px rgba(26, 13, 8, 0.40))
+    drop-shadow(0 16px 22px rgba(26, 13, 8, 0.32));
+}
+
+.hero-sign-text {
+  @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[78%] h-auto;
+  filter:
+    drop-shadow(0 1px 0.5px rgba(26, 13, 8, 0.85))      /* cut edge — dark, tight */
+    drop-shadow(0 -1px 0.5px rgba(255, 243, 224, 0.35)) /* lit upper lip = carved */
+    drop-shadow(0 2px 3px rgba(26, 13, 8, 0.45));        /* ambient occlusion */
+}
+
+/* ---------- RIGHT BLOCK (holds the CondorPremiaCluster component) ---------- */
+.hero-right-block {
+  /* Reduced margin to align with logo without overflowing the bottom of the screen */
+  @apply flex justify-center lg:justify-end w-full lg:w-auto opacity-0 lg:mt-16 xl:mt-24;
+  animation: fade-in-left 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+}
+
+/* ---------- Animations ---------- */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in-left {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes subtle-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+/* ═══════════════════════ sections/clube ═══════════════════════ */
+.clube-banner {
+  @apply relative flex flex-col w-full mt-12 md:mt-20 p-8 md:p-16;
+  @apply rounded-3xl border border-gold/30;
+  @apply bg-chocolate-medium bg-tabua;
+  @apply shadow-[0_24px_64px_rgba(26,13,8,0.5)];
+  @apply transition-all duration-500 hover:border-gold/50 hover:shadow-[0_30px_80px_rgba(26,13,8,0.6)];
+}
+
+.clube-banner::before {
+  content: "";
+  @apply absolute inset-0 pointer-events-none rounded-3xl;
+  background-image:
+    radial-gradient(ellipse at 30% 50%, rgba(234,168,36,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 20%, rgba(120,20,10,0.3) 0%, transparent 50%);
+}
+
+.clube-banner-inner {
+  @apply relative z-10 flex flex-col items-center md:items-start justify-center w-full md:w-3/4 ml-auto;
+}
+
+.clube-banner-logo {
+  @apply absolute -top-8 -left-4 md:-top-16 md:-left-8 lg:-left-12 z-20 pointer-events-none;
+  @apply h-28 md:h-40 lg:h-48 w-auto object-contain;
+  @apply filter drop-shadow-[0_8px_24px_rgba(58,28,18,0.2)];
+  @apply transition-transform duration-700 hover:scale-105;
+}
+
+.clube-banner-text-container {
+  @apply w-full text-center md:text-left mt-24 md:mt-0 z-10 relative;
+}
+
+.clube-banner-text {
+  @apply max-w-lg md:max-w-xl text-center md:text-left;
+  @apply text-cream text-xl md:text-2xl lg:text-3xl leading-[1.6];
+  @apply font-display font-medium tracking-wide text-warm-glow;
+}
+
+.clube-button {
+  @apply absolute bottom-0 left-1/2 md:left-[60%] z-20 shrink-0 cursor-pointer;
+  @apply -translate-x-1/2 translate-y-1/2 px-10 md:px-14 py-4 md:py-5;
+  @apply rounded-full border border-white/20;
+  background: linear-gradient(to right, #C9982A, #EAA824, #DCA420);
+  @apply text-[#1F110B] text-xs md:text-sm font-sans font-black uppercase tracking-widest;
+  @apply shadow-[0_8px_28px_rgba(234,168,36,0.45)];
+  @apply transition-all duration-300 transform hover:scale-105 active:scale-95;
+}
+/* ═══════════════════════ sections/events ═══════════════════════ */
+/* ============================================================================
+   EVENTS SECTION & RUSTIC PINTEREST NOTICE BOARD (MOD01 Overhaul)
+   ============================================================================ */
+
+.content-section {
+  @apply py-16 md:py-24 bg-transparent relative overflow-hidden;
+}
+
+.section-title-group {
+  @apply mb-16 text-center relative z-10 w-full flex flex-col items-center justify-center;
+}
+
+.section-pretitle {
+  @apply text-gold font-display font-bold text-xs uppercase tracking-widest mb-3;
+}
+
+.section-main-title {
+  @apply text-3xl md:text-5xl lg:text-6xl font-display font-bold italic tracking-normal capitalize text-latte leading-none text-warm-glow;
+}
+
+.section-subtitle {
+  @apply text-latte/80 max-w-xl mx-auto mt-4 text-sm md:text-base font-medium;
+}
+
+/* ============================================================================
+   CITY FILTER (badges redondeados) — sin contenedor envolvente
+   ============================================================================ */
+
+.city-filter {
+  @apply flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-12 w-full relative z-10;
+}
+
+.city-badge {
+  @apply inline-flex items-center gap-2.5 px-6 py-3 rounded-full cursor-pointer
+         font-display font-bold text-sm md:text-base uppercase tracking-wide
+         text-cream border border-gold/45 transition-all duration-300;
+  background: rgba(42, 25, 16, 0.92);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.city-badge:hover {
+  @apply border-gold text-white;
+  background: rgba(58, 34, 22, 0.96);
+  transform: translateY(-2px);
+}
+
+.city-badge .badge-count {
+  @apply inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full
+         text-2xs font-extrabold tracking-normal bg-gold text-chocolate-dark;
+}
+
+.city-badge.active {
+  @apply text-chocolate-dark border-transparent;
+  background: linear-gradient(to bottom, #F3B53A, var(--color-gold) 60%, #D89A1E);
+  box-shadow: 0 10px 26px rgba(234, 168, 36, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.city-badge.active .badge-count {
+  @apply bg-chocolate-dark text-gold;
+}
+
+/* Panel de eventos de una ciudad (fade al cambiar de badge) */
+.city-panel {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.hidden-panel {
+  display: none !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================================
+   EVENTS GRID — carrusel horizontal; en xl las 5 cards entran en una fila
+   ============================================================================ */
+
+.events-grid {
+  /* <1280px: carrusel horizontal con snap (evita scroll vertical, desliza al costado) */
+  @apply flex overflow-x-auto snap-x snap-mandatory gap-4 w-full relative z-10 pt-3 pb-3;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.events-grid::-webkit-scrollbar {
+  display: none;
+}
+
+.events-grid > * {
+  @apply snap-start;
+  flex: 0 0 15rem; /* 240px por card en modo carrusel */
+}
+
+/* ≥1280px: las 5 palestras en una sola fila, sin scroll */
+@media (min-width: 1280px) {
+  .events-grid {
+    @apply grid grid-cols-5 overflow-visible gap-4;
+  }
+  .events-grid > * {
+    flex: initial; /* en grid el ancho lo define la columna */
+  }
+}
+
+/* Hint "deslize para ver mais" — badge solo en modo carrusel (<1280px) */
+.carousel-hint {
+  @apply flex justify-center w-full mb-6;
+  transition: opacity 0.4s ease;
+}
+
+.carousel-hint-pill {
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-full select-none
+         bg-gold/15 border border-gold/40 text-gold font-bold text-2xs uppercase tracking-widest;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.carousel-hint-pill svg {
+  @apply w-4 h-4 shrink-0;
+  animation: hint-slide 1.4s ease-in-out infinite;
+}
+
+@keyframes hint-slide {
+  0%, 100% { transform: translateX(0); opacity: 0.55; }
+  50% { transform: translateX(5px); opacity: 1; }
+}
+
+.carousel-hint.is-hidden {
+  @apply opacity-0 pointer-events-none;
+}
+
+@media (min-width: 1280px) {
+  .carousel-hint {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-hint-pill svg {
+    animation: none;
+  }
+}
+
+/* ============================================================================
+   EVENT CARDS (Sabores — card del evento, compacta para fila de 5)
+   ============================================================================ */
+
+.sabores-event-card {
+  @apply relative flex flex-col rounded-3xl transition-all duration-300;
+  background: linear-gradient(165deg, #4A2818 0%, #2E1810 55%, #160B06 100%);
+  border: 1px solid rgba(234, 168, 36, 0.22);
+  box-shadow:
+    0 18px 40px -14px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.sabores-event-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(234, 168, 36, 0.5);
+  box-shadow:
+    0 32px 60px -18px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(234, 168, 36, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Capa */
+.sabores-card-cover {
+  @apply relative h-36 w-full overflow-hidden rounded-t-3xl bg-chocolate-dark;
+}
+
+.sabores-card-cover img {
+  @apply h-full w-full object-cover transition-transform duration-500;
+}
+
+.sabores-event-card:hover .sabores-card-cover img {
+  @apply scale-105;
+}
+
+.sabores-card-cover::after {
+  content: "";
+  @apply absolute inset-0 pointer-events-none;
+  background: linear-gradient(to top, rgba(22, 11, 6, 0.92) 0%, rgba(22, 11, 6, 0.15) 50%, transparent 100%);
+}
+
+/* Badges sobre la capa */
+.sabores-card-status {
+  @apply absolute top-3 right-3 z-20 text-2xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.sabores-card-status.is-open {
+  @apply bg-green-600 text-white;
+}
+
+.sabores-card-status.is-off {
+  @apply bg-chocolate-dark/85 text-latte border border-gold/25;
+}
+
+.sabores-card-age {
+  @apply absolute bottom-3 right-3 z-20 text-2xs font-black px-2 py-1 rounded-full bg-wine text-white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Cuerpo */
+.sabores-card-body {
+  @apply relative z-10 flex flex-col flex-1 p-4;
+}
+
+.sabores-card-date {
+  @apply inline-flex items-center gap-1.5 font-display font-bold italic text-gold text-xs mb-1.5;
+}
+
+.sabores-card-date svg {
+  @apply w-3.5 h-3.5 shrink-0;
+}
+
+.sabores-card-title {
+  @apply font-display font-bold text-base lg:text-lg text-cream leading-snug mb-2 line-clamp-2;
+}
+
+.sabores-card-sponsor {
+  @apply self-start mb-3 text-2xs font-bold uppercase tracking-wide text-gold/90
+         border border-gold/30 rounded-md px-2 py-0.5 bg-gold/5;
+}
+
+.sabores-card-speaker {
+  @apply flex items-center gap-2.5 mb-3;
+}
+
+.sabores-card-speaker-avatar {
+  @apply w-8 h-8 rounded-full bg-gold/15 border border-gold/30 text-gold
+         flex items-center justify-center text-2xs font-bold shrink-0;
+}
+
+.sabores-card-speaker-info {
+  @apply flex flex-col min-w-0;
+}
+
+.sabores-card-speaker-label {
+  @apply text-[0.6rem] font-bold uppercase tracking-wider text-latte/50;
+}
+
+.sabores-card-speaker-name {
+  @apply text-xs font-semibold text-latte truncate;
+}
+
+.sabores-card-meta {
+  @apply flex flex-col gap-1.5 mb-4 text-latte/75 text-xs;
+}
+
+.sabores-card-meta-row {
+  @apply flex items-start gap-2;
+}
+
+.sabores-card-meta-row svg {
+  @apply w-3.5 h-3.5 text-gold/80 shrink-0 mt-px;
+}
+
+/* CTA */
+.sabores-card-cta {
+  @apply mt-auto w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full
+         font-display font-bold text-xs uppercase tracking-widest text-chocolate-dark
+         transition-all duration-300 cursor-pointer;
+  background: linear-gradient(to bottom, #F3B53A, var(--color-gold) 60%, #D89A1E);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 6px 18px rgba(234, 168, 36, 0.3);
+}
+
+.sabores-card-cta:hover:not(:disabled) {
+  transform: scale(1.02);
+}
+
+.sabores-card-cta:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.sabores-card-cta:disabled {
+  @apply cursor-not-allowed text-latte/45;
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(234, 168, 36, 0.12);
+}
+
+/* Estado cerrado (esgotado / encerrado) */
+.sabores-event-card.is-closed {
+  @apply opacity-85;
+}
+
+.sabores-event-card.is-closed .sabores-card-cover img {
+  @apply grayscale;
+}
+
+/* ═══════════════════════ sections/recipes ═══════════════════════ */
+/* ============================================================================
+   RECIPE BLOG SECTION (Tailwind v4 Nested Editorial Grid)
+   ============================================================================ */
+
+.recipe-grid {
+  @apply grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 relative z-10 w-full;
+}
+
+.recipe-card {
+  @apply relative rounded-3xl overflow-hidden aspect-[4/5] shadow-xl border border-chocolate-medium/30
+         transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(178,84,33,0.4)] cursor-pointer;
+
+  /* Nested Hover Interactions (Standard CSS Nesting) */
+  &:hover {
+    .recipe-image {
+      @apply scale-110;
+    }
+    .recipe-title {
+      @apply text-gold;
+    }
+  }
+}
+
+.recipe-image {
+  @apply absolute inset-0 w-full h-full object-cover transition-transform duration-700;
+}
+
+.recipe-overlay {
+  @apply absolute inset-0 bg-gradient-to-t from-chocolate-medium via-chocolate-medium/60 to-transparent;
+}
+
+.recipe-content {
+  @apply absolute bottom-0 left-0 right-0 p-8 flex flex-col justify-end gap-3 z-10;
+}
+
+.recipe-tag {
+  @apply self-start bg-gold text-chocolate-dark font-display font-bold text-2xs uppercase tracking-widest px-2.5 py-1 rounded-md;
+}
+
+.recipe-title {
+  @apply text-latte font-display font-bold italic tracking-normal text-xl lg:text-2xl leading-snug transition-colors duration-300;
+}
+
+.recipe-btn {
+  @apply self-start text-xs font-display font-bold uppercase tracking-widest text-gold mt-2 
+         border-b-2 border-transparent hover:border-gold transition-all duration-200 pb-1;
+}
+
+/* ═══════════════════════ sections/footer ═══════════════════════ */
+/* Premium Footer */
+.premium-footer {
+  @apply relative pt-16 pb-8 bg-chocolate-medium overflow-hidden border-t border-white/5;
+}
+
+.footer-wave {
+  @apply absolute inset-0 w-full h-full fill-current pointer-events-none opacity-10 text-gold;
+}
+
+.footer-container {
+  @apply container mx-auto px-6 max-w-[90rem] relative z-10 flex flex-col md:flex-row items-center justify-between gap-8;
+}
+
+.footer-logo {
+  @apply h-8 w-auto object-contain transition-transform duration-300 hover:scale-105;
+}
+
+.footer-copyright {
+  @apply text-center text-white/50 text-2xs font-bold tracking-widest uppercase;
+}
+
+.footer-social-wrapper {
+  @apply flex items-center gap-3;
+}
+
+.footer-social-link {
+  @apply flex items-center justify-center w-9 h-9 rounded-full text-white border border-white/10
+         transition-all duration-300 hover:scale-115 hover:-translate-y-1 hover:shadow-lg;
+}
+
+/* ═══════════════════════ sections/video ═══════════════════════ */
+/* ============================================================================
+   VIDEO SECTION (Glassmorphic Rounded Frame)
+   ============================================================================ */
+.video-terminal-frame {
+  @apply relative rounded-3xl md:rounded-5xl overflow-hidden bg-cream border border-chocolate-medium/30 backdrop-blur-md p-2 md:p-3;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 20px 40px -10px rgba(58,28,18,0.15);
+}
+
+.video-terminal-frame:hover {
+  @apply border-caramel bg-white;
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-copper-glow);
+}
+
+.video-aspect-wrapper {
+  @apply relative w-full rounded-2xl md:rounded-4xl overflow-hidden;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.video-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ═══════════════════════ sections/sponsors ═══════════════════════ */
+/* Sponsors & Supporters Stacked Infinite Marquees Styling */
+
+.sponsors-stack {
+  @apply flex flex-col gap-8 w-full relative;
+}
+
+.sponsors-row-group {
+  @apply flex flex-col gap-4 w-full;
+}
+
+/* Gold glassmorphic pill badge to break the text monotony */
+.sponsors-row-label {
+  @apply font-display font-bold text-2xs md:text-xs text-gold tracking-widest uppercase px-4 py-2 bg-gold/10 border border-gold/20 rounded-full w-fit select-none shadow-[0_4px_12px_rgba(223,171,67,0.06)] backdrop-blur-sm self-start;
+}
+
+/* High-contrast row container simulating a light parchment plank on the dark table */
+.sponsors-row-container {
+  @apply w-full overflow-hidden py-6 lg:py-8 bg-[#F9F6ED] border-2 border-[#EADAB8] rounded-3xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] relative flex items-center;
+}
+
+/* Symmetrical fade masks on the edges to hide hard borders dynamically */
+.sponsors-row-container::before,
+.sponsors-row-container::after {
+  content: "";
+  @apply absolute top-0 bottom-0 w-16 md:w-32 z-20 pointer-events-none;
+}
+
+.sponsors-row-container::before {
+  @apply left-0 bg-gradient-to-r from-[#F9F6ED] via-[#F9F6ED]/90 to-transparent;
+}
+
+.sponsors-row-container::after {
+  @apply right-0 bg-gradient-to-l from-[#F9F6ED] via-[#F9F6ED]/90 to-transparent;
+}
+
+/* Marquee tracks */
+.marquee-track-left {
+  @apply flex gap-16 w-max shrink-0;
+  animation: scroll-left 55s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track-right {
+  @apply flex gap-16 w-max shrink-0;
+  animation: scroll-right 55s linear infinite;
+  will-change: transform;
+}
+
+/* GPU-Accelerated Infinite Scrolling Keyframes */
+@keyframes scroll-left {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes scroll-right {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Clean logo item wrapper (no card boxes) */
+.sponsor-logo-item {
+  @apply w-48 h-32 md:w-64 md:h-40 flex items-center justify-center select-none rounded-full;
+}
+
+/* Increased logo size, opacity, and full color */
+.sponsor-logo-img {
+  @apply max-h-20 md:max-h-28 w-auto object-contain transition-all duration-300;
+  opacity: 0.9;
+  mix-blend-mode: multiply;
+}
+
+.sponsor-logo-img:hover {
+  opacity: 1;
+  mix-blend-mode: normal;
+  transform: scale(1.05);
+}
+
+
+
+/* ═══════════════════════ sections/emcasa ═══════════════════════ */
+.emcasa-banner {
+  @apply relative flex flex-col w-full mt-12 md:mt-20 p-8 md:p-16;
+  @apply rounded-3xl border border-gold/30;
+  @apply bg-chocolate-medium bg-tabua;
+  @apply shadow-[0_24px_64px_rgba(26,13,8,0.5)];
+  @apply transition-all duration-500 hover:border-gold/50 hover:shadow-[0_30px_80px_rgba(26,13,8,0.6)];
+}
+
+.emcasa-banner::before {
+  content: "";
+  @apply absolute inset-0 pointer-events-none rounded-3xl;
+  background-image:
+    radial-gradient(ellipse at 70% 50%, rgba(234,168,36,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 20% 20%, rgba(120,20,10,0.3) 0%, transparent 50%);
+}
+
+.emcasa-banner-inner {
+  @apply relative z-10 flex flex-col items-center md:items-start justify-center w-full md:w-3/4 mr-auto;
+}
+
+.emcasa-banner-logo {
+  @apply absolute -top-8 -right-4 md:-top-16 md:-right-8 lg:-right-12 z-20 pointer-events-none;
+  @apply h-28 md:h-40 lg:h-48 w-auto object-contain;
+  @apply filter drop-shadow-[0_8px_24px_rgba(58,28,18,0.2)];
+  @apply transition-transform duration-700 hover:scale-105;
+}
+
+.emcasa-banner-text-container {
+  @apply w-full text-center md:text-left mt-24 md:mt-0 z-10 relative;
+}
+
+.emcasa-banner-text {
+  @apply max-w-lg md:max-w-xl text-center md:text-left;
+  @apply text-cream text-xl md:text-2xl lg:text-3xl leading-[1.6];
+  @apply font-display font-medium tracking-wide text-warm-glow;
+}
+
+.emcasa-button {
+  @apply absolute bottom-0 left-1/2 md:left-[40%] z-20 shrink-0 cursor-pointer;
+  @apply -translate-x-1/2 translate-y-1/2 px-10 md:px-14 py-4 md:py-5;
+  @apply rounded-full border border-white/20;
+  background: linear-gradient(to right, #C9982A, #EAA824, #DCA420);
+  @apply text-[#1F110B] text-xs md:text-sm font-display font-bold uppercase tracking-widest;
+  @apply shadow-[0_8px_28px_rgba(234,168,36,0.45)];
+  @apply transition-all duration-300 transform hover:scale-105 active:scale-95;
+}

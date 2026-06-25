@@ -1,0 +1,86 @@
+---
+import CloseIcon from "../icons/CloseIcon.astro";
+
+// Estilos del form (tema invierno: chocolate + gold). Se comparten por clase string
+// para no tocar el CSS global; el handler togglea `border-red-500` en error.
+const inputCls =
+  "w-full px-3 py-2 rounded-xl bg-chocolate-dark/60 border border-gold/25 text-latte placeholder:text-latte/30 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition text-sm";
+const labelCls =
+  "text-[0.7rem] font-bold uppercase tracking-wider text-gold/80 pl-1";
+const errCls = "sabores-error hidden text-red-400 text-[0.65rem] pl-1 font-medium";
+---
+
+<dialog id="sabores-modal" class="custom-dialog">
+  <div class="relative p-6 md:p-8">
+    <button
+      id="sabores-close"
+      type="button"
+      class="absolute top-4 right-4 text-latte/50 hover:text-gold p-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gold/40"
+      aria-label="Fechar"
+    >
+      <CloseIcon />
+    </button>
+
+    <span class="section-pretitle">Inscrição</span>
+    <h3
+      id="sabores-modal-title"
+      class="font-display font-bold italic text-2xl text-latte leading-tight mb-1"
+    >
+      Evento
+    </h3>
+    <p id="sabores-modal-date" class="text-gold text-sm font-bold"></p>
+    <p id="sabores-modal-city" class="text-latte/60 text-xs mb-5"></p>
+
+    <form id="sabores-form" class="flex flex-col gap-3" novalidate>
+      <input type="hidden" id="sabores-event-id" name="eventId" />
+      <input type="hidden" id="sabores-event-tema" name="eventTema" />
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="col-span-2 flex flex-col gap-1">
+          <label class={labelCls} for="sabores-nome">Nome completo</label>
+          <input id="sabores-nome" name="nome" type="text" required placeholder="Seu nome" class={inputCls} />
+          <span class={errCls}>Informe um nome válido.</span>
+        </div>
+        <div class="col-span-2 flex flex-col gap-1">
+          <label class={labelCls} for="sabores-email">E-mail</label>
+          <input id="sabores-email" name="email" type="email" required placeholder="seu@email.com" class={inputCls} />
+          <span class={errCls}>E-mail inválido.</span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class={labelCls} for="sabores-telefone">Telefone</label>
+          <input id="sabores-telefone" name="telefone" type="tel" required maxlength="15" placeholder="(00) 00000-0000" class={inputCls} />
+          <span class={errCls}>Telefone inválido.</span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <label class={labelCls} for="sabores-cpf">CPF</label>
+          <input id="sabores-cpf" name="cpf" type="text" required maxlength="14" placeholder="000.000.000-00" class={inputCls} />
+          <span class={errCls}>CPF inválido.</span>
+        </div>
+      </div>
+
+      <!-- +18: visible solo en eventos com bebida alcoólica (handler togglea hidden/required) -->
+      <label id="sabores-age-block" class="hidden items-start gap-2 text-xs text-latte/80 cursor-pointer pl-1">
+        <input id="sabores-maioridade" name="maioridade" type="checkbox" class="mt-0.5 accent-gold w-4 h-4 shrink-0" />
+        <span>Confirmo que sou <strong>maior de 18 anos</strong>. (Obrigatório por conter bebidas alcoólicas)</span>
+      </label>
+
+      <label class="flex items-start gap-2 text-xs text-latte/80 cursor-pointer pl-1">
+        <input id="sabores-lgpd" name="lgpd" type="checkbox" required class="mt-0.5 accent-gold w-4 h-4 shrink-0" />
+        <span>Autorizo o uso dos meus dados pela Rede Condor para comunicações sobre o evento, conforme a política de privacidade.</span>
+      </label>
+
+      <button
+        id="sabores-submit"
+        type="submit"
+        disabled
+        class="btn-primary w-full mt-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+      >
+        <span id="sabores-submit-text">Confirmar inscrição</span>
+        <svg id="sabores-spinner" class="hidden animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+        </svg>
+      </button>
+    </form>
+  </div>
+</dialog>

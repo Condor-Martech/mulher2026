@@ -1,0 +1,54 @@
+---
+import sponsors from "../../data/sabores/sponsors.json";
+const { patrocinadores, apoiadores } = sponsors;
+---
+
+<section id="patrocinio" class="py-16 bg-transparent relative z-10 scroll-reveal">
+  <div class="container mx-auto px-6 max-w-[90rem]">
+    <h4 class="text-center font-display font-bold text-lg text-latte/50 tracking-widest uppercase mb-12 select-none">
+      Marcas parceiras que aquecem o nosso inverno
+    </h4>
+
+    <div class="sponsors-stack">
+      <!-- Patrocinadores (scroll izquierda) -->
+      <div class="sponsors-row-group">
+        <h5 class="sponsors-row-label">Patrocinadores</h5>
+        <div class="sponsors-row-container">
+          <div class="marquee-track-left">
+            {[...patrocinadores, ...patrocinadores].map((logo) => (
+              <div class="sponsor-logo-item" title={logo.name}>
+                <img
+                  src={logo.logoUrl}
+                  alt={`Logo da marca patrocinadora ${logo.name}`}
+                  class="sponsor-logo-img"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- Apoiadores (scroll derecha) -->
+      <div class="sponsors-row-group">
+        <h5 class="sponsors-row-label">Apoiadores</h5>
+        <div class="sponsors-row-container">
+          <div class="marquee-track-right">
+            {[...apoiadores, ...apoiadores].map((logo) => (
+              <div class="sponsor-logo-item" title={logo.name}>
+                <img
+                  src={logo.logoUrl}
+                  alt={`Logo da marca apoiadora ${logo.name}`}
+                  class="sponsor-logo-img"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

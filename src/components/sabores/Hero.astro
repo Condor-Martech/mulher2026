@@ -1,0 +1,45 @@
+---
+// Hero — banner por capas (foto BG + branding por assets V02 + cluster promo).
+import CondorPremiaCluster from "./CondorPremiaCluster.astro";
+
+const V02 = "/assets/sabores-de-inverno";
+---
+
+<section id="home" class="hero-section">
+  <!-- Capa 0: foto de fondo -->
+  <img
+    src={`${V02}/BG.png`}
+    alt="Mesa invernal premium Condor"
+    class="hero-bg-img"
+    fetchpriority="high"
+  />
+  <div class="hero-top-vignette"></div>
+
+  <!-- Capa 1: contenido (branding izq / cluster der) -->
+  <div class="hero-content">
+    <div class="hero-left-block">
+      <div class="hero-title">
+        <img src={`${V02}/Sabores .png`} alt="Sabores" class="ht-sabores" />
+        <div class="ht-line2">
+          <img src={`${V02}/de.png`} alt="de" class="ht-de" />
+          <img src={`${V02}/Inverno.png`} alt="Inverno" class="ht-inverno" />
+        </div>
+      </div>
+
+      <img src={`${V02}/Logo_Condor.png`} alt="Condor" class="hero-logo" />
+
+      <div class="hero-sign">
+        <img src={`${V02}/tabua.png`} alt="" class="hero-sign-wood" aria-hidden="true" />
+        <img
+          src={`${V02}/Sabores que aquecem, momentos que ficam .png`}
+          alt="Sabores que aquecem, momentos que ficam"
+          class="hero-sign-text"
+        />
+      </div>
+    </div>
+
+    <div class="hero-right-block">
+      <CondorPremiaCluster />
+    </div>
+  </div>
+</section>

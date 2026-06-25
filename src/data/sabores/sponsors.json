@@ -1,0 +1,32 @@
+{
+  "patrocinadores": [
+    { "name": "Baden Baden", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Baden-Baden.png", "isDark": true },
+    { "name": "Santa Rita", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Logo_Santa_Rita.svg.png" },
+    { "name": "Santa Clara", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Santa-Clara-1024x515.png" },
+    { "name": "3 Corações", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/3-coracoes.webp" },
+    { "name": "Sadia", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Sadia.png" },
+    { "name": "Seara", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Seara.png" },
+    { "name": "Multiflon", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Multiflon-Horizontal-1024x460.png", "isDark": true },
+    { "name": "Tramontina", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Tramontina-1024x205.png" },
+    { "name": "Fischer", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Fischer-1024x356.png", "isDark": true },
+    { "name": "Aiwa", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Aiwa-1024x683.png", "isDark": true },
+    { "name": "Philco", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/04/LOGO-PHILCO-SLOGAN-1024x377.png", "isDark": true },
+    { "name": "Britânia", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/04/BRITANIA-S-SLOGAN-USOTELA-RGB_2-1024x211.png", "isDark": true },
+    { "name": "Nadir", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/04/Nadir-1024x538.png", "isDark": true }
+  ],
+  "apoiadores": [
+    { "name": "Coca-Cola Light", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Coca-Cola-Light.png" },
+    { "name": "Ouro Fino", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2024/06/logo-ourofino.png" },
+    { "name": "Padaria e Rotisseria", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Padaria-e-Rotisseria-SELO.png" },
+    { "name": "Rizolli", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Rizolli-1.png" },
+    { "name": "Maggi", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Maggi.png" },
+    { "name": "Nivea", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Nivea.png" },
+    { "name": "Lacta", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Lacta.png" },
+    { "name": "Terraustral", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Terraustral.png", "isDark": true },
+    { "name": "Therezopolis", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Therezopolis.png", "isDark": true },
+    { "name": "Galbani", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/galbani-seeklogo.png" },
+    { "name": "Heinz", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/HeinzNovo_Preto.png", "isDark": true },
+    { "name": "Kraft Heinz", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/Logo-Kraft-Heinz-para-Apresentacoes-1.png", "isDark": true },
+    { "name": "Polenghi", "logoUrl": "https://campanha.condor.com.br/wp-content/uploads/2025/06/PRINCIPAL-POLENGHI-POSITIVA.jpg" }
+  ]
+}

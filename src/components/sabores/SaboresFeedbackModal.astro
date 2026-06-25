@@ -1,0 +1,28 @@
+---
+import CloseIcon from "../icons/CloseIcon.astro";
+---
+
+<dialog id="sabores-feedback" class="custom-dialog">
+  <div class="relative p-8 flex flex-col items-center text-center">
+    <button
+      id="sabores-feedback-close"
+      type="button"
+      class="absolute top-4 right-4 text-latte/50 hover:text-gold p-2 rounded-full transition-colors"
+      aria-label="Fechar"
+    >
+      <CloseIcon />
+    </button>
+
+    <div id="sabores-feedback-icon" class="text-5xl mb-4"></div>
+    <h3
+      id="sabores-feedback-title"
+      class="font-display font-bold italic text-2xl text-latte mb-2"
+    >
+    </h3>
+    <p id="sabores-feedback-message" class="text-latte/70 text-sm max-w-xs"></p>
+
+    <button id="sabores-feedback-ok" type="button" class="btn-primary mt-6">
+      Entendi
+    </button>
+  </div>
+</dialog>

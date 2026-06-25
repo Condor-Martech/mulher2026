@@ -1,0 +1,47 @@
+---
+// Banner "Condor em Casa" (reemplaza al de Condor Premia). Basado en el KV de referencia:
+// gradiente azul + borde claro, copy a la izquierda y lockup "Condor em CASA" a la derecha.
+import content from "../../data/sabores/content.json";
+const emCasa = content.emCasa;
+---
+
+<section class="py-2 lg:py-8 bg-transparent relative z-10 scroll-reveal">
+  <div class="container mx-auto px-6 max-w-[90rem] flex justify-center">
+    <a
+      href={emCasa.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-track="condor_em_casa_clicked"
+      data-placement="banner_em_casa"
+      class="relative w-full max-w-[1100px] group transition-all hover:brightness-105"
+      aria-label="Condor em Casa — faça suas compras e levamos até você"
+    >
+      <div
+        class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10
+               rounded-[20px] md:rounded-[26px] border-2 border-white/40
+               bg-gradient-to-r from-[#0a57a3] via-[#0f6cb8] to-[#1c84cc]
+               shadow-[0_10px_36px_rgba(0,80,165,0.4)]
+               px-8 py-7 md:px-14 md:py-9"
+      >
+        <!-- Copy -->
+        <div class="text-center md:text-left">
+          <h2 class="text-white font-sans font-black text-2xl md:text-3xl lg:text-[2.4rem] leading-tight mb-1.5">
+            {emCasa.title}
+          </h2>
+          <p class="text-white font-sans text-lg md:text-xl lg:text-2xl leading-tight">
+            {emCasa.subtitlePre}<strong class="font-black">{emCasa.subtitleStrong}</strong>
+          </p>
+        </div>
+
+        <!-- Lockup Condor em CASA -->
+        <img
+          src={emCasa.logo}
+          alt="Condor em Casa"
+          width="320"
+          height="180"
+          class="h-28 md:h-28 lg:h-32 w-auto shrink-0 drop-shadow-[0_6px_16px_rgba(0,0,0,0.25)] transition-transform group-hover:scale-105"
+        />
+      </div>
+    </a>
+  </div>
+</section>

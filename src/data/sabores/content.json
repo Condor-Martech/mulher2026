@@ -1,0 +1,44 @@
+{
+  "hero": {
+    "pretitle": "Festival Gastronômico",
+    "titleHtml": "Sabores <span class=\"font-script text-gold lowercase\">de</span> Inverno",
+    "subtitle": "Aqueça a sua casa com sabor, sofisticação e economia. Venha viver momentos inesquecíveis."
+  },
+  "clube": {
+    "titleLine1": "Baixe o app do Clube Condor",
+    "titleLine2": "aproveite todas as vantagens e eventos especiais",
+    "cta": "Cadastrar ou Atualizar",
+    "logo": "/assets/sabores-de-inverno/clube-logo.png",
+    "link": "https://clubecondor.com/"
+  },
+  "events": {
+    "pretitle": "AGENDA EXCLUSIVA",
+    "title": "PROGRAMAÇÃO DE EVENTOS",
+    "subtitle": "Escolha a edição mais próxima de você, reserve na agenda e inscreva-se para garantir a sua vaga.",
+    "swipeLabel": "Deslize para ver mais →"
+  },
+  "status": {
+    "OPEN":     { "label": "Inscrições Abertas", "cta": "Inscrever-se", "disabled": false },
+    "SOON":     { "label": "Em breve",           "cta": "Em breve",     "disabled": true },
+    "FULL":     { "label": "Esgotado",           "cta": "Esgotado",     "disabled": true },
+    "FINISHED": { "label": "Encerrado",          "cta": "Encerrado",    "disabled": true }
+  },
+  "video": {
+    "pretitle": "CAMPANHA OFICIAL",
+    "title": "SABORES DE INVERNO CONDOR",
+    "subtitle": "Assista ao vídeo da campanha oficial e confira as novidades e prêmios que preparamos para você.",
+    "youtubeId": "_S8OASRJYXE"
+  },
+  "emCasa": {
+    "link": "https://www.condor.com.br/",
+    "logo": "/assets/sabores-de-inverno/emcasa-logo.png",
+    "title": "Não quer sair de casa?",
+    "subtitlePre": "Faça suas compras e ",
+    "subtitleStrong": "levamos até você."
+  },
+  "blog": {
+    "pretitle": "DICAS E RECEITAS",
+    "title": "BLOG SABORES",
+    "subtitle": "Aprenda a fazer delícias gastronômicas para aquecer seus dias mais frios com receitas preparadas por nossos especialistas."
+  }
+}

@@ -1,0 +1,85 @@
+---
+import LayoutSaboresInverno from "../../layouts/LayoutSaboresInverno.astro";
+import FloatingLeaves from "../../components/sabores/FloatingLeaves.astro";
+import Navbar from "../../components/sabores/Navbar.astro";
+import Hero from "../../components/sabores/Hero.astro";
+import VideoSection from "../../components/sabores/VideoSection.astro";
+import ClubeBanner from "../../components/sabores/ClubeBanner.astro";
+import Sponsors from "../../components/sabores/Sponsors.astro";
+import EmCasaBanner from "../../components/sabores/EmCasaBanner.astro";
+import RecipeGrid from "../../components/sabores/RecipeGrid.astro";
+import Footer from "../../components/sabores/Footer.astro";
+import SaboresEventGrid from "../../components/sabores/SaboresEventGrid.astro";
+import { fetchSaboresEvents } from "../../services/saboresEventService";
+
+// Grilla de eventos en vivo (Supabase, campanha sabores-de-inverno-2026), agrupada
+// por fecha. El modal de inscripción social viene dentro de SaboresEventGrid.
+const events = await fetchSaboresEvents();
+
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=30, stale-while-revalidate=60",
+);
+---
+
+<LayoutSaboresInverno title="Sabores de Inverno 2026 - Condor">
+  <FloatingLeaves />
+  <Navbar />
+
+  <main class="relative z-10">
+    <Hero />
+    {/* VideoSection oculto por ahora — componente hecho, sin decidir si se usa.
+        Re-activar quitando este comentario: <VideoSection /> */}
+    <ClubeBanner />
+
+    <!-- Slice 2: grilla de eventos por ciudad + modal de inscripción social -->
+    <SaboresEventGrid events={events} />
+
+    <Sponsors />
+    <EmCasaBanner />
+    {/* RecipeGrid (blog) oculto por ahora — componente hecho, sin decidir si se usa.
+        Re-activar quitando este comentario: <RecipeGrid /> */}
+  </main>
+
+  <Footer />
+
+  <script>
+    // Scroll reveal (progressive enhancement): los `.scroll-reveal` arrancan ocultos
+    // (solo con JS) y aparecen al entrar al viewport.
+    function initScrollReveal() {
+      const els = document.querySelectorAll(".scroll-reveal");
+      if (els.length === 0) return;
+
+      els.forEach((el) => {
+        el.classList.add(
+          "opacity-0",
+          "translate-y-12",
+          "transition-all",
+          "duration-1000",
+          "ease-[cubic-bezier(0.16,1,0.3,1)]",
+          "motion-reduce:transition-none",
+          "motion-reduce:opacity-100",
+          "motion-reduce:transform-none",
+        );
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.remove("opacity-0", "translate-y-12");
+              entry.target.classList.add("opacity-100", "translate-y-0");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { root: null, threshold: 0.1, rootMargin: "0px 0px -80px 0px" },
+      );
+
+      els.forEach((el) => observer.observe(el));
+    }
+
+    initScrollReveal();
+    document.addEventListener("astro:page-load", initScrollReveal);
+  </script>
+</LayoutSaboresInverno>

@@ -1,0 +1,24 @@
+---
+// Hojas secas decorativas flotando en el fondo. Misma ilustración vectorial, variando
+// posición/tamaño/rotación/tinte.
+const leaves = [
+  { pos: "left-[5vw] top-[95vh]", size: "w-24 h-24", opacity: "opacity-15", rotate: "rotate-[15deg]", color: "text-caramel" },
+  { pos: "right-[8vw] top-[160vh]", size: "w-20 h-20", opacity: "opacity-12", rotate: "-rotate-[35deg]", color: "text-gold" },
+  { pos: "left-[8vw] top-[240vh]", size: "w-28 h-28", opacity: "opacity-15", rotate: "rotate-[45deg]", color: "text-caramel" },
+  { pos: "right-[6vw] top-[340vh]", size: "w-22 h-22", opacity: "opacity-12", rotate: "rotate-[75deg]", color: "text-gold" },
+];
+
+const LEAF_PATH =
+  "M12 2C11.5 4.5 9 6.5 7 8C5 9.5 3 11 4 13.5C5 16 8 16 10 15C10.5 16.5 11 18.5 12 21C13 18.5 13.5 16.5 14 15C16 16 19 16 20 13.5C21 11 19 9.5 17 8C15 6.5 12.5 4.5 12 2Z";
+---
+
+<div class="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none">
+  {leaves.map((leaf) => (
+    <div class={`absolute ${leaf.pos} ${leaf.size} ${leaf.opacity} ${leaf.rotate}`}>
+      <svg viewBox="0 0 24 24" fill="none" class={`${leaf.color} w-full h-full`}>
+        <path d={LEAF_PATH} fill="currentColor" />
+        <path d="M12 2V21" stroke="rgba(26,13,8,0.15)" stroke-width="1.2" stroke-linecap="round" />
+      </svg>
+    </div>
+  ))}
+</div>

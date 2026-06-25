@@ -17,6 +17,14 @@ export interface Event {
   qtd_social?: number;
   current_crm?: number;
   current_social?: number;
+  // Sabores de Inverno: metadatos de sede/marca (JSONB `data`) + gate +18 derivado.
+  data?: Record<string, any> | null;
+  region?: string;
+  location?: string;
+  brand?: string;
+  sponsor?: string;
+  time_label?: string;
+  requiresAge?: boolean;
 }
 
 export interface EventStatusConfig {
