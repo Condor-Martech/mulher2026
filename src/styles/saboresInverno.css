@@ -209,7 +209,7 @@
 /* Physical braided hemp rope visual divider */
 @utility divider-corda {
   @apply block w-full h-8 relative my-12 z-10 pointer-events-none;
-  background-image: url("/assets/sabores-de-inverno/Corda.png");
+  background-image: url("/assets/sabores-de-inverno/corda.png");
   background-repeat: repeat-x;
   background-size: contain;
   background-position: center;
