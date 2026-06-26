@@ -17,11 +17,19 @@ const {
 } = Astro.props;
 const { gtmId } = settings;
 const ogImage = "/assets/sabores-de-inverno/hero-kv.png";
+
+// Una sola fuente de verdad para el href de Google Fonts (cargado async + fallback noscript).
+const fontsHref =
+  "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&family=Great+Vibes&display=swap";
 ---
 
 <!doctype html>
 <html lang="pt-br" class="overflow-x-hidden w-full max-w-[100vw]">
   <head>
+    {/* charset + viewport PRIMERO: deben caer en los primeros 1024 bytes
+        (auditoría Lighthouse "charset"), antes de los scripts de GTM/OpenPanel. */}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {gtmId && (
       <script is:inline define:vars={{ gtmId }}>
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -32,8 +40,6 @@ const ogImage = "/assets/sabores-de-inverno/hero-kv.png";
       </script>
     )}
     <Analytics />
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/favicon-64.png" sizes="64x64" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -59,11 +65,18 @@ const ogImage = "/assets/sabores-de-inverno/hero-kv.png";
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Sabores Fonts: Inter (body), Playfair Display (display italic), Great Vibes (script) -->
+    {/* Sabores Fonts: Inter (body), Playfair Display (display italic), Great Vibes (script).
+        Carga async (media=print → onload) para no bloquear el render; display=swap ya
+        pinta en la tipografía de respaldo y cambia al cargar. <noscript> = fallback sin JS. */}
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&family=Great+Vibes&display=swap"
       rel="stylesheet"
+      href={fontsHref}
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link rel="stylesheet" href={fontsHref} />
+    </noscript>
   </head>
   <body class="text-latte font-sans antialiased relative min-h-screen w-full overflow-x-hidden bg-grain">
     {gtmId && (

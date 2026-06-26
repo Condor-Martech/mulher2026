@@ -5,7 +5,7 @@ const V02 = "/assets/sabores-de-inverno";
 const premiaLink = "https://www.condor.com.br/premia";
 ---
 
-<div class="flex flex-col items-center w-max select-none pb-8 lg:pb-12 pt-4 group/cluster relative">
+<div class="flex flex-col items-center w-max select-none pb-3 lg:pb-12 pt-2 lg:pt-4 group/cluster relative">
   <!-- Glow detrás del selo -->
   <div class="absolute top-[10%] left-1/2 -translate-x-1/2 w-[70%] h-[30%] bg-amber-500/20 blur-[80px] rounded-full pointer-events-none z-0 transition-opacity duration-700 opacity-70 group-hover/cluster:opacity-100"></div>
 
@@ -18,7 +18,7 @@ const premiaLink = "https://www.condor.com.br/premia";
     data-destination="premia"
     data-placement="hero_cluster"
     data-label="selo"
-    class="block w-56 sm:w-64 md:w-72 lg:w-80 xl:w-[24rem] transition-all duration-500 hover:scale-110 hover:brightness-110 hover:drop-shadow-[0_20px_40px_rgba(255,180,80,0.15)] drop-shadow-[0_16px_32px_rgba(26,13,8,0.5)] z-30 relative animate-float-slow"
+    class="premia-link block w-64 sm:w-64 md:w-72 lg:w-80 xl:w-[24rem] transition-all duration-500 hover:scale-110 hover:brightness-110 hover:drop-shadow-[0_20px_40px_rgba(255,180,80,0.15)] drop-shadow-[0_16px_32px_rgba(26,13,8,0.5)] z-30 relative animate-float-slow"
     aria-label="Condor Premia — R$ Meio Milhão Todo Mês"
   >
     <img src={`${V02}/selo-condor-premia.png`} alt="Condor Premia — R$ Meio Milhão Todo Mês" class="w-full h-auto" />
@@ -42,7 +42,7 @@ const premiaLink = "https://www.condor.com.br/premia";
   </div>
 
   <!-- Z-ON + regulamento -->
-  <div class="flex flex-col items-center gap-2 lg:gap-3 mt-4 sm:mt-6 lg:mt-8 z-10">
+  <div class="flex flex-col items-center gap-1 lg:gap-3 mt-2 sm:mt-6 lg:mt-8 z-10">
     <img
       src={`${V02}/premia-zon.png`}
       alt="Z-ON — Receba o seu prêmio em dinheiro na conta digital do Z-ON"
@@ -57,7 +57,7 @@ const premiaLink = "https://www.condor.com.br/premia";
       data-destination="premia"
       data-placement="hero_cluster"
       data-label="regulamento"
-      class="block w-60 sm:w-64 md:w-72 lg:w-[22rem] xl:w-[24rem] transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:brightness-110 drop-shadow-[0_6px_12px_rgba(26,13,8,0.40)] hover:drop-shadow-[0_12px_20px_rgba(26,13,8,0.50)]"
+      class="premia-link block w-60 sm:w-64 md:w-72 lg:w-[22rem] xl:w-[24rem] transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:brightness-110 drop-shadow-[0_6px_12px_rgba(26,13,8,0.40)] hover:drop-shadow-[0_12px_20px_rgba(26,13,8,0.50)]"
       aria-label="Consulte o regulamento completo em condor.com.br/premia"
     >
       <img src={`${V02}/premia-regulamento.png`} alt="Consulte o regulamento completo no site condor.com.br/premia" class="w-full h-auto" />
@@ -66,6 +66,9 @@ const premiaLink = "https://www.condor.com.br/premia";
 </div>
 
 <style>
+  /* Radio base para que el anillo de foco (:focus-visible) quede prolijo */
+  .premia-link { border-radius: 0.75rem; }
+
   .animate-float-slow { animation: float 6s ease-in-out infinite; }
   .animate-float-medium { animation: float 5s ease-in-out infinite 1s; }
   .animate-float-delayed { animation: float 5.5s ease-in-out infinite 2.5s; }
@@ -74,5 +77,14 @@ const premiaLink = "https://www.condor.com.br/premia";
     0% { transform: translateY(0px); }
     50% { transform: translateY(-8px); }
     100% { transform: translateY(0px); }
+  }
+
+  /* Accesibilidad: respetar la preferencia de menos movimiento */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float-slow,
+    .animate-float-medium,
+    .animate-float-delayed {
+      animation: none;
+    }
   }
 </style>

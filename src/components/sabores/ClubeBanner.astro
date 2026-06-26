@@ -1,7 +1,7 @@
 ---
 // Banner "Clube Condor". Reskin cálido (marrón) para integrarlo a Sabores de Inverno:
-// base chocolate + textura madeira + acentos gold, con el lockup Clube Condor superpuesto
-// a la izquierda (sus placas claras resaltan sobre el fondo oscuro).
+// base chocolate + textura madeira + acentos gold, con el lockup Clube Condor dentro
+// a la derecha (sus placas claras resaltan sobre el fondo oscuro).
 import content from "../../data/sabores/content.json";
 const clube = content.clube;
 ---
@@ -18,25 +18,12 @@ const clube = content.clube;
       aria-label="Clube Condor — baixe o app e aproveite as vantagens"
       class="group relative w-full max-w-[1100px] flex items-center"
     >
-      <div class="relative z-10 flex flex-col md:flex-row items-center w-full">
-        <!-- Logo Clube Condor - superpuesto a la izquierda -->
-        <div
-          class="shrink-0 relative z-20 mb-[-1.5rem] md:mb-0 md:-mr-12 lg:-mr-20 2xl:-mr-24"
-        >
-          <img
-            src={clube.logo}
-            alt="Clube Condor"
-            width="300"
-            height="200"
-            class="h-32 md:h-36 lg:h-44 xl:h-48 2xl:h-52 w-auto drop-shadow-2xl transition-transform duration-500 group-hover:scale-105"
-          />
-        </div>
-
+      <div class="relative z-10 flex w-full">
         <!-- Banner cálido (marrón) -->
         <div
-          class="relative overflow-hidden w-full md:flex-1 flex flex-col justify-center
+          class="relative overflow-hidden w-full flex flex-col-reverse md:flex-row items-center justify-between gap-6 md:gap-8
                  rounded-[18px] lg:rounded-[24px] border border-gold/35 bg-chocolate-medium bg-tabua
-                 pt-8 pb-6 px-6 md:pl-24 md:pr-8 lg:pl-36 lg:pr-12 md:py-7 lg:py-8
+                 p-6 md:px-10 lg:px-12 xl:px-16 md:py-8 lg:py-10
                  shadow-[0_14px_44px_rgba(26,13,8,0.55)]
                  transition-all duration-500 group-hover:border-gold/60 group-hover:shadow-[0_20px_60px_rgba(26,13,8,0.7)]
                  text-center md:text-left"
@@ -47,7 +34,7 @@ const clube = content.clube;
                    bg-[radial-gradient(ellipse_at_85%_30%,rgba(234,168,36,0.16),transparent_55%),radial-gradient(ellipse_at_20%_90%,rgba(120,20,10,0.35),transparent_55%)]"
           ></span>
 
-          <div class="relative z-10">
+          <div class="relative z-10 flex-1">
             <h2
               class="font-sans font-extrabold text-cream text-xl md:text-2xl lg:text-[1.9rem] tracking-tight leading-tight mb-1.5 text-warm-glow"
             >
@@ -58,6 +45,17 @@ const clube = content.clube;
             >
               {clube.titleLine2}
             </p>
+          </div>
+
+          <!-- Logo Clube Condor - dentro a la derecha -->
+          <div class="relative z-10 shrink-0">
+            <img
+              src={clube.logo}
+              alt="Clube Condor"
+              width="300"
+              height="200"
+              class="h-24 md:h-28 lg:h-32 xl:h-36 w-auto drop-shadow-2xl transition-transform duration-500 group-hover:scale-105"
+            />
           </div>
         </div>
       </div>
