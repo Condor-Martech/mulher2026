@@ -1,4 +1,7 @@
 ---
+// Banner "Clube Condor". Reskin cálido (marrón) para integrarlo a Sabores de Inverno:
+// base chocolate + textura madeira + acentos gold, con el lockup Clube Condor superpuesto
+// a la izquierda (sus placas claras resaltan sobre el fondo oscuro).
 import content from "../../data/sabores/content.json";
 const clube = content.clube;
 ---
@@ -12,30 +15,50 @@ const clube = content.clube;
       data-track="promo_banner_clicked"
       data-destination="clube"
       data-placement="clube_banner"
-      class="relative w-full flex items-center group transition-all hover:brightness-105"
+      aria-label="Clube Condor — baixe o app e aproveite as vantagens"
+      class="group relative w-full max-w-[1100px] flex items-center"
     >
       <div class="relative z-10 flex flex-col md:flex-row items-center w-full">
-        <!-- Logo Clube Condor - superpuesto -->
-        <div class="shrink-0 relative z-20 mb-[-1.5rem] md:mb-0 md:-mr-12 lg:-mr-20 2xl:-mr-24">
+        <!-- Logo Clube Condor - superpuesto a la izquierda -->
+        <div
+          class="shrink-0 relative z-20 mb-[-1.5rem] md:mb-0 md:-mr-12 lg:-mr-20 2xl:-mr-24"
+        >
           <img
             src={clube.logo}
             alt="Clube Condor"
             width="300"
             height="200"
-            class="h-32 md:h-36 lg:h-44 xl:h-48 2xl:h-52 w-auto drop-shadow-2xl transition-transform group-hover:scale-105"
+            class="h-32 md:h-36 lg:h-44 xl:h-48 2xl:h-52 w-auto drop-shadow-2xl transition-transform duration-500 group-hover:scale-105"
           />
         </div>
 
-        <!-- Banner azul -->
+        <!-- Banner cálido (marrón) -->
         <div
-          class="w-full md:flex-1 flex flex-col justify-center leading-[1.1] bg-gradient-to-r from-[#0060AA] to-[#0089D0] rounded-[18px] lg:rounded-[22px] pt-6 pb-4 px-6 md:pl-20 md:pr-6 lg:pl-32 lg:pr-12 md:py-1.5 lg:py-3 xl:py-4 2xl:py-6 shadow-[0_8px_32px_rgba(0,96,170,0.4)] border-2 border-white/10 text-center md:text-left"
+          class="relative overflow-hidden w-full md:flex-1 flex flex-col justify-center
+                 rounded-[18px] lg:rounded-[24px] border border-gold/35 bg-chocolate-medium bg-tabua
+                 pt-8 pb-6 px-6 md:pl-24 md:pr-8 lg:pl-36 lg:pr-12 md:py-7 lg:py-8
+                 shadow-[0_14px_44px_rgba(26,13,8,0.55)]
+                 transition-all duration-500 group-hover:border-gold/60 group-hover:shadow-[0_20px_60px_rgba(26,13,8,0.7)]
+                 text-center md:text-left"
         >
-          <h2 class="text-white font-sans font-black text-[20px] xs:text-[24px] lg:text-[1.8rem] xl:text-[2.2rem] 2xl:text-[2.6rem] tracking-tight leading-tight uppercase">
-            {clube.titleLine1}
-          </h2>
-          <p class="text-white/90 font-sans font-light text-[15px] xs:text-lg lg:text-[1.3rem] xl:text-[1.6rem] 2xl:text-[1.9rem] tracking-tight leading-tight">
-            {clube.titleLine2}
-          </p>
+          <!-- Glow cálido -->
+          <span
+            class="pointer-events-none absolute inset-0 z-0
+                   bg-[radial-gradient(ellipse_at_85%_30%,rgba(234,168,36,0.16),transparent_55%),radial-gradient(ellipse_at_20%_90%,rgba(120,20,10,0.35),transparent_55%)]"
+          ></span>
+
+          <div class="relative z-10">
+            <h2
+              class="font-sans font-extrabold text-cream text-xl md:text-2xl lg:text-[1.9rem] tracking-tight leading-tight mb-1.5 text-warm-glow"
+            >
+              {clube.titleLine1}
+            </h2>
+            <p
+              class="font-sans text-latte/90 text-base md:text-lg lg:text-xl leading-snug"
+            >
+              {clube.titleLine2}
+            </p>
+          </div>
         </div>
       </div>
     </a>

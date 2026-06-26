@@ -1,6 +1,6 @@
 ---
-// Banner "Condor em Casa" (reemplaza al de Condor Premia). Basado en el KV de referencia:
-// gradiente azul + borde claro, copy a la izquierda y lockup "Condor em CASA" a la derecha.
+// Banner "Condor em Casa" (entrega a domicilio). Identidad AZUL de Condor em Casa,
+// con CTA, profundidad y el lockup "Condor em CASA" a la derecha.
 import content from "../../data/sabores/content.json";
 const emCasa = content.emCasa;
 ---
@@ -13,35 +13,45 @@ const emCasa = content.emCasa;
       rel="noopener noreferrer"
       data-track="condor_em_casa_clicked"
       data-placement="banner_em_casa"
-      class="relative w-full max-w-[1100px] group transition-all hover:brightness-105"
       aria-label="Condor em Casa — faça suas compras e levamos até você"
+      class="group relative w-full max-w-[1100px] overflow-hidden
+             flex flex-col md:flex-row items-center justify-between gap-7 md:gap-10
+             rounded-[20px] md:rounded-[28px] border border-white/30
+             bg-gradient-to-br from-[#0a57a3] via-[#0f6cb8] to-[#1c84cc]
+             px-8 py-8 md:px-14 md:py-10
+             shadow-[0_18px_50px_rgba(0,80,165,0.45)]
+             transition-all duration-500 hover:border-white/55 hover:shadow-[0_26px_70px_rgba(0,80,165,0.6)]"
     >
-      <div
-        class="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10
-               rounded-[20px] md:rounded-[26px] border-2 border-white/40
-               bg-gradient-to-r from-[#0a57a3] via-[#0f6cb8] to-[#1c84cc]
-               shadow-[0_10px_36px_rgba(0,80,165,0.4)]
-               px-8 py-7 md:px-14 md:py-9"
-      >
-        <!-- Copy -->
-        <div class="text-center md:text-left">
-          <h2 class="text-white font-sans font-black text-2xl md:text-3xl lg:text-[2.4rem] leading-tight mb-1.5">
-            {emCasa.title}
-          </h2>
-          <p class="text-white font-sans text-lg md:text-xl lg:text-2xl leading-tight">
-            {emCasa.subtitlePre}<strong class="font-black">{emCasa.subtitleStrong}</strong>
-          </p>
-        </div>
+      <!-- Glow para profundidad -->
+      <span
+        class="pointer-events-none absolute inset-0 z-0 rounded-[20px] md:rounded-[28px]
+               bg-[radial-gradient(ellipse_at_18%_25%,rgba(255,255,255,0.22),transparent_55%),radial-gradient(ellipse_at_92%_85%,rgba(0,35,80,0.45),transparent_55%)]"
+      ></span>
 
-        <!-- Lockup Condor em CASA -->
-        <img
-          src={emCasa.logo}
-          alt="Condor em Casa"
-          width="320"
-          height="180"
-          class="h-28 md:h-28 lg:h-32 w-auto shrink-0 drop-shadow-[0_6px_16px_rgba(0,0,0,0.25)] transition-transform group-hover:scale-105"
-        />
+      <!-- Copy -->
+      <div class="relative z-10 text-center md:text-left">
+        <h2
+          class="font-sans font-extrabold text-white text-2xl md:text-3xl lg:text-[2.3rem] leading-tight tracking-tight mb-2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.25)]"
+        >
+          {emCasa.title}
+        </h2>
+        <p class="font-sans text-white/90 text-lg md:text-xl leading-snug">
+          {emCasa.subtitlePre}<strong class="font-extrabold text-white"
+            >{emCasa.subtitleStrong}</strong
+          >
+        </p>
       </div>
+
+      <!-- Lockup Condor em CASA -->
+      <img
+        src={emCasa.logo}
+        alt="Condor em Casa"
+        width="320"
+        height="180"
+        class="relative z-10 h-24 md:h-28 lg:h-32 w-auto shrink-0
+               drop-shadow-[0_10px_24px_rgba(0,0,0,0.35)]
+               transition-transform duration-500 group-hover:scale-105"
+      />
     </a>
   </div>
 </section>

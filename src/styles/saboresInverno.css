@@ -1015,66 +1015,47 @@
 
 /* High-contrast row container simulating a light parchment plank on the dark table */
 .sponsors-row-container {
-  @apply w-full overflow-hidden py-6 lg:py-8 bg-[#F9F6ED] border-2 border-[#EADAB8] rounded-3xl shadow-[0_16px_48px_rgba(0,0,0,0.5)] relative flex items-center;
+  @apply w-full py-7 px-6 lg:py-9 lg:px-10 bg-[#F9F6ED] border-2 border-[#EADAB8] rounded-3xl shadow-[0_16px_48px_rgba(0,0,0,0.5)];
 }
 
-/* Symmetrical fade masks on the edges to hide hard borders dynamically */
-.sponsors-row-container::before,
-.sponsors-row-container::after {
-  content: "";
-  @apply absolute top-0 bottom-0 w-16 md:w-32 z-20 pointer-events-none;
+/* Grilla balanceada: filas parejas (sin huérfanos). 8 patrocinadores → 4×2,
+   10 apoiadores → 5×2. Cada logo ocupa su celda completa y queda centrado. */
+.sponsors-logos {
+  @apply grid place-items-center w-full gap-x-4 gap-y-8 md:gap-x-8 md:gap-y-10;
 }
 
-.sponsors-row-container::before {
-  @apply left-0 bg-gradient-to-r from-[#F9F6ED] via-[#F9F6ED]/90 to-transparent;
+/* Patrocinadores = tier principal (un escalón visual por encima) */
+.sponsors-logos--main {
+  @apply grid-cols-2 sm:grid-cols-3 md:grid-cols-4;
 }
 
-.sponsors-row-container::after {
-  @apply right-0 bg-gradient-to-l from-[#F9F6ED] via-[#F9F6ED]/90 to-transparent;
+/* Apoiadores = tier de apoyo */
+.sponsors-logos--support {
+  @apply grid-cols-2 sm:grid-cols-3 md:grid-cols-5;
 }
 
-/* Marquee tracks */
-.marquee-track-left {
-  @apply flex gap-16 w-max shrink-0;
-  animation: scroll-left 55s linear infinite;
-  will-change: transform;
-}
-
-.marquee-track-right {
-  @apply flex gap-16 w-max shrink-0;
-  animation: scroll-right 55s linear infinite;
-  will-change: transform;
-}
-
-/* GPU-Accelerated Infinite Scrolling Keyframes */
-@keyframes scroll-left {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-@keyframes scroll-right {
-  0% {
-    transform: translate3d(-50%, 0, 0);
-  }
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-/* Clean logo item wrapper (no card boxes) */
+/* Slot = celda completa con altura uniforme por tier */
 .sponsor-logo-item {
-  @apply w-48 h-32 md:w-64 md:h-40 flex items-center justify-center select-none rounded-full;
+  @apply flex items-center justify-center select-none w-full;
+}
+.sponsors-logos--main .sponsor-logo-item {
+  @apply h-24 md:h-32;
+}
+.sponsors-logos--support .sponsor-logo-item {
+  @apply h-20 md:h-28;
 }
 
-/* Increased logo size, opacity, and full color */
 .sponsor-logo-img {
-  @apply max-h-20 md:max-h-28 w-auto object-contain transition-all duration-300;
-  opacity: 0.9;
+  @apply w-auto object-contain transition-all duration-300;
+  opacity: 0.92;
   mix-blend-mode: multiply;
+}
+/* Patrocinadores más grandes que apoiadores → jerarquía clara */
+.sponsors-logos--main .sponsor-logo-img {
+  @apply max-h-16 md:max-h-24;
+}
+.sponsors-logos--support .sponsor-logo-img {
+  @apply max-h-12 md:max-h-20;
 }
 
 .sponsor-logo-img:hover {

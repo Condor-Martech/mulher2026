@@ -14,8 +14,8 @@ const { patrocinadores, apoiadores } = sponsors;
       <div class="sponsors-row-group">
         <h5 class="sponsors-row-label">Patrocinadores</h5>
         <div class="sponsors-row-container">
-          <div class="marquee-track-left">
-            {[...patrocinadores, ...patrocinadores].map((logo) => (
+          <div class="sponsors-logos sponsors-logos--main">
+            {patrocinadores.map((logo) => (
               <div class="sponsor-logo-item" title={logo.name}>
                 <img
                   src={logo.logoUrl}
@@ -34,8 +34,8 @@ const { patrocinadores, apoiadores } = sponsors;
       <div class="sponsors-row-group">
         <h5 class="sponsors-row-label">Apoiadores</h5>
         <div class="sponsors-row-container">
-          <div class="marquee-track-right">
-            {[...apoiadores, ...apoiadores].map((logo) => (
+          <div class="sponsors-logos sponsors-logos--support">
+            {apoiadores.map((logo) => (
               <div class="sponsor-logo-item" title={logo.name}>
                 <img
                   src={logo.logoUrl}
