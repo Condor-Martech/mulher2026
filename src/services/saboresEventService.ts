@@ -8,23 +8,10 @@ import {
 export { getStatusConfig };
 
 // Campaña Sabores de Inverno 2026. Service self-contained (sin registry config-driven):
-// el campanhaId y el gate +18 viven acá, igual que eventService/maesEventService.
+// el campanhaId vive acá, igual que eventService/maesEventService.
+// Gate +18: regla global de la campaña — TODOS los eventos son para maiores de 18 anos,
+// así que la confirmación se exige siempre en el form (no hay derivación por evento).
 const CAMPAIGN_ID = 'sabores-de-inverno-2026';
-
-// Gate +18: marcas con alcohol o flag explícito `requer_maioridade` en el JSONB `data`.
-const SABORES_ALCOHOL_BRANDS = ['baden baden', 'terraustral', 'santa rita'];
-const saboresRequiresAge = (
-  data: Record<string, any> | null | undefined,
-): boolean => {
-  const d = data ?? {};
-  if (d.requer_maioridade === true) return true;
-  const brand = String(d.brand ?? '').toLowerCase();
-  return SABORES_ALCOHOL_BRANDS.some((b) => brand.includes(b));
-};
-
-/** ¿Este evento exige confirmación +18? (marca con alcohol o flag en `data`). */
-export const eventRequiresAge = (event: Event): boolean =>
-  saboresRequiresAge(event.data);
 
 export const getEventStatus = (
   event: Event,
@@ -92,7 +79,6 @@ export const fetchSaboresEvents = async (): Promise<Event[]> => {
       brand: p.data?.brand,
       sponsor: p.data?.sponsor,
       time_label: p.data?.time_label,
-      requiresAge: saboresRequiresAge(p.data),
     }));
 
     // Conteo vía RPC SECURITY DEFINER (no expone PII; mismo patrón RLS que mulher/maes).

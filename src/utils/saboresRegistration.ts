@@ -30,9 +30,17 @@ export function initSaboresEvents() {
         t.classList.toggle("active", on);
         t.setAttribute("aria-selected", on ? "true" : "false");
       });
-      panels.forEach((p) =>
-        p.classList.toggle("hidden-panel", p.dataset.cityPanel !== key),
-      );
+      panels.forEach((p) => {
+        const hidden = p.dataset.cityPanel !== key;
+        p.classList.toggle("hidden-panel", hidden);
+        if (!hidden) {
+          // El panel recién mostrado: volver al inicio y recalcular flechas
+          // (sus medidas eran 0 mientras estaba en display:none).
+          const track = p.querySelector<HTMLElement>("[data-events-track]");
+          if (track) track.scrollLeft = 0;
+          (p as any).__refreshArrows?.();
+        }
+      });
     };
     tabs.forEach((t) =>
       t.addEventListener("click", () => {
@@ -53,6 +61,84 @@ export function initSaboresEvents() {
       );
   }
 
+  // ─────────────────────── Flechas de navegación (carrusel) ───────────────
+  const prefersReduced = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  document.querySelectorAll<HTMLElement>("[data-city-panel]").forEach((panel) => {
+    const track = panel.querySelector<HTMLElement>("[data-events-track]");
+    // Flechas de escritorio (superpuestas) + flechas mobile (barra inferior).
+    const prevs = panel.querySelectorAll<HTMLButtonElement>(
+      ".carousel-prev, .carousel-prev-m",
+    );
+    const nexts = panel.querySelectorAll<HTMLButtonElement>(
+      ".carousel-next, .carousel-next-m",
+    );
+    if (!track || !prevs.length || !nexts.length) return;
+
+    const controls = panel.querySelector<HTMLElement>(".carousel-controls");
+    const dotsWrap = panel.querySelector<HTMLElement>("[data-dots]");
+    const cards = Array.from(track.children) as HTMLElement[];
+
+    // Un punto por card (solo-mobile). Click → ir a esa card.
+    if (dotsWrap) {
+      cards.forEach((_, i) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "carousel-dot";
+        dot.setAttribute("aria-label", `Ir para edição ${i + 1}`);
+        dot.addEventListener("click", () =>
+          track.scrollTo({
+            left: cards[i].offsetLeft,
+            behavior: prefersReduced ? "auto" : "smooth",
+          }),
+        );
+        dotsWrap.appendChild(dot);
+      });
+    }
+    const dots = dotsWrap
+      ? (Array.from(dotsWrap.children) as HTMLElement[])
+      : [];
+
+    // Estado de las flechas/puntos según la posición de scroll. Si no hay
+    // overflow (≤ las que caben) las flechas quedan disabled → ocultas vía CSS
+    // y la barra mobile se esconde por completo.
+    const refresh = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      const overflowing = max > 4; // tolerancia en px
+      const x = track.scrollLeft;
+      prevs.forEach((b) => (b.disabled = !overflowing || x <= 1));
+      nexts.forEach((b) => (b.disabled = !overflowing || x >= max - 1));
+      controls?.classList.toggle("is-hidden", !overflowing);
+      if (dots.length) {
+        let active = 0;
+        let best = Infinity;
+        cards.forEach((c, i) => {
+          const d = Math.abs(c.offsetLeft - x);
+          if (d < best) {
+            best = d;
+            active = i;
+          }
+        });
+        dots.forEach((d, i) => d.classList.toggle("active", i === active));
+      }
+    };
+
+    const page = (dir: number) => {
+      const amount = Math.round(track.clientWidth * 0.85) * dir;
+      track.scrollBy({ left: amount, behavior: prefersReduced ? "auto" : "smooth" });
+    };
+
+    prevs.forEach((b) => b.addEventListener("click", () => page(-1)));
+    nexts.forEach((b) => b.addEventListener("click", () => page(1)));
+    track.addEventListener("scroll", refresh, { passive: true });
+    window.addEventListener("resize", refresh);
+    refresh();
+
+    // Expuesto para refrescar al activar el panel (ver tabs).
+    (panel as any).__refreshArrows = refresh;
+  });
+
   // ─────────────────────────── Modal de inscripción ──────────────────────
   const modal = $("sabores-modal") as HTMLDialogElement | null;
   const feedback = $("sabores-feedback") as HTMLDialogElement | null;
@@ -61,8 +147,6 @@ export function initSaboresEvents() {
 
   const idInput = $("sabores-event-id") as HTMLInputElement | null;
   const temaInput = $("sabores-event-tema") as HTMLInputElement | null;
-  const ageBlock = $("sabores-age-block");
-  const ageInput = $("sabores-maioridade") as HTMLInputElement | null;
   const submitBtn = $("sabores-submit") as HTMLButtonElement | null;
   const submitText = $("sabores-submit-text");
   const spinner = $("sabores-spinner");
@@ -89,16 +173,12 @@ export function initSaboresEvents() {
           cityEl.textContent = [btn.dataset.eventCity, btn.dataset.eventLocation]
             .filter(Boolean)
             .join(" · ");
+        const palNameEl = $("sabores-modal-palestrante-name");
+        const pal = btn.dataset.eventPalestrante || "";
+        if (palNameEl) palNameEl.textContent = pal;
+        $("sabores-modal-palestrante")?.classList.toggle("hidden", !pal);
 
-        // Gate +18 por evento.
-        const requiresAge = btn.dataset.eventRequiresAge === "1";
-        if (ageBlock && ageInput) {
-          ageBlock.classList.toggle("hidden", !requiresAge);
-          ageBlock.classList.toggle("flex", requiresAge);
-          ageInput.required = requiresAge;
-          if (!requiresAge) ageInput.checked = false;
-        }
-
+        // +18 obrigatório em todos os eventos: o checkbox já é `required` no markup.
         resetValidation();
         checkValidity();
         track("event_modal_opened", { event_id: id });

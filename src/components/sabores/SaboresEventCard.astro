@@ -2,6 +2,7 @@
 import type { Event } from "../../types/event";
 import { getEventStatus } from "../../services/saboresEventService";
 import content from "../../data/sabores/content.json";
+import sponsors from "../../data/sabores/sponsors.json";
 
 interface Props {
   event: Event;
@@ -15,7 +16,6 @@ const statusMap = content.status as Record<
   { label: string; cta: string; disabled: boolean }
 >;
 const statusCfg = statusMap[status] ?? statusMap.SOON;
-const isOpen = status === "OPEN";
 
 // --- Fecha (America/Sao_Paulo) ---
 const dateObj = new Date(event.data_evento);
@@ -31,10 +31,9 @@ const time =
   event.time_label && event.time_label.toLowerCase() !== "a definir"
     ? event.time_label
     : "";
-// Eyebrow compacto de la card (la fecha es lo que diferencia dentro de una ciudad).
-const dateBadge = valid
-  ? `${part({ day: "2-digit", month: "long" })}${time ? ` · ${time}` : ""}`
-  : "Data a definir";
+// Fecha destacada de la card (Opción B): eyebrow con el día de la semana + fecha grande.
+const weekdayLabel = valid ? cap(part({ weekday: "long" })) : "";
+const dateMain = valid ? part({ day: "2-digit", month: "long" }) : "Data a definir";
 // Fecha completa (con día de la semana) para el modal.
 const dateFull = valid
   ? `${cap(part({ weekday: "long" }))}, ${part({ day: "2-digit", month: "long" })}${time ? ` · ${time}` : ""}`
@@ -67,46 +66,99 @@ const mapsUrl =
 const cover = `/assets/sabores-de-inverno/eventos/${event.id}.jpg`;
 
 const sponsorLabel = event.brand ?? event.sponsor ?? "";
+
+// Logo del patrocinador del evento: reemplaza el logo genérico de Condor en el
+// brandmark de la portada. Se busca por nombre normalizado (sin acentos/espacios,
+// p.ej. "3 Corações" → "3coracoes") contra sponsors.json. Fallback: logo de Condor.
+const normalizeBrand = (s: string) =>
+  s
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]/g, "");
+const sponsorLogoByBrand = new Map<string, string>(
+  [...sponsors.patrocinadores, ...sponsors.apoiadores].map(
+    (s) => [normalizeBrand(s.name), s.logoUrl] as [string, string],
+  ),
+);
+const sponsorKey = normalizeBrand(sponsorLabel);
+const sponsorLogo = sponsorKey ? sponsorLogoByBrand.get(sponsorKey) ?? null : null;
+const brandmarkSrc = sponsorLogo ?? "/assets/sabores-de-inverno/condor-logo.png";
+const brandmarkAlt = sponsorLogo ? sponsorLabel || "Patrocinador" : "Condor";
+
+// El título a veces trae un prefijo "…Marca…:" (p.ej. "Chá Leão: …") redundante
+// con el logo del patrocinador. Si el segmento antes del primer ":" menciona la
+// marca del evento, lo quitamos y mostramos solo el subtítulo real.
+const stripRedundantBrandPrefix = (tema: string): string => {
+  const i = tema.indexOf(":");
+  if (i === -1 || !sponsorLabel) return tema;
+  const prefix = tema.slice(0, i);
+  return normalizeBrand(prefix).includes(normalizeBrand(sponsorLabel))
+    ? tema.slice(i + 1).trim()
+    : tema;
+};
+const title = stripRedundantBrandPrefix(event.tema);
+
+// Palestrante para el modal (oculta placeholders "a definir/confirmar").
+const speaker =
+  event.palestrante &&
+  !/^a\s+(definir|confirmar)/i.test(event.palestrante.trim())
+    ? event.palestrante
+    : "";
 ---
 
-<article class:list={["sabores-event-card", { "is-closed": statusCfg.disabled }]}>
+<article class="sabores-event-card" data-status={status}>
   <!-- Capa del evento -->
   <div class="sabores-card-cover">
-    <img
-      src={cover}
-      alt={event.tema}
-      loading="lazy"
-      decoding="async"
-    />
-    <span class:list={["sabores-card-status", isOpen ? "is-open" : "is-off"]}>
+    <div class="sabores-card-cover-media">
+      <img
+        src={cover}
+        alt={event.tema}
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <span class="sabores-card-status">
       {statusCfg.label}
     </span>
-    {
-      event.requiresAge && <span class="sabores-card-age">+18</span>
-    }
+    <span class="sabores-card-age">+18</span>
+    <span class="sabores-card-brandmark">
+      <img
+        src={brandmarkSrc}
+        alt={brandmarkAlt}
+        data-brand={sponsorLogo ? sponsorKey : undefined}
+        loading="lazy"
+        decoding="async"
+      />
+    </span>
   </div>
 
   <!-- Cuerpo marrón -->
   <div class="sabores-card-body">
-    <p class="sabores-card-date">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <rect x="3" y="4" width="18" height="17" rx="2" />
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9h18M8 2v4M16 2v4" />
-      </svg>
-      {dateBadge}
-    </p>
+    <div class="sabores-card-date">
+      {weekdayLabel && <span class="sabores-card-weekday">{weekdayLabel}</span>}
+      <p class="sabores-card-date-main">
+        {dateMain}{time && <span class="sabores-card-time"> · {time}</span>}
+      </p>
+    </div>
 
-    <h3 class="sabores-card-title">{event.tema}</h3>
-
-    {sponsorLabel && <span class="sabores-card-sponsor">{sponsorLabel}</span>}
+    <h3 class="sabores-card-title">{title}</h3>
 
     {
-      event.palestrante && (
-        <div class="sabores-card-speaker">
-          <span class="sabores-card-speaker-info">
-            <span class="sabores-card-speaker-label">Palestrante</span>
-            <span class="sabores-card-speaker-name">{event.palestrante}</span>
-          </span>
+      ((!sponsorLogo && sponsorLabel) || event.palestrante) && (
+        <div class="sabores-card-credits">
+          {!sponsorLogo && sponsorLabel && (
+            <div class="sabores-card-brand">
+              <span class="sabores-card-brand-label">Apresentado por</span>
+              <span class="sabores-card-brand-name">{sponsorLabel}</span>
+            </div>
+          )}
+          {event.palestrante && (
+            <div class="sabores-card-speaker">
+              <span class="sabores-card-speaker-label">Palestrante</span>
+              <span class="sabores-card-speaker-name">{event.palestrante}</span>
+            </div>
+          )}
         </div>
       )
     }
@@ -121,12 +173,10 @@ const sponsorLabel = event.brand ?? event.sponsor ?? "";
             rel="noopener noreferrer"
             aria-label={`Ver ${store || city} no Google Maps`}
           >
-            <span class="sabores-card-map-pin" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
-                <circle cx="12" cy="11" r="3" />
-              </svg>
-            </span>
+            <svg class="sabores-card-map-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
+              <circle cx="12" cy="11" r="3" />
+            </svg>
             <span class="sabores-card-map-text">
               <span class="sabores-card-map-place">{store || city}</span>
               <span class="sabores-card-map-cta">Ver no mapa</span>
@@ -152,11 +202,11 @@ const sponsorLabel = event.brand ?? event.sponsor ?? "";
       class="open-sabores-modal sabores-card-cta"
       disabled={statusCfg.disabled}
       data-event-id={event.id}
-      data-event-tema={event.tema}
+      data-event-tema={title}
       data-event-date={dateFull}
       data-event-city={city}
       data-event-location={event.location ?? ""}
-      data-event-requires-age={event.requiresAge ? "1" : "0"}
+      data-event-palestrante={speaker}
     >
       {statusCfg.cta}
     </button>

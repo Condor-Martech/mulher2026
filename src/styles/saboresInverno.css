@@ -228,7 +228,7 @@
 /* ═══════════════════════ components/navbar ═══════════════════════ */
 /* Floating Navigation Header (Pill Style) */
 .floating-header {
-  @apply fixed top-8 left-0 right-0 z-50 flex justify-center md:px-6 pointer-events-none w-full;
+  @apply fixed top-8 left-0 right-0 z-50 flex justify-end md:justify-center px-5 md:px-6 pointer-events-none w-full;
 }
 
 .floating-nav {
@@ -441,13 +441,13 @@
 /* Layer 1 — content container (left branding / right cluster) */
 .hero-content {
   @apply relative z-20 flex flex-col lg:flex-row justify-between items-center
-         px-6 lg:px-20 xl:px-32 pt-24 lg:pt-12 xl:pt-12 pb-12 lg:pb-16
+         px-6 lg:px-20 xl:px-32 pt-24 lg:pt-12 xl:pt-12 pb-6 lg:pb-16
          max-w-[1700px] mx-auto w-full lg:-mt-10;
 }
 
 /* ---------- LEFT BLOCK ---------- */
 .hero-left-block {
-  @apply flex flex-col items-center gap-4 lg:gap-6 w-full lg:w-auto opacity-0;
+  @apply flex flex-col items-center gap-3 lg:gap-6 w-full lg:w-auto opacity-0;
   animation: fade-in-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
 }
 
@@ -572,11 +572,11 @@
    ============================================================================ */
 
 .content-section {
-  @apply py-16 md:py-24 bg-transparent relative overflow-hidden;
+  @apply py-10 md:py-20 bg-transparent relative overflow-hidden;
 }
 
 .section-title-group {
-  @apply mb-16 text-center relative z-10 w-full flex flex-col items-center justify-center;
+  @apply mb-10 md:mb-14 text-center relative z-10 w-full flex flex-col items-center justify-center;
 }
 
 .section-pretitle {
@@ -596,7 +596,7 @@
    ============================================================================ */
 
 .city-filter {
-  @apply flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-12 w-full relative z-10;
+  @apply flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-7 md:mb-10 w-full relative z-10;
 }
 
 .city-badge {
@@ -634,38 +634,147 @@
 }
 
 /* ============================================================================
-   EVENTS GRID — carrusel horizontal; en xl las 5 cards entran en una fila
+   EVENTS CAROUSEL — carrusel horizontal en TODOS los anchos: 4 cards + peek
+   de la siguiente, con flechas de navegación. (≤4 eventos = sin overflow.)
    ============================================================================ */
 
+/* Wrapper: contexto de posicionamiento para las flechas */
+.events-carousel {
+  @apply relative w-full;
+}
+
+/* Track scrollable con snap.
+   overflow-x:auto fuerza overflow-y:auto (spec) → el padding vertical le da aire
+   a la sombra (ya reducida) para que no se recorte; -mb compensa el hueco. */
 .events-grid {
-  /* <1280px: carrusel horizontal con snap (evita scroll vertical, desliza al costado) */
-  @apply flex overflow-x-auto snap-x snap-mandatory gap-4 w-full relative z-10 pt-3 pb-3;
+  @apply flex overflow-x-auto snap-x snap-mandatory gap-4 w-full relative z-10 pt-6 pb-8 -mb-5;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  scroll-behavior: smooth;
 }
 
 .events-grid::-webkit-scrollbar {
   display: none;
 }
 
+/* Ancho de card → define cuántas se ven + el peek de la siguiente */
 .events-grid > * {
   @apply snap-start;
-  flex: 0 0 15rem; /* 240px por card en modo carrusel */
+  flex: 0 0 82%; /* mobile: 1 card + peek */
 }
 
-/* ≥1280px: las 5 palestras en una sola fila, sin scroll */
-@media (min-width: 1280px) {
-  .events-grid {
-    @apply grid grid-cols-5 overflow-visible gap-4;
-  }
+@media (min-width: 640px) {
   .events-grid > * {
-    flex: initial; /* en grid el ancho lo define la columna */
+    flex-basis: calc((100% - 1rem) / 2.25); /* tablet: 2 + peek */
   }
+}
+
+@media (min-width: 1024px) {
+  .events-grid > * {
+    flex-basis: calc((100% - 3rem) / 4.3); /* desktop: 4 + peek */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .events-grid {
+    scroll-behavior: auto;
+  }
+}
+
+/* Flechas de navegación — superpuestas en los bordes, solo desde tablet */
+.carousel-arrow {
+  @apply hidden md:flex items-center justify-center absolute top-1/2 -translate-y-1/2 z-30
+         w-11 h-11 rounded-full cursor-pointer text-gold
+         bg-chocolate-dark/90 border border-gold/45 backdrop-blur-sm
+         shadow-[0_8px_24px_rgba(0,0,0,0.5)] transition-all duration-200;
+}
+
+.carousel-arrow svg {
+  @apply w-5 h-5;
+}
+
+.carousel-arrow:hover:not(:disabled) {
+  @apply bg-gold text-chocolate-dark border-gold scale-105;
+}
+
+.carousel-arrow:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* En los extremos (o sin overflow) la flecha se oculta */
+.carousel-arrow:disabled {
+  @apply opacity-0 pointer-events-none;
+}
+
+.carousel-prev {
+  @apply -left-3 lg:-left-5;
+}
+
+.carousel-next {
+  @apply -right-3 lg:-right-5;
+}
+
+/* ----------------------------------------------------------------------------
+   Barra de control solo-mobile (<768px): flecha ‹ · puntos · flecha ›
+   Desde tablet (≥768px) la navegación vuelve a las flechas superpuestas.
+   ---------------------------------------------------------------------------- */
+.carousel-controls {
+  @apply flex md:hidden items-center justify-center gap-4 mt-4;
+}
+
+.carousel-controls.is-hidden {
+  @apply hidden;
+}
+
+.carousel-arrow-m {
+  @apply flex items-center justify-center w-11 h-11 rounded-full cursor-pointer text-gold shrink-0
+         bg-chocolate-dark/90 border border-gold/45 backdrop-blur-sm
+         shadow-[0_8px_24px_rgba(0,0,0,0.5)] transition-all duration-200;
+}
+
+.carousel-arrow-m svg {
+  @apply w-5 h-5;
+}
+
+.carousel-arrow-m:hover:not(:disabled) {
+  @apply bg-gold text-chocolate-dark border-gold scale-105;
+}
+
+.carousel-arrow-m:active:not(:disabled) {
+  @apply scale-95;
+}
+
+.carousel-arrow-m:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* En los extremos: atenuada (no oculta) → conserva el centrado de la barra */
+.carousel-arrow-m:disabled {
+  @apply opacity-30 pointer-events-none;
+}
+
+/* Puntos de progreso: uno por card; el activo se estira en una píldora dorada */
+.carousel-dots {
+  @apply flex items-center justify-center gap-1.5 flex-wrap;
+}
+
+.carousel-dot {
+  @apply h-1.5 w-1.5 rounded-full bg-gold/30 cursor-pointer border-0 p-0 transition-all duration-300;
+}
+
+.carousel-dot:hover:not(.active) {
+  @apply bg-gold/60;
+}
+
+.carousel-dot.active {
+  @apply w-5 bg-gold;
 }
 
 /* Hint "deslize para ver mais" — badge solo en modo carrusel (<1280px) */
 .carousel-hint {
-  @apply flex justify-center w-full mb-6;
+  @apply flex justify-center w-full mb-4;
   transition: opacity 0.4s ease;
 }
 
@@ -689,7 +798,7 @@
   @apply opacity-0 pointer-events-none;
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 768px) {
   .carousel-hint {
     display: none;
   }
@@ -706,11 +815,11 @@
    ============================================================================ */
 
 .sabores-event-card {
-  @apply relative flex flex-col rounded-3xl transition-all duration-300;
+  @apply relative flex flex-col overflow-hidden rounded-3xl transition-all duration-300;
   background: linear-gradient(165deg, #4A2818 0%, #2E1810 55%, #160B06 100%);
   border: 1px solid rgba(234, 168, 36, 0.22);
   box-shadow:
-    0 18px 40px -14px rgba(0, 0, 0, 0.75),
+    0 10px 24px -12px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
@@ -718,23 +827,121 @@
   transform: translateY(-6px);
   border-color: rgba(234, 168, 36, 0.5);
   box-shadow:
-    0 32px 60px -18px rgba(0, 0, 0, 0.85),
+    0 16px 30px -14px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgba(234, 168, 36, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-/* Capa */
-.sabores-card-cover {
-  @apply relative h-36 w-full overflow-hidden rounded-t-3xl bg-chocolate-dark;
+/* Card activa (OPEN): flota por defecto y se apila por encima del resto para que
+   se note de un vistazo cuál tiene inscrição aberta. Sin scale (crecer la
+   recorta dentro del carrusel: overflow-x fuerza overflow-y) — el destaque va
+   por lift + anillo dorado + glow contenido (spread negativo, no se recorta) +
+   un pulso sutil. El z-index la levanta sobre las cards vecinas (z auto). */
+.sabores-event-card[data-status="OPEN"] {
+  z-index: 5;
+  transform: translateY(-14px);
+  border-color: rgba(234, 168, 36, 0.75);
+  animation: saboresActiveGlow 2.6s ease-in-out infinite;
 }
 
-.sabores-card-cover img {
+.sabores-event-card[data-status="OPEN"]:hover {
+  transform: translateY(-18px);
+  border-color: rgba(234, 168, 36, 0.9);
+  animation: none;
+  box-shadow:
+    0 0 0 2px rgba(234, 168, 36, 0.6),
+    0 30px 50px -18px rgba(0, 0, 0, 0.72),
+    0 0 30px -16px rgba(234, 168, 36, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+@keyframes saboresActiveGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1.5px rgba(234, 168, 36, 0.4),
+      0 24px 42px -18px rgba(0, 0, 0, 0.68),
+      0 0 26px -16px rgba(234, 168, 36, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  }
+  50% {
+    box-shadow:
+      0 0 0 2px rgba(234, 168, 36, 0.62),
+      0 26px 46px -18px rgba(0, 0, 0, 0.7),
+      0 0 30px -14px rgba(234, 168, 36, 0.62),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sabores-event-card[data-status="OPEN"] {
+    animation: none;
+    box-shadow:
+      0 0 0 2px rgba(234, 168, 36, 0.5),
+      0 26px 46px -18px rgba(0, 0, 0, 0.68),
+      0 0 28px -14px rgba(234, 168, 36, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  }
+}
+
+/* Capa */
+.sabores-card-cover {
+  @apply relative h-52 w-full rounded-t-3xl bg-chocolate-dark;
+}
+
+/* Media interna: recorta el zoom al hover. El redondeo de las esquinas lo aplica
+   la propia card (overflow-hidden + rounded-3xl), de modo que la imagen llega
+   justo hasta el borde dorado sin dejar un hueco en la esquina. */
+.sabores-card-cover-media {
+  @apply absolute inset-0 overflow-hidden;
+}
+
+/* Logo del patrocinador (o Condor como fallback) en una chip blanca apoyada
+   abajo-izquierda, a caballo del borde inferior de la portada. La caja blanca
+   da contraste a logos de cualquier color/fondo. */
+.sabores-card-brandmark {
+  @apply absolute left-4 bottom-0 translate-y-1/2 z-30 inline-flex items-center justify-center;
+  @apply rounded-2xl bg-white px-3.5 py-2.5 shadow-lg ring-1 ring-black/10;
+}
+
+.sabores-card-brandmark img {
+  @apply h-14 w-auto;          /* altura de tapa uniforme (≈56px) para todos los logos */
+  max-width: 9rem;
+  object-fit: contain;
+}
+
+/* Homogeneización óptica por marca: las proporciones de origen son muy dispares
+   (cuadrados llenan la altura → se ven grandes; wordmarks anchos chocan el cap →
+   se ven chicos). Se afina con data-brand (slug normalizado de la marca). */
+
+/* Wordmarks muy anchos: más ancho permitido para que alcancen la misma altura */
+.sabores-card-brandmark img[data-brand="santarita"],
+.sabores-card-brandmark img[data-brand="cocacola"],
+.sabores-card-brandmark img[data-brand="scjohnson"] {
+  max-width: 11.5rem;
+}
+
+/* Logos cuadrados/densos: bajan un poco para no verse mayores que los wordmarks */
+.sabores-card-brandmark img[data-brand="3coracoes"],
+.sabores-card-brandmark img[data-brand="bolamel"],
+.sabores-card-brandmark img[data-brand="camil"],
+.sabores-card-brandmark img[data-brand="ype"],
+.sabores-card-brandmark img[data-brand="ourofino"],
+.sabores-card-brandmark img[data-brand="padariacondor"] {
+  @apply h-12;
+}
+
+/* Logo vertical (galbani): limita la altura para que no quede gigante y angosto */
+.sabores-card-brandmark img[data-brand="galbani"] {
+  @apply h-12;
+}
+
+.sabores-card-cover-media img {
   @apply h-full w-full object-cover transition-transform duration-500;
   /* Leve realce para que las fotos oscuras (p.ej. Terraustral) no queden apagadas */
   filter: brightness(1.07) saturate(1.05);
 }
 
-.sabores-event-card:hover .sabores-card-cover img {
+.sabores-event-card:hover .sabores-card-cover-media img {
   @apply scale-105;
 }
 
@@ -751,11 +958,12 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
-.sabores-card-status.is-open {
+/* Color del badge según el estado del card (data-status en el <article>) */
+.sabores-event-card[data-status="OPEN"] .sabores-card-status {
   @apply bg-green-600 text-white;
 }
 
-.sabores-card-status.is-off {
+.sabores-event-card:not([data-status="OPEN"]) .sabores-card-status {
   @apply bg-chocolate-dark/85 text-latte border border-gold/25;
 }
 
@@ -764,75 +972,91 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
-/* Cuerpo */
+/* Cuerpo (pt extra: deja aire para la mitad inferior de la chip del logo, que
+   flota en la costura y mide ~68px → cuelga ~34px dentro del cuerpo). */
 .sabores-card-body {
-  @apply relative z-10 flex flex-col flex-1 p-4;
+  @apply relative z-10 flex flex-col flex-1 px-4 pb-4 pt-12;
 }
 
+/* Fecha destacada (Opción B — elegancia tipográfica): eyebrow del día de la semana
+   + fecha grande en dorado. Co-protagonista con el título, sin íconos redundantes. */
 .sabores-card-date {
-  @apply inline-flex items-center gap-1.5 font-sans font-bold uppercase tracking-wide text-gold text-xs mb-2;
+  @apply flex flex-col mb-3;
 }
 
-.sabores-card-date svg {
-  @apply w-3.5 h-3.5 shrink-0;
+.sabores-card-weekday {
+  @apply font-sans font-bold uppercase text-2xs tracking-[0.18em] text-gold/65 mb-0.5;
+}
+
+.sabores-card-date-main {
+  @apply font-sans font-extrabold text-xl text-gold leading-tight tracking-tight;
+}
+
+.sabores-card-time {
+  @apply text-sm font-bold text-gold/75 tracking-normal whitespace-nowrap;
 }
 
 .sabores-card-title {
-  @apply font-sans font-extrabold text-lg text-cream leading-tight mb-2 line-clamp-2;
+  /* Altura fija de 3 líneas (reserva + recorte): así el bloque de créditos
+     (palestrante) arranca a la MISMA altura en todas las cards, sin importar
+     el largo del título. Títulos >3 líneas se truncan con ellipsis. */
+  @apply font-sans font-extrabold text-xl text-cream leading-tight mb-3 min-h-[3lh] line-clamp-3;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
 }
 
-.sabores-card-sponsor {
-  @apply self-start mb-3 inline-flex items-center text-xs font-extrabold
-         uppercase tracking-wider text-gold border border-gold/45 rounded-lg
-         px-3 py-1 bg-gold/12 shadow-[0_2px_10px_rgba(234,168,36,0.18)];
+/* Bloque "créditos" (marca + palestrante), separado del título por una línea sutil */
+.sabores-card-credits {
+  @apply flex flex-col items-start gap-2.5 mb-4 pt-3 border-t border-gold/15;
+}
+
+/* Marca como atribución (label:valor), consistente con Palestrante.
+   Nombre en dorado para mantenerla destacada, sin el pill redundante. */
+.sabores-card-brand {
+  @apply flex flex-col min-w-0 w-full;
+}
+
+.sabores-card-brand-label {
+  @apply text-2xs font-bold uppercase tracking-[0.15em] text-gold/60 mb-0.5;
+}
+
+.sabores-card-brand-name {
+  @apply text-lg font-extrabold text-gold leading-tight truncate;
+  text-shadow: 0 1px 10px rgba(234, 168, 36, 0.3);
 }
 
 .sabores-card-speaker {
-  @apply flex items-center gap-2.5 mb-3;
-}
-
-.sabores-card-speaker-info {
-  @apply flex flex-col min-w-0;
+  @apply flex flex-col min-w-0 w-full;
 }
 
 .sabores-card-speaker-label {
-  @apply text-[0.6rem] font-bold uppercase tracking-wider text-latte/60;
+  @apply text-2xs font-bold uppercase tracking-[0.15em] text-gold/60 mb-0.5;
 }
 
 .sabores-card-speaker-name {
-  @apply text-sm font-bold text-cream truncate;
+  @apply text-base font-bold text-cream leading-tight truncate;
 }
 
 .sabores-card-meta {
-  @apply flex flex-col gap-1.5 mb-4 text-latte/85 text-xs font-medium;
+  @apply flex flex-col mt-auto mb-4;
 }
 
 .sabores-card-meta-row {
-  @apply flex items-start gap-2;
+  @apply flex items-start gap-2 text-latte/85 text-xs font-medium;
 }
 
 .sabores-card-meta-row svg {
   @apply w-3.5 h-3.5 text-gold/80 shrink-0 mt-px;
 }
 
-/* Ubicación enlazada a Google Maps — bloque destacado y táctil (clave en mobile:
-   affordance siempre visible, sin depender de hover, y área de toque amplia). */
+/* Ubicación → Google Maps: apenas un link (sin caja) pero explícito — ícono de pin,
+   lugar + "Ver no mapa". Secundario al CTA, que es la acción principal. */
 .sabores-card-map {
-  @apply flex items-center gap-3 w-full px-3 py-2.5 rounded-xl no-underline cursor-pointer
-         border border-gold/30 bg-gold/8 transition-all duration-200;
+  @apply inline-flex items-center gap-2 w-full no-underline cursor-pointer
+         text-latte transition-colors duration-200;
 }
 
-.sabores-card-map:hover,
-.sabores-card-map:active {
-  @apply border-gold/60 bg-gold/15;
-}
-
-.sabores-card-map-pin {
-  @apply flex items-center justify-center w-9 h-9 rounded-lg bg-gold/15 text-gold shrink-0;
-}
-
-.sabores-card-map-pin svg {
-  @apply w-[18px] h-[18px];
+.sabores-card-map-icon {
+  @apply w-4 h-4 text-gold shrink-0;
 }
 
 .sabores-card-map-text {
@@ -840,15 +1064,19 @@
 }
 
 .sabores-card-map-place {
-  @apply text-sm font-bold text-cream truncate;
+  @apply text-xs font-semibold text-latte/85 truncate;
 }
 
 .sabores-card-map-cta {
-  @apply text-2xs font-extrabold uppercase tracking-wider text-gold;
+  @apply text-2xs font-bold uppercase tracking-wider text-gold;
 }
 
 .sabores-card-map-arrow {
-  @apply w-4 h-4 text-gold/80 shrink-0 ml-auto transition-transform duration-200;
+  @apply w-3.5 h-3.5 text-gold/70 shrink-0 ml-auto transition-transform duration-200;
+}
+
+.sabores-card-map:hover .sabores-card-map-cta {
+  @apply underline underline-offset-2;
 }
 
 .sabores-card-map:hover .sabores-card-map-arrow {
@@ -857,7 +1085,7 @@
 
 /* CTA */
 .sabores-card-cta {
-  @apply mt-auto w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full
+  @apply w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full
          font-sans font-extrabold text-xs uppercase tracking-wider text-chocolate-dark
          transition-all duration-300 cursor-pointer;
   background: linear-gradient(to bottom, #F3B53A, var(--color-gold) 60%, #D89A1E);
@@ -878,12 +1106,27 @@
   box-shadow: inset 0 0 0 1px rgba(234, 168, 36, 0.12);
 }
 
-/* Estado cerrado (esgotado / encerrado) */
-.sabores-event-card.is-closed {
+/* ─────────── Accesibilidad: foco visible solo por teclado (:focus-visible) ───────────
+   Controles interactivos sobre fondo oscuro → anillo dorado. */
+.sabores-card-map:focus-visible,
+.city-badge:focus-visible,
+.premia-link:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* El CTA ya es dorado: anillo claro (cream) para que contraste con el botón. */
+.sabores-card-cta:focus-visible {
+  outline: 3px solid var(--color-cream);
+  outline-offset: 2px;
+}
+
+/* Estado cerrado (cualquiera que no sea OPEN: em breve / esgotado / encerrado) */
+.sabores-event-card:not([data-status="OPEN"]) {
   @apply opacity-85;
 }
 
-.sabores-event-card.is-closed .sabores-card-cover img {
+.sabores-event-card:not([data-status="OPEN"]) .sabores-card-cover img {
   @apply grayscale;
 }
 
@@ -1000,8 +1243,29 @@
 /* ═══════════════════════ sections/sponsors ═══════════════════════ */
 /* Sponsors & Supporters Stacked Infinite Marquees Styling */
 
+/* Editorial section heading with flanking gold rules */
+.sponsors-heading {
+  @apply flex items-center justify-center gap-4 md:gap-6 mb-10 md:mb-14 w-full max-w-3xl mx-auto;
+}
+
+.sponsors-heading-rule {
+  @apply hidden sm:block h-px flex-1;
+}
+
+.sponsors-heading-rule--left {
+  @apply bg-linear-to-r from-transparent to-gold/40;
+}
+
+.sponsors-heading-rule--right {
+  @apply bg-linear-to-l from-transparent to-gold/40;
+}
+
+.sponsors-heading-title {
+  @apply text-center font-display font-bold text-lg sm:text-2xl md:text-3xl text-latte/80 tracking-[0.1em] sm:tracking-[0.18em] uppercase select-none text-balance min-w-0;
+}
+
 .sponsors-stack {
-  @apply flex flex-col gap-8 w-full relative;
+  @apply flex flex-col gap-6 md:gap-8 w-full relative;
 }
 
 .sponsors-row-group {
@@ -1010,18 +1274,18 @@
 
 /* Gold glassmorphic pill badge to break the text monotony */
 .sponsors-row-label {
-  @apply font-display font-bold text-2xs md:text-xs text-gold tracking-widest uppercase px-4 py-2 bg-gold/10 border border-gold/20 rounded-full w-fit select-none shadow-[0_4px_12px_rgba(223,171,67,0.06)] backdrop-blur-sm self-start;
+  @apply font-display font-bold text-sm md:text-base text-gold tracking-widest uppercase px-6 py-3 bg-gold/10 border border-gold/20 rounded-full w-fit select-none shadow-[0_4px_12px_rgba(223,171,67,0.06)] backdrop-blur-sm self-start;
 }
 
 /* High-contrast row container simulating a light parchment plank on the dark table */
 .sponsors-row-container {
-  @apply w-full py-7 px-6 lg:py-9 lg:px-10 bg-[#F9F6ED] border-2 border-[#EADAB8] rounded-3xl shadow-[0_16px_48px_rgba(0,0,0,0.5)];
+  @apply w-full py-5 px-6 lg:py-9 lg:px-10 bg-[#F9F6ED] border-2 border-[#EADAB8] rounded-3xl shadow-[0_16px_48px_rgba(0,0,0,0.5)];
 }
 
 /* Grilla balanceada: filas parejas (sin huérfanos). 8 patrocinadores → 4×2,
    10 apoiadores → 5×2. Cada logo ocupa su celda completa y queda centrado. */
 .sponsors-logos {
-  @apply grid place-items-center w-full gap-x-4 gap-y-8 md:gap-x-8 md:gap-y-10;
+  @apply grid place-items-center w-full gap-x-4 gap-y-6 md:gap-x-8 md:gap-y-10;
 }
 
 /* Patrocinadores = tier principal (un escalón visual por encima) */
@@ -1034,28 +1298,16 @@
   @apply grid-cols-2 sm:grid-cols-3 md:grid-cols-5;
 }
 
-/* Slot = celda completa con altura uniforme por tier */
+/* Slot = celda completa con altura uniforme para todos los tiers */
 .sponsor-logo-item {
-  @apply flex items-center justify-center select-none w-full;
-}
-.sponsors-logos--main .sponsor-logo-item {
-  @apply h-24 md:h-32;
-}
-.sponsors-logos--support .sponsor-logo-item {
-  @apply h-20 md:h-28;
+  @apply flex items-center justify-center select-none w-full h-20 md:h-28;
 }
 
+/* Patrocinadores y apoiadores comparten el mismo tamaño de logo */
 .sponsor-logo-img {
-  @apply w-auto object-contain transition-all duration-300;
+  @apply w-auto max-w-full object-contain transition-all duration-300 max-h-14 md:max-h-20;
   opacity: 0.92;
   mix-blend-mode: multiply;
-}
-/* Patrocinadores más grandes que apoiadores → jerarquía clara */
-.sponsors-logos--main .sponsor-logo-img {
-  @apply max-h-16 md:max-h-24;
-}
-.sponsors-logos--support .sponsor-logo-img {
-  @apply max-h-12 md:max-h-20;
 }
 
 .sponsor-logo-img:hover {

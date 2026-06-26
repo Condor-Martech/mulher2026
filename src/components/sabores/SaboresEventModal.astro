@@ -28,8 +28,20 @@ const errCls = "sabores-error hidden text-red-400 text-[0.65rem] pl-1 font-mediu
     >
       Evento
     </h3>
-    <p id="sabores-modal-date" class="text-gold text-sm font-bold"></p>
-    <p id="sabores-modal-city" class="text-latte/70 text-xs mb-5"></p>
+    <div class="mb-6 mt-3 flex flex-col gap-2.5">
+      <div>
+        <p class="text-[0.6rem] font-bold uppercase tracking-widest text-gold/60">Data & Hora</p>
+        <p id="sabores-modal-date" class="text-gold text-sm font-bold"></p>
+      </div>
+      <div>
+        <p class="text-[0.6rem] font-bold uppercase tracking-widest text-gold/60">Local</p>
+        <p id="sabores-modal-city" class="text-latte text-sm font-semibold"></p>
+      </div>
+      <div id="sabores-modal-palestrante" class="hidden">
+        <p class="text-[0.6rem] font-bold uppercase tracking-widest text-gold/60">Palestrante</p>
+        <p id="sabores-modal-palestrante-name" class="text-latte text-sm font-semibold"></p>
+      </div>
+    </div>
 
     <form id="sabores-form" class="flex flex-col gap-3" novalidate>
       <input type="hidden" id="sabores-event-id" name="eventId" />
@@ -58,10 +70,10 @@ const errCls = "sabores-error hidden text-red-400 text-[0.65rem] pl-1 font-mediu
         </div>
       </div>
 
-      <!-- +18: visible solo en eventos com bebida alcoólica (handler togglea hidden/required) -->
-      <label id="sabores-age-block" class="hidden items-start gap-2 text-xs text-latte/80 cursor-pointer pl-1">
-        <input id="sabores-maioridade" name="maioridade" type="checkbox" class="mt-0.5 accent-gold w-4 h-4 shrink-0" />
-        <span>Confirmo que sou <strong>maior de 18 anos</strong>. (Obrigatório por conter bebidas alcoólicas)</span>
+      <!-- +18: obrigatório em TODOS os eventos da campanha (regra global). -->
+      <label class="flex items-start gap-2 text-xs text-latte/80 cursor-pointer pl-1">
+        <input id="sabores-maioridade" name="maioridade" type="checkbox" required class="mt-0.5 accent-gold w-4 h-4 shrink-0" />
+        <span>Confirmo que sou <strong>maior de 18 anos</strong>. (Evento exclusivo para maiores de idade)</span>
       </label>
 
       <label class="flex items-start gap-2 text-xs text-latte/80 cursor-pointer pl-1">

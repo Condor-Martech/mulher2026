@@ -100,16 +100,68 @@ const cities = [...byCity.keys()]
             </span>
           </div>
 
-          {/* Solo las cards del evento, sueltas sobre la página */}
+          {/* Un carrusel por ciudad: flechas + track scrollable con las cards */}
           {cities.map((c, i) => (
             <div
               data-city-panel={c.key}
               role="tabpanel"
-              class:list={["city-panel events-grid", { "hidden-panel": i !== 0 }]}
+              class:list={["city-panel events-carousel", { "hidden-panel": i !== 0 }]}
             >
-              {c.list.map((event) => (
-                <SaboresEventCard event={event} />
-              ))}
+              <button
+                type="button"
+                class="carousel-arrow carousel-prev"
+                data-dir="-1"
+                aria-label="Ver edições anteriores"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+
+              <div class="events-grid" data-events-track>
+                {c.list.map((event) => (
+                  <SaboresEventCard event={event} />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                class="carousel-arrow carousel-next"
+                data-dir="1"
+                aria-label="Ver mais edições"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6" />
+                </svg>
+              </button>
+
+              {/* Barra de control solo-mobile: flecha ‹ · puntos · flecha › */}
+              <div class="carousel-controls" aria-hidden="true">
+                <button
+                  type="button"
+                  class="carousel-arrow-m carousel-prev-m"
+                  data-dir="-1"
+                  aria-label="Edição anterior"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+
+                {/* Puntos generados en JS (uno por card) */}
+                <div class="carousel-dots" data-dots></div>
+
+                <button
+                  type="button"
+                  class="carousel-arrow-m carousel-next-m"
+                  data-dir="1"
+                  aria-label="Próxima edição"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6" />
+                  </svg>
+                </button>
+              </div>
             </div>
           ))}
         </Fragment>
