@@ -199,7 +199,7 @@
     opacity: 0.08;
     mix-blend-mode: overlay;
     pointer-events: none;
-    background-image: url("/assets/sabores-de-inverno/tabua.png");
+    background-image: url("/assets/sabores-de-inverno/tabua.webp");
     background-size: cover;
     background-position: center;
     z-index: 1;
