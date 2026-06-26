@@ -112,17 +112,17 @@
   html {
     scroll-behavior: smooth;
     @apply text-latte font-sans antialiased overflow-x-hidden w-full;
-    background-color: #2B1D14;
+    background-color: #6E3411;
   }
 
   body {
     @apply min-h-screen overflow-x-hidden w-full relative text-latte;
-    /* Toasted Mocha dark base for organic glassmorphism feel */
-    background-color: #2B1D14;
+    /* Warm rust/sienna base matching the hero key-visual (V02) */
+    background-color: #6E3411;
     background-image:
-      radial-gradient(120% 80% at 50% 30%, rgba(100, 60, 40, 0.15), transparent 60%),
-      radial-gradient(120% 90% at 100% 100%, rgba(20, 10, 5, 0.45), transparent 55%),
-      linear-gradient(180deg, #32231A 0%, #2B1D14 50%, #1A110B 100%);
+      radial-gradient(120% 80% at 50% 30%, rgba(165, 90, 50, 0.20), transparent 60%),
+      radial-gradient(120% 90% at 100% 100%, rgba(40, 18, 8, 0.40), transparent 55%),
+      linear-gradient(180deg, #7C3A14 0%, #6E3411 45%, #4A2410 100%);
     background-repeat: no-repeat;
   }
 
@@ -584,7 +584,7 @@
 }
 
 .section-main-title {
-  @apply text-3xl md:text-5xl lg:text-6xl font-display font-bold italic tracking-normal capitalize text-latte leading-none text-warm-glow;
+  @apply text-3xl md:text-5xl lg:text-6xl font-sans font-extrabold tracking-tight capitalize text-latte leading-none text-warm-glow;
 }
 
 .section-subtitle {
@@ -613,19 +613,10 @@
   transform: translateY(-2px);
 }
 
-.city-badge .badge-count {
-  @apply inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full
-         text-2xs font-extrabold tracking-normal bg-gold text-chocolate-dark;
-}
-
 .city-badge.active {
   @apply text-chocolate-dark border-transparent;
   background: linear-gradient(to bottom, #F3B53A, var(--color-gold) 60%, #D89A1E);
   box-shadow: 0 10px 26px rgba(234, 168, 36, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.city-badge.active .badge-count {
-  @apply bg-chocolate-dark text-gold;
 }
 
 /* Panel de eventos de una ciudad (fade al cambiar de badge) */
@@ -739,16 +730,19 @@
 
 .sabores-card-cover img {
   @apply h-full w-full object-cover transition-transform duration-500;
+  /* Leve realce para que las fotos oscuras (p.ej. Terraustral) no queden apagadas */
+  filter: brightness(1.07) saturate(1.05);
 }
 
 .sabores-event-card:hover .sabores-card-cover img {
   @apply scale-105;
 }
 
+/* Scrim mínimo SOLO arriba: da contraste al badge de estado sin oscurecer la foto */
 .sabores-card-cover::after {
   content: "";
-  @apply absolute inset-0 pointer-events-none;
-  background: linear-gradient(to top, rgba(22, 11, 6, 0.92) 0%, rgba(22, 11, 6, 0.15) 50%, transparent 100%);
+  @apply absolute inset-x-0 top-0 h-16 pointer-events-none;
+  background: linear-gradient(to bottom, rgba(22, 11, 6, 0.5) 0%, transparent 100%);
 }
 
 /* Badges sobre la capa */
@@ -776,7 +770,7 @@
 }
 
 .sabores-card-date {
-  @apply inline-flex items-center gap-1.5 font-display font-bold italic text-gold text-xs mb-1.5;
+  @apply inline-flex items-center gap-1.5 font-sans font-bold uppercase tracking-wide text-gold text-xs mb-2;
 }
 
 .sabores-card-date svg {
@@ -784,21 +778,17 @@
 }
 
 .sabores-card-title {
-  @apply font-display font-bold text-base lg:text-lg text-cream leading-snug mb-2 line-clamp-2;
+  @apply font-sans font-extrabold text-lg text-cream leading-tight mb-2 line-clamp-2;
 }
 
 .sabores-card-sponsor {
-  @apply self-start mb-3 text-2xs font-bold uppercase tracking-wide text-gold/90
-         border border-gold/30 rounded-md px-2 py-0.5 bg-gold/5;
+  @apply self-start mb-3 inline-flex items-center text-xs font-extrabold
+         uppercase tracking-wider text-gold border border-gold/45 rounded-lg
+         px-3 py-1 bg-gold/12 shadow-[0_2px_10px_rgba(234,168,36,0.18)];
 }
 
 .sabores-card-speaker {
   @apply flex items-center gap-2.5 mb-3;
-}
-
-.sabores-card-speaker-avatar {
-  @apply w-8 h-8 rounded-full bg-gold/15 border border-gold/30 text-gold
-         flex items-center justify-center text-2xs font-bold shrink-0;
 }
 
 .sabores-card-speaker-info {
@@ -806,15 +796,15 @@
 }
 
 .sabores-card-speaker-label {
-  @apply text-[0.6rem] font-bold uppercase tracking-wider text-latte/50;
+  @apply text-[0.6rem] font-bold uppercase tracking-wider text-latte/60;
 }
 
 .sabores-card-speaker-name {
-  @apply text-xs font-semibold text-latte truncate;
+  @apply text-sm font-bold text-cream truncate;
 }
 
 .sabores-card-meta {
-  @apply flex flex-col gap-1.5 mb-4 text-latte/75 text-xs;
+  @apply flex flex-col gap-1.5 mb-4 text-latte/85 text-xs font-medium;
 }
 
 .sabores-card-meta-row {
@@ -825,10 +815,50 @@
   @apply w-3.5 h-3.5 text-gold/80 shrink-0 mt-px;
 }
 
+/* Ubicación enlazada a Google Maps — bloque destacado y táctil (clave en mobile:
+   affordance siempre visible, sin depender de hover, y área de toque amplia). */
+.sabores-card-map {
+  @apply flex items-center gap-3 w-full px-3 py-2.5 rounded-xl no-underline cursor-pointer
+         border border-gold/30 bg-gold/8 transition-all duration-200;
+}
+
+.sabores-card-map:hover,
+.sabores-card-map:active {
+  @apply border-gold/60 bg-gold/15;
+}
+
+.sabores-card-map-pin {
+  @apply flex items-center justify-center w-9 h-9 rounded-lg bg-gold/15 text-gold shrink-0;
+}
+
+.sabores-card-map-pin svg {
+  @apply w-[18px] h-[18px];
+}
+
+.sabores-card-map-text {
+  @apply flex flex-col min-w-0 leading-tight;
+}
+
+.sabores-card-map-place {
+  @apply text-sm font-bold text-cream truncate;
+}
+
+.sabores-card-map-cta {
+  @apply text-2xs font-extrabold uppercase tracking-wider text-gold;
+}
+
+.sabores-card-map-arrow {
+  @apply w-4 h-4 text-gold/80 shrink-0 ml-auto transition-transform duration-200;
+}
+
+.sabores-card-map:hover .sabores-card-map-arrow {
+  @apply translate-x-0.5;
+}
+
 /* CTA */
 .sabores-card-cta {
   @apply mt-auto w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full
-         font-display font-bold text-xs uppercase tracking-widest text-chocolate-dark
+         font-sans font-extrabold text-xs uppercase tracking-wider text-chocolate-dark
          transition-all duration-300 cursor-pointer;
   background: linear-gradient(to bottom, #F3B53A, var(--color-gold) 60%, #D89A1E);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 6px 18px rgba(234, 168, 36, 0.3);

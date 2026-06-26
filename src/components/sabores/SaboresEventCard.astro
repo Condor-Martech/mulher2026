@@ -31,7 +31,12 @@ const time =
   event.time_label && event.time_label.toLowerCase() !== "a definir"
     ? event.time_label
     : "";
-const dateLine = valid
+// Eyebrow compacto de la card (la fecha es lo que diferencia dentro de una ciudad).
+const dateBadge = valid
+  ? `${part({ day: "2-digit", month: "long" })}${time ? ` · ${time}` : ""}`
+  : "Data a definir";
+// Fecha completa (con día de la semana) para el modal.
+const dateFull = valid
   ? `${cap(part({ weekday: "long" }))}, ${part({ day: "2-digit", month: "long" })}${time ? ` · ${time}` : ""}`
   : "Data a definir";
 
@@ -46,17 +51,21 @@ const city = REGION_NAMES[regionKey] ?? event.region ?? "";
 // Tienda sin el prefijo "Hiper Condor" (ya se ve en branding); fallback a la ciudad.
 const store = (event.location ?? "").replace(/^Hiper\s+Condor\s*/i, "").trim();
 
+// Link a Google Maps: override explícito por evento (data.maps_url) o búsqueda por
+// nombre de tienda + ciudad (sin API key; resuelve al pin para tiendas con nombre).
+const mapsOverride =
+  (event.data?.maps_url as string | undefined) ??
+  (event.data?.mapsUrl as string | undefined);
+const mapsQuery = [event.location, city].filter(Boolean).join(" ").trim();
+const mapsUrl =
+  mapsOverride ||
+  (mapsQuery
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`
+    : null);
+
 // --- Capa (slug = event id) ---
 const cover = `/assets/sabores-de-inverno/eventos/${event.id}.jpg`;
 
-// --- Palestrante (iniciales para el avatar) ---
-const initials = (event.palestrante ?? "")
-  .split(/\s+/)
-  .filter(Boolean)
-  .slice(0, 2)
-  .map((w) => w[0])
-  .join("")
-  .toUpperCase();
 const sponsorLabel = event.brand ?? event.sponsor ?? "";
 ---
 
@@ -84,7 +93,7 @@ const sponsorLabel = event.brand ?? event.sponsor ?? "";
         <rect x="3" y="4" width="18" height="17" rx="2" />
         <path stroke-linecap="round" stroke-linejoin="round" d="M3 9h18M8 2v4M16 2v4" />
       </svg>
-      {dateLine}
+      {dateBadge}
     </p>
 
     <h3 class="sabores-card-title">{event.tema}</h3>
@@ -94,7 +103,6 @@ const sponsorLabel = event.brand ?? event.sponsor ?? "";
     {
       event.palestrante && (
         <div class="sabores-card-speaker">
-          <span class="sabores-card-speaker-avatar">{initials || "?"}</span>
           <span class="sabores-card-speaker-info">
             <span class="sabores-card-speaker-label">Palestrante</span>
             <span class="sabores-card-speaker-name">{event.palestrante}</span>
@@ -104,13 +112,39 @@ const sponsorLabel = event.brand ?? event.sponsor ?? "";
     }
 
     <div class="sabores-card-meta">
-      <span class="sabores-card-meta-row">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
-          <circle cx="12" cy="11" r="3" />
-        </svg>
-        <span>{store || city}</span>
-      </span>
+      {
+        mapsUrl ? (
+          <a
+            class="sabores-card-map"
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Ver ${store || city} no Google Maps`}
+          >
+            <span class="sabores-card-map-pin" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
+                <circle cx="12" cy="11" r="3" />
+              </svg>
+            </span>
+            <span class="sabores-card-map-text">
+              <span class="sabores-card-map-place">{store || city}</span>
+              <span class="sabores-card-map-cta">Ver no mapa</span>
+            </span>
+            <svg class="sabores-card-map-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6" />
+            </svg>
+          </a>
+        ) : (
+          <span class="sabores-card-meta-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
+              <circle cx="12" cy="11" r="3" />
+            </svg>
+            <span>{store || city}</span>
+          </span>
+        )
+      }
     </div>
 
     <button
@@ -119,7 +153,7 @@ const sponsorLabel = event.brand ?? event.sponsor ?? "";
       disabled={statusCfg.disabled}
       data-event-id={event.id}
       data-event-tema={event.tema}
-      data-event-date={dateLine}
+      data-event-date={dateFull}
       data-event-city={city}
       data-event-location={event.location ?? ""}
       data-event-requires-age={event.requiresAge ? "1" : "0"}
