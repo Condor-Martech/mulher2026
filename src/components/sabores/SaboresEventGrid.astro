@@ -12,9 +12,11 @@ interface Props {
   content: any;
 }
 const { events, content } = Astro.props;
-const eventsCopy = content.events;
-const sponsors = content.sponsors;
-const statusMap = content.status;
+// Guards defensivos: si el content remoto llega incompleto, caemos a valores
+// seguros en vez de romper la grilla (la copy queda vacía, sin 500).
+const eventsCopy = content?.events ?? {};
+const sponsors = content?.sponsors ?? { patrocinadores: [], apoiadores: [] };
+const statusMap = content?.status ?? {};
 
 // Agrupación POR CIUDAD (decisión de gerencia). Cada tab = una ciudad; dentro,
 // los eventos quedan ordenados por fecha (las 5 quartas de julho).

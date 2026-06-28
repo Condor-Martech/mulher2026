@@ -4,7 +4,7 @@
 import CondorPremiaCluster from "./CondorPremiaCluster.astro";
 
 interface Props {
-  hero: {
+  hero?: {
     bg: string;
     tituloSabores: string;
     tituloDe: string;
@@ -13,9 +13,12 @@ interface Props {
     signWood: string;
     signText: string;
   };
-  premia: Record<string, string>;
+  premia?: Record<string, string>;
 }
-const { hero, premia } = Astro.props;
+// Guard defensivo: si el content remoto llega incompleto, `hero`/`premia` pueden
+// faltar. Usamos {} para no romper el acceso a propiedades; los <img> sin src
+// simplemente no cargan, pero la página no tira 500.
+const { hero = {} as NonNullable<Props["hero"]>, premia } = Astro.props;
 ---
 
 <section id="home" class="hero-section">

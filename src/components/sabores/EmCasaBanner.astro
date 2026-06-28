@@ -3,7 +3,7 @@
 // con CTA, profundidad y el lockup "Condor em CASA" a la derecha.
 // `emCasa` llega ya con la URL del logo apuntando a Minio (transformado en el service).
 interface Props {
-  emCasa: {
+  emCasa?: {
     link: string;
     logo: string;
     title: string;
@@ -11,9 +11,12 @@ interface Props {
     subtitleStrong: string;
   };
 }
+// Guard defensivo: si el content remoto llega sin `emCasa`, no renderizamos el
+// banner en vez de tirar 500.
 const { emCasa } = Astro.props;
 ---
 
+{emCasa && (
 <section class="py-2 lg:py-8 bg-transparent relative z-10 scroll-reveal">
   <div class="container mx-auto px-6 max-w-[90rem] flex justify-center">
     <a
@@ -64,3 +67,4 @@ const { emCasa } = Astro.props;
     </a>
   </div>
 </section>
+)}

@@ -4,7 +4,7 @@
 // a la derecha (sus placas claras resaltan sobre el fondo oscuro).
 // `clube` llega ya con la URL del logo apuntando a Minio (transformado en el service).
 interface Props {
-  clube: {
+  clube?: {
     titleLine1: string;
     titleLine2: string;
     cta: string;
@@ -12,9 +12,12 @@ interface Props {
     link: string;
   };
 }
+// Guard defensivo: si el content remoto llega sin `clube`, no renderizamos el
+// banner en vez de tirar 500.
 const { clube } = Astro.props;
 ---
 
+{clube && (
 <section class="py-2 lg:py-8 bg-transparent relative z-10 scroll-reveal">
   <div class="container mx-auto px-6 max-w-[90rem] flex justify-center">
     <a
@@ -71,3 +74,4 @@ const { clube } = Astro.props;
     </a>
   </div>
 </section>
+)}

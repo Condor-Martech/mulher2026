@@ -2,7 +2,7 @@
 // Cluster promocional Condor Premia: selo + dos corazones escalonados + Z-ON + botón
 // regulamento. Los assets + el link llegan por props (content.premia, ya en Minio).
 interface Props {
-  premia: {
+  premia?: {
     link: string;
     selo: string;
     coracao1: string;
@@ -14,8 +14,11 @@ interface Props {
   };
 }
 const { premia } = Astro.props;
-const premiaLink = premia.link;
+// Guard defensivo: si el content remoto llega incompleto (sin `premia`), no
+// renderizamos el cluster en vez de tirar 500. La página sigue viva.
+const premiaLink = premia?.link;
 ---
+{premia && (
 
 <div class="flex flex-col items-center w-max select-none pb-3 lg:pb-12 pt-2 lg:pt-4 group/cluster relative">
   <!-- Glow detrás del selo -->
@@ -76,6 +79,7 @@ const premiaLink = premia.link;
     </a>
   </div>
 </div>
+)}
 
 <style>
   /* Radio base para que el anillo de foco (:focus-visible) quede prolijo */

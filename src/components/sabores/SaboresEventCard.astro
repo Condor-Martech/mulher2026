@@ -17,7 +17,10 @@ const { event, sponsors, statusMap } = Astro.props;
 
 // Estado por canal SOCIAL (la grilla pública = canal social → cupo qtd_social).
 const status = getEventStatus(event, "social");
-const statusCfg = statusMap[status] ?? statusMap.SOON;
+// Guard defensivo: si statusMap llega vacío (content remoto incompleto), caemos a
+// un config seguro en vez de romper al leer statusCfg.label/cta/disabled.
+const statusCfg = statusMap?.[status] ??
+  statusMap?.SOON ?? { label: "Em breve", cta: "Em breve", disabled: true };
 
 // --- Fecha (America/Sao_Paulo) ---
 const dateObj = new Date(event.data_evento);

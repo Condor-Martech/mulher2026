@@ -15,10 +15,13 @@ import { getSaboresContent } from "../../services/saboresContentService";
 // por fecha. El modal de inscripción social viene dentro de SaboresEventGrid.
 // Content editorial (textos + assets) desde Minio con fallback local; un solo
 // fetch por request, prop-drilled a los componentes que lo necesitan.
-const [events, content] = await Promise.all([
+const [events, contentRaw] = await Promise.all([
   fetchSaboresEvents(),
   getSaboresContent(),
 ]);
+// Red de seguridad final: el service siempre devuelve un objeto, pero garantizamos
+// que `content` nunca sea null/undefined para los accesos `content.hero` etc.
+const content = contentRaw ?? {};
 
 Astro.response.headers.set(
   "Cache-Control",
