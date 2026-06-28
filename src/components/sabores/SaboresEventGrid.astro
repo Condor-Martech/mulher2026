@@ -18,6 +18,13 @@ const eventsCopy = content?.events ?? {};
 const sponsors = content?.sponsors ?? { patrocinadores: [], apoiadores: [] };
 const statusMap = content?.status ?? {};
 
+// Título híbrido: la última palabra va en dorado. Partimos el string del JSON
+// (p.ej. "PROGRAMAÇÃO DE EVENTOS" → head "PROGRAMAÇÃO DE " + tail "EVENTOS").
+const titleRaw: string = eventsCopy.title ?? "";
+const lastSpace = titleRaw.lastIndexOf(" ");
+const titleHead = lastSpace === -1 ? "" : titleRaw.slice(0, lastSpace + 1);
+const titleTail = lastSpace === -1 ? titleRaw : titleRaw.slice(lastSpace + 1);
+
 // Agrupación POR CIUDAD (decisión de gerencia). Cada tab = una ciudad; dentro,
 // los eventos quedan ordenados por fecha (las 5 quartas de julho).
 const REGION_NAMES: Record<string, string> = {
@@ -65,8 +72,11 @@ const cities = [...byCity.keys()]
 >
   <div class="container mx-auto px-6 max-w-[90rem] relative z-10">
     <div class="section-title-group">
-      <span class="section-pretitle">{eventsCopy.pretitle}</span>
-      <h2 class="section-main-title">{eventsCopy.title}</h2>
+      <div class="section-title-rules">
+        <span class="section-title-rule section-title-rule--left"></span>
+        <h2 class="section-main-title">{titleHead}<span class="section-title-accent">{titleTail}</span></h2>
+        <span class="section-title-rule section-title-rule--right"></span>
+      </div>
       <p class="section-subtitle">{eventsCopy.subtitle}</p>
     </div>
 
