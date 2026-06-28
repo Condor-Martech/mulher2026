@@ -3,18 +3,22 @@ import LayoutSaboresInverno from "../../layouts/LayoutSaboresInverno.astro";
 import FloatingLeaves from "../../components/sabores/FloatingLeaves.astro";
 import Navbar from "../../components/sabores/Navbar.astro";
 import Hero from "../../components/sabores/Hero.astro";
-import VideoSection from "../../components/sabores/VideoSection.astro";
 import ClubeBanner from "../../components/sabores/ClubeBanner.astro";
 import Sponsors from "../../components/sabores/Sponsors.astro";
 import EmCasaBanner from "../../components/sabores/EmCasaBanner.astro";
-import RecipeGrid from "../../components/sabores/RecipeGrid.astro";
 import Footer from "../../components/sabores/Footer.astro";
 import SaboresEventGrid from "../../components/sabores/SaboresEventGrid.astro";
 import { fetchSaboresEvents } from "../../services/saboresEventService";
+import { getSaboresContent } from "../../services/saboresContentService";
 
 // Grilla de eventos en vivo (Supabase, campanha sabores-de-inverno-2026), agrupada
 // por fecha. El modal de inscripción social viene dentro de SaboresEventGrid.
-const events = await fetchSaboresEvents();
+// Content editorial (textos + assets) desde Minio con fallback local; un solo
+// fetch por request, prop-drilled a los componentes que lo necesitan.
+const [events, content] = await Promise.all([
+  fetchSaboresEvents(),
+  getSaboresContent(),
+]);
 
 Astro.response.headers.set(
   "Cache-Control",
@@ -27,18 +31,14 @@ Astro.response.headers.set(
   <Navbar />
 
   <main class="relative z-10">
-    <Hero />
-    {/* VideoSection oculto por ahora — componente hecho, sin decidir si se usa.
-        Re-activar quitando este comentario: <VideoSection /> */}
-    <ClubeBanner />
+    <Hero hero={content.hero} premia={content.premia} />
+    <ClubeBanner clube={content.clube} />
 
     <!-- Slice 2: grilla de eventos por ciudad + modal de inscripción social -->
-    <SaboresEventGrid events={events} />
+    <SaboresEventGrid events={events} content={content} />
 
-    <Sponsors />
-    <EmCasaBanner />
-    {/* RecipeGrid (blog) oculto por ahora — componente hecho, sin decidir si se usa.
-        Re-activar quitando este comentario: <RecipeGrid /> */}
+    <Sponsors sponsors={content.sponsors} />
+    <EmCasaBanner emCasa={content.emCasa} />
   </main>
 
   <Footer />

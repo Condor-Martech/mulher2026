@@ -98,10 +98,9 @@
 
 /* Reduced motion preference respect */
 @media (prefers-reduced-motion: reduce) {
-  .hero-img, 
-  .animate-marquee, 
-  .marquee-track, 
-  .recipe-image {
+  .hero-img,
+  .animate-marquee,
+  .marquee-track {
     animation: none !important;
     transition: none !important;
   }
@@ -199,7 +198,7 @@
     opacity: 0.08;
     mix-blend-mode: overlay;
     pointer-events: none;
-    background-image: url("/assets/sabores-de-inverno/tabua.webp");
+    background-image: var(--bg-tabua-url);
     background-size: cover;
     background-position: center;
     z-index: 1;
@@ -209,7 +208,7 @@
 /* Physical braided hemp rope visual divider */
 @utility divider-corda {
   @apply block w-full h-8 relative my-12 z-10 pointer-events-none;
-  background-image: url("/assets/sabores-de-inverno/corda.png");
+  background-image: var(--divider-corda-url);
   background-repeat: repeat-x;
   background-size: contain;
   background-position: center;
@@ -1130,55 +1129,6 @@
   @apply grayscale;
 }
 
-/* ═══════════════════════ sections/recipes ═══════════════════════ */
-/* ============================================================================
-   RECIPE BLOG SECTION (Tailwind v4 Nested Editorial Grid)
-   ============================================================================ */
-
-.recipe-grid {
-  @apply grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 relative z-10 w-full;
-}
-
-.recipe-card {
-  @apply relative rounded-3xl overflow-hidden aspect-[4/5] shadow-xl border border-chocolate-medium/30
-         transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_30px_60px_-15px_rgba(178,84,33,0.4)] cursor-pointer;
-
-  /* Nested Hover Interactions (Standard CSS Nesting) */
-  &:hover {
-    .recipe-image {
-      @apply scale-110;
-    }
-    .recipe-title {
-      @apply text-gold;
-    }
-  }
-}
-
-.recipe-image {
-  @apply absolute inset-0 w-full h-full object-cover transition-transform duration-700;
-}
-
-.recipe-overlay {
-  @apply absolute inset-0 bg-gradient-to-t from-chocolate-medium via-chocolate-medium/60 to-transparent;
-}
-
-.recipe-content {
-  @apply absolute bottom-0 left-0 right-0 p-8 flex flex-col justify-end gap-3 z-10;
-}
-
-.recipe-tag {
-  @apply self-start bg-gold text-chocolate-dark font-display font-bold text-2xs uppercase tracking-widest px-2.5 py-1 rounded-md;
-}
-
-.recipe-title {
-  @apply text-latte font-display font-bold italic tracking-normal text-xl lg:text-2xl leading-snug transition-colors duration-300;
-}
-
-.recipe-btn {
-  @apply self-start text-xs font-display font-bold uppercase tracking-widest text-gold mt-2 
-         border-b-2 border-transparent hover:border-gold transition-all duration-200 pb-1;
-}
-
 /* ═══════════════════════ sections/footer ═══════════════════════ */
 /* Premium Footer */
 .premium-footer {
@@ -1208,36 +1158,6 @@
 .footer-social-link {
   @apply flex items-center justify-center w-9 h-9 rounded-full text-white border border-white/10
          transition-all duration-300 hover:scale-115 hover:-translate-y-1 hover:shadow-lg;
-}
-
-/* ═══════════════════════ sections/video ═══════════════════════ */
-/* ============================================================================
-   VIDEO SECTION (Glassmorphic Rounded Frame)
-   ============================================================================ */
-.video-terminal-frame {
-  @apply relative rounded-3xl md:rounded-5xl overflow-hidden bg-cream border border-chocolate-medium/30 backdrop-blur-md p-2 md:p-3;
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 20px 40px -10px rgba(58,28,18,0.15);
-}
-
-.video-terminal-frame:hover {
-  @apply border-caramel bg-white;
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-copper-glow);
-}
-
-.video-aspect-wrapper {
-  @apply relative w-full rounded-2xl md:rounded-4xl overflow-hidden;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-}
-
-.video-iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
 }
 
 /* ═══════════════════════ sections/sponsors ═══════════════════════ */

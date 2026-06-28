@@ -5,6 +5,7 @@
 import "../styles/saboresInverno.css";
 import settings from "../data/settings.json";
 import Analytics from "../components/Analytics.astro";
+import { toSaboresCdn } from "../services/saboresContentService";
 
 interface Props {
   title: string;
@@ -16,7 +17,16 @@ const {
   description = "Sabores de Inverno Condor 2026: festivais gastronômicos exclusivos por cidade. Reserve sua agenda e garanta sua vaga.",
 } = Astro.props;
 const { gtmId } = settings;
-const ogImage = "/assets/sabores-de-inverno/hero-kv.png";
+
+// OG/Twitter image: absoluta para los crawlers (toSaboresCdn → https://s3.cndr.me/...).
+// Estas rutas son fijas y conocidas, no salen del content.json → no hace falta fetch.
+const ogImage = toSaboresCdn("/assets/sabores-de-inverno/hero-kv.png");
+
+// Fondos servidos desde Minio vía CSS custom properties (las @utility bg-tabua /
+// divider-corda los leen con var()). Se inyectan en <body> para que hereden a todo.
+const tabuaUrl = toSaboresCdn("/assets/sabores-de-inverno/tabua.webp");
+const cordaUrl = toSaboresCdn("/assets/sabores-de-inverno/corda.png");
+const bgVars = `--bg-tabua-url:url('${tabuaUrl}');--divider-corda-url:url('${cordaUrl}');`;
 
 // Una sola fuente de verdad para el href de Google Fonts (cargado async + fallback noscript).
 const fontsHref =
@@ -78,7 +88,7 @@ const fontsHref =
       <link rel="stylesheet" href={fontsHref} />
     </noscript>
   </head>
-  <body class="text-latte font-sans antialiased relative min-h-screen w-full overflow-x-hidden bg-grain">
+  <body class="text-latte font-sans antialiased relative min-h-screen w-full overflow-x-hidden bg-grain" style={bgVars}>
     {gtmId && (
       <noscript>
         <iframe src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`} height="0" width="0" style="display:none;visibility:hidden"></iframe>

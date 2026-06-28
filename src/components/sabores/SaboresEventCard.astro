@@ -1,20 +1,22 @@
 ---
 import type { Event } from "../../types/event";
 import { getEventStatus } from "../../services/saboresEventService";
-import content from "../../data/sabores/content.json";
-import sponsors from "../../data/sabores/sponsors.json";
+import { toSaboresCdn } from "../../services/saboresContentService";
 
+interface Sponsor {
+  name: string;
+  logoUrl: string;
+}
 interface Props {
   event: Event;
+  // Pasados desde SaboresEventGrid (vienen del content de Minio, ya transformados).
+  sponsors: { patrocinadores: Sponsor[]; apoiadores: Sponsor[] };
+  statusMap: Record<string, { label: string; cta: string; disabled: boolean }>;
 }
-const { event } = Astro.props;
+const { event, sponsors, statusMap } = Astro.props;
 
 // Estado por canal SOCIAL (la grilla pública = canal social → cupo qtd_social).
 const status = getEventStatus(event, "social");
-const statusMap = content.status as Record<
-  string,
-  { label: string; cta: string; disabled: boolean }
->;
 const statusCfg = statusMap[status] ?? statusMap.SOON;
 
 // --- Fecha (America/Sao_Paulo) ---
@@ -63,7 +65,7 @@ const mapsUrl =
     : null);
 
 // --- Capa (slug = event id) ---
-const cover = `/assets/sabores-de-inverno/eventos/${event.id}.jpg`;
+const cover = toSaboresCdn(`/assets/sabores-de-inverno/eventos/${event.id}.jpg`);
 
 const sponsorLabel = event.brand ?? event.sponsor ?? "";
 
@@ -83,7 +85,8 @@ const sponsorLogoByBrand = new Map<string, string>(
 );
 const sponsorKey = normalizeBrand(sponsorLabel);
 const sponsorLogo = sponsorKey ? sponsorLogoByBrand.get(sponsorKey) ?? null : null;
-const brandmarkSrc = sponsorLogo ?? "/assets/sabores-de-inverno/condor-logo.png";
+const brandmarkSrc =
+  sponsorLogo ?? toSaboresCdn("/assets/sabores-de-inverno/condor-logo.png");
 const brandmarkAlt = sponsorLogo ? sponsorLabel || "Patrocinador" : "Condor";
 
 // El título a veces trae un prefijo "…Marca…:" (p.ej. "Chá Leão: …") redundante

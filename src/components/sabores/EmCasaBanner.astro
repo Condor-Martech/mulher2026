@@ -1,8 +1,17 @@
 ---
 // Banner "Condor em Casa" (entrega a domicilio). Identidad AZUL de Condor em Casa,
 // con CTA, profundidad y el lockup "Condor em CASA" a la derecha.
-import content from "../../data/sabores/content.json";
-const emCasa = content.emCasa;
+// `emCasa` llega ya con la URL del logo apuntando a Minio (transformado en el service).
+interface Props {
+  emCasa: {
+    link: string;
+    logo: string;
+    title: string;
+    subtitlePre: string;
+    subtitleStrong: string;
+  };
+}
+const { emCasa } = Astro.props;
 ---
 
 <section class="py-2 lg:py-8 bg-transparent relative z-10 scroll-reveal">

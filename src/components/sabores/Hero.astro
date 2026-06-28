@@ -1,14 +1,27 @@
 ---
-// Hero — banner por capas (foto BG + branding por assets V02 + cluster promo).
+// Hero — banner por capas (foto BG + branding + cluster promo). Los assets llegan
+// por props desde la página (content.hero), ya apuntando a Minio vía el service.
 import CondorPremiaCluster from "./CondorPremiaCluster.astro";
 
-const V02 = "/assets/sabores-de-inverno";
+interface Props {
+  hero: {
+    bg: string;
+    tituloSabores: string;
+    tituloDe: string;
+    tituloInverno: string;
+    logoCondor: string;
+    signWood: string;
+    signText: string;
+  };
+  premia: Record<string, string>;
+}
+const { hero, premia } = Astro.props;
 ---
 
 <section id="home" class="hero-section">
   <!-- Capa 0: foto de fondo -->
   <img
-    src={`${V02}/hero-bg.webp`}
+    src={hero.bg}
     alt="Mesa invernal premium Condor"
     class="hero-bg-img"
     fetchpriority="high"
@@ -19,19 +32,19 @@ const V02 = "/assets/sabores-de-inverno";
   <div class="hero-content">
     <div class="hero-left-block">
       <div class="hero-title">
-        <img src={`${V02}/titulo-sabores.png`} alt="Sabores" class="ht-sabores" />
+        <img src={hero.tituloSabores} alt="Sabores" class="ht-sabores" />
         <div class="ht-line2">
-          <img src={`${V02}/titulo-de.png`} alt="de" class="ht-de" />
-          <img src={`${V02}/titulo-inverno.png`} alt="Inverno" class="ht-inverno" />
+          <img src={hero.tituloDe} alt="de" class="ht-de" />
+          <img src={hero.tituloInverno} alt="Inverno" class="ht-inverno" />
         </div>
       </div>
 
-      <img src={`${V02}/hero-logo-condor.png`} alt="Condor" class="hero-logo" />
+      <img src={hero.logoCondor} alt="Condor" class="hero-logo" />
 
       <div class="hero-sign">
-        <img src={`${V02}/tabua.webp`} alt="" class="hero-sign-wood" aria-hidden="true" />
+        <img src={hero.signWood} alt="" class="hero-sign-wood" aria-hidden="true" />
         <img
-          src={`${V02}/hero-sign-text.webp`}
+          src={hero.signText}
           alt="Sabores que aquecem, momentos que ficam"
           class="hero-sign-text"
         />
@@ -39,7 +52,7 @@ const V02 = "/assets/sabores-de-inverno";
     </div>
 
     <div class="hero-right-block">
-      <CondorPremiaCluster />
+      <CondorPremiaCluster premia={premia} />
     </div>
   </div>
 </section>

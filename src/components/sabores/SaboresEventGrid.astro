@@ -3,13 +3,18 @@ import type { Event } from "../../types/event";
 import SaboresEventCard from "./SaboresEventCard.astro";
 import SaboresEventModal from "./SaboresEventModal.astro";
 import SaboresFeedbackModal from "./SaboresFeedbackModal.astro";
-import content from "../../data/sabores/content.json";
 
+// `content` llega desde la página (con assets ya apuntando a Minio). Pasamos
+// `sponsors` y `status` a cada card por props para evitar imports de JSON dentro
+// de la card (que se renderiza en loop).
 interface Props {
   events: Event[];
+  content: any;
 }
-const { events } = Astro.props;
+const { events, content } = Astro.props;
 const eventsCopy = content.events;
+const sponsors = content.sponsors;
+const statusMap = content.status;
 
 // Agrupación POR CIUDAD (decisión de gerencia). Cada tab = una ciudad; dentro,
 // los eventos quedan ordenados por fecha (las 5 quartas de julho).
@@ -120,7 +125,7 @@ const cities = [...byCity.keys()]
 
               <div class="events-grid" data-events-track>
                 {c.list.map((event) => (
-                  <SaboresEventCard event={event} />
+                  <SaboresEventCard event={event} sponsors={sponsors} statusMap={statusMap} />
                 ))}
               </div>
 

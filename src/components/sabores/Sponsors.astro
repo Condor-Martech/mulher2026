@@ -1,6 +1,13 @@
 ---
-import sponsors from "../../data/sabores/sponsors.json";
-const { patrocinadores, apoiadores } = sponsors;
+// `sponsors` llega con los logoUrl ya apuntando a Minio (transformado en el service).
+interface Sponsor {
+  name: string;
+  logoUrl: string;
+}
+interface Props {
+  sponsors: { patrocinadores: Sponsor[]; apoiadores: Sponsor[] };
+}
+const { patrocinadores, apoiadores } = Astro.props.sponsors;
 ---
 
 <section id="patrocinio" class="py-10 md:py-16 bg-transparent relative z-10 scroll-reveal">

@@ -1,8 +1,20 @@
 ---
 // Cluster promocional Condor Premia: selo + dos corazones escalonados + Z-ON + botón
-// regulamento. Bloque reutilizable (hero). Ajustado al key-visual V02.
-const V02 = "/assets/sabores-de-inverno";
-const premiaLink = "https://www.condor.com.br/premia";
+// regulamento. Los assets + el link llegan por props (content.premia, ya en Minio).
+interface Props {
+  premia: {
+    link: string;
+    selo: string;
+    coracao1: string;
+    valesCompras: string;
+    coracao2: string;
+    umAnoSupermercado: string;
+    zon: string;
+    regulamento: string;
+  };
+}
+const { premia } = Astro.props;
+const premiaLink = premia.link;
 ---
 
 <div class="flex flex-col items-center w-max select-none pb-3 lg:pb-12 pt-2 lg:pt-4 group/cluster relative">
@@ -21,22 +33,22 @@ const premiaLink = "https://www.condor.com.br/premia";
     class="premia-link block w-64 sm:w-64 md:w-72 lg:w-80 xl:w-[24rem] transition-all duration-500 hover:scale-110 hover:brightness-110 hover:drop-shadow-[0_20px_40px_rgba(255,180,80,0.15)] drop-shadow-[0_16px_32px_rgba(26,13,8,0.5)] z-30 relative animate-float-slow"
     aria-label="Condor Premia — R$ Meio Milhão Todo Mês"
   >
-    <img src={`${V02}/selo-condor-premia.webp`} alt="Condor Premia — R$ Meio Milhão Todo Mês" class="w-full h-auto" />
+    <img src={premia.selo} alt="Condor Premia — R$ Meio Milhão Todo Mês" class="w-full h-auto" />
   </a>
 
   <!-- Corazones, escalonados en diagonal -->
   <div class="relative flex items-start justify-center -mt-8 sm:-mt-10 lg:-mt-12 z-20">
     <div class="relative w-36 sm:w-44 md:w-52 lg:w-60 drop-shadow-[0_6px_12px_rgba(26,13,8,0.35)] z-20 animate-float-medium transition-transform duration-500 hover:scale-105 hover:-rotate-2 hover:brightness-110 cursor-default">
-      <img src={`${V02}/premia-coracao-1.png`} alt="" aria-hidden="true" class="w-full h-auto" />
+      <img src={premia.coracao1} alt="" aria-hidden="true" class="w-full h-auto" />
       <div class="absolute inset-0 flex items-center justify-center translate-y-[-2%] px-2">
-        <img src={`${V02}/premia-vales-compras.png`} alt="Vales-Compras todos os dias" class="w-[50%] h-auto" />
+        <img src={premia.valesCompras} alt="Vales-Compras todos os dias" class="w-[50%] h-auto" />
       </div>
     </div>
 
     <div class="relative w-32 sm:w-40 md:w-48 lg:w-56 -ml-8 sm:-ml-10 md:-ml-12 lg:-ml-16 mt-6 sm:mt-8 md:mt-10 lg:mt-12 drop-shadow-[0_9px_16px_rgba(26,13,8,0.45)] z-10 animate-float-delayed transition-transform duration-500 hover:scale-105 hover:rotate-3 hover:brightness-110 hover:z-30 cursor-default">
-      <img src={`${V02}/premia-coracao-2.png`} alt="" aria-hidden="true" class="w-full h-auto" />
+      <img src={premia.coracao2} alt="" aria-hidden="true" class="w-full h-auto" />
       <div class="absolute inset-0 flex items-center justify-center translate-y-[0%] px-2">
-        <img src={`${V02}/premia-1-ano-supermercado.png`} alt="1 Ano de supermercado grátis" class="w-[64%] h-auto" />
+        <img src={premia.umAnoSupermercado} alt="1 Ano de supermercado grátis" class="w-[64%] h-auto" />
       </div>
     </div>
   </div>
@@ -44,7 +56,7 @@ const premiaLink = "https://www.condor.com.br/premia";
   <!-- Z-ON + regulamento -->
   <div class="flex flex-col items-center gap-1 lg:gap-3 mt-2 sm:mt-6 lg:mt-8 z-10">
     <img
-      src={`${V02}/premia-zon.png`}
+      src={premia.zon}
       alt="Z-ON — Receba o seu prêmio em dinheiro na conta digital do Z-ON"
       class="w-56 sm:w-64 md:w-72 lg:w-80 xl:w-[22rem] h-auto drop-shadow-[0_8px_14px_rgba(26,13,8,0.38)] transition-all duration-300 hover:brightness-110"
     />
@@ -60,7 +72,7 @@ const premiaLink = "https://www.condor.com.br/premia";
       class="premia-link block w-60 sm:w-64 md:w-72 lg:w-[22rem] xl:w-[24rem] transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:brightness-110 drop-shadow-[0_6px_12px_rgba(26,13,8,0.40)] hover:drop-shadow-[0_12px_20px_rgba(26,13,8,0.50)]"
       aria-label="Consulte o regulamento completo em condor.com.br/premia"
     >
-      <img src={`${V02}/premia-regulamento.png`} alt="Consulte o regulamento completo no site condor.com.br/premia" class="w-full h-auto" />
+      <img src={premia.regulamento} alt="Consulte o regulamento completo no site condor.com.br/premia" class="w-full h-auto" />
     </a>
   </div>
 </div>
