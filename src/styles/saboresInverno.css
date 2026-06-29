@@ -263,7 +263,7 @@
 /* ═══════════════════════ components/dialog ═══════════════════════ */
 /* Premium Dynamic Modals - Glassmorphic Dark */
 .custom-dialog {
-  @apply fixed inset-0 z-dialog m-auto w-[calc(100%-2rem)] sm:w-full max-w-[480px] rounded-3xl overflow-visible
+  @apply fixed inset-0 z-dialog m-auto w-[calc(100%-2rem)] sm:w-full max-w-[480px] max-h-[calc(100dvh-2rem)] rounded-3xl overflow-y-auto overscroll-contain
          text-latte p-0
          backdrop:bg-chocolate-dark/80 backdrop:backdrop-blur-md;
   /* On-brand dark "digital ticket" — gold accents read with high contrast on this */
