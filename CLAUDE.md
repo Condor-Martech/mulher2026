@@ -23,6 +23,14 @@ PUBLIC_SUPABASE_ANON_KEY=
 
 `src/lib/supabase.ts` throws at module load if either is missing. Under SSR, dynamic routes (`[id].astro`) query Supabase on every request — there is no `getStaticPaths`.
 
+Optional (analytics — see below). When `PUBLIC_OPENPANEL_CLIENT_ID` is unset the `<Analytics>` partial renders nothing, so analytics degrades gracefully:
+
+```
+PUBLIC_OPENPANEL_CLIENT_ID=     # required to enable OpenPanel; absent ⇒ no-op
+PUBLIC_OPENPANEL_API_URL=       # defaults to https://opapi.cndr.me (self-hosted)
+PUBLIC_OPENPANEL_SCRIPT_URL=    # optional override
+```
+
 ## Deployment
 
 - `Dockerfile` is a 2-stage build: **Node 22 alpine** builds Astro → **Node 22 alpine** runner serves the SSR application via `node ./dist/server/entry.mjs` on port 4321.
@@ -97,10 +105,21 @@ Each page sets its own `Cache-Control` header for CDN/browser caching:
 
 All copy, links, and config live in JSON files in `src/data/`. `settings.json` holds GTM ID and CTA overrides (Mulher). `events.json` holds status badge/button labels and the `statusConfig` map — **not** event data, which comes from Supabase. Maes and Pascoa have their own `content.json` files in their respective subfolders.
 
+### Analytics
+
+Two independent stacks run side by side and do **not** share state: **GTM** (`GTM-N96J7ZRF`, owned by another team, injected via both layouts) and **OpenPanel** (`@openpanel/astro`, the product team's source of truth). `track.ts` deliberately does **not** push to `window.dataLayer` — keep the two separate. The canonical event catalog, rules, and rationale live in [docs/tracking-plan.md](docs/tracking-plan.md) (Spanish); this section is the code-side summary.
+
+- **`src/components/Analytics.astro`** — single partial mounted once in `<head>` of **both** layouts (`Layout.astro` + `LayoutMaes.astro`). Renders `<OpenPanelComponent>` only when `PUBLIC_OPENPANEL_CLIENT_ID` is set. `trackScreenViews` and `trackAttributes` are on; `trackOutgoingLinks` is **off** (business outbounds are tracked as named events to avoid double-counting). Also boots `scrollDepth.ts`.
+- **`src/lib/analyticsContext.ts`** — `getAnalyticsGlobals(Astro.url, referer)` computes `globalProperties` **server-side** so they ride every event (including the auto `screen_view`). Derives `campaign`, `route`, `page_type`, UTM params, and external `referrer_host`. Adds `source` (crm/social) only for the quota campaigns (`mulher`, `maes`) — using the **same channel-resolution rule** as `utils/formHandler.ts` and the `[id].astro` pages. Keep these three in sync.
+- **`src/lib/track.ts`** — the only way to emit a custom event: `track(event, props)`. `event` is typed against the `AnalyticsEvent` union (the catalog) so typos fail the build. **PII guard**: keys in `PII_KEYS` (cpf, email, telefone, nome, nascimento_filho, …) are stripped before sending (LGPD). Calls `window.op` via optional chaining and swallows all errors — analytics must never break the page. When adding an event, add its name to the `AnalyticsEvent` union.
+- **Declarative tracking**: `data-track` attributes on elements (consumed by OpenPanel's `trackAttributes`) are used across campaign components (`Hero`, `Footer`, banners, FAQ, `[id].astro`, etc.) for click events without inline JS.
+
 ### Layouts
 
-- `src/layouts/Layout.astro` — Base layout used by Mulher, Pascoa, and Passeio Ciclístico. Fonts: Inter, Outfit, Pacifico. Includes GTM.
-- `src/layouts/LayoutMaes.astro` — Exclusive Mães layout. Fonts: Montserrat, Pacifico, Pinyon Script. Includes Open Graph / Twitter Card meta tags, dedicated theme-color (#713334), and GTM.
+Both layouts mount the shared `<Analytics>` partial (OpenPanel) in `<head>` alongside GTM — see the Analytics section.
+
+- `src/layouts/Layout.astro` — Base layout used by Mulher, Pascoa, and Passeio Ciclístico. Fonts: Inter, Outfit, Pacifico. Includes GTM + `<Analytics>`.
+- `src/layouts/LayoutMaes.astro` — Exclusive Mães layout. Fonts: Montserrat, Pacifico, Pinyon Script. Includes Open Graph / Twitter Card meta tags, dedicated theme-color (#713334), GTM + `<Analytics>`.
 
 ### Styling
 
