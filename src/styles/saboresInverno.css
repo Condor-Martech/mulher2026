@@ -261,6 +261,12 @@
 }
 
 /* ═══════════════════════ components/dialog ═══════════════════════ */
+/* Bloqueo del scroll de fondo mientras un modal está abierto (lo togglea el JS
+   en <html>). Evita el "scroll detrás" del modal en laptops de pantalla baja. */
+.modal-open {
+  overflow: hidden;
+}
+
 /* Premium Dynamic Modals - Glassmorphic Dark */
 .custom-dialog {
   @apply fixed inset-0 z-dialog m-auto w-[calc(100%-2rem)] sm:w-full max-w-[480px] max-h-[calc(100dvh-2rem)] rounded-3xl overflow-y-auto overscroll-contain
@@ -294,6 +300,66 @@
 
 .custom-dialog-body {
   @apply p-6 sm:p-8 flex flex-col gap-5 bg-transparent rounded-b-3xl;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   Compactación en laptops de pantalla baja (Lenovo E470, HP ~768px de alto).
+   El modal ya scrollea (max-h + overflow-y-auto), pero a esa altura el form
+   no entra y el botón "Confirmar inscrição" queda fuera del fold → mala UX.
+   Estas media queries por ALTURA reducen paddings, gaps, título y campos solo
+   cuando el viewport es bajo. No afectan desktop alto ni el scroll natural en
+   móvil. Apuntan al contenedor interno (.relative) y al #sabores-form del modal.
+   ────────────────────────────────────────────────────────────────────────── */
+@media (max-height: 760px) {
+  /* contenedor interno del modal: padding vertical más compacto */
+  .custom-dialog > .relative {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+  /* título del evento más chico */
+  #sabores-modal-title {
+    font-size: 1.25rem; /* text-xl */
+    margin-bottom: 0;
+  }
+  /* bloque de Data/Local/Palestrante: menos margen y gap */
+  #sabores-modal-title + div {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    gap: 0.4rem;
+  }
+  /* form más apretado */
+  #sabores-form {
+    gap: 0.6rem;
+  }
+  #sabores-form .grid {
+    gap: 0.6rem;
+  }
+  /* inputs más bajos */
+  #sabores-form input[type="text"],
+  #sabores-form input[type="email"],
+  #sabores-form input[type="tel"] {
+    padding-top: 0.45rem;
+    padding-bottom: 0.45rem;
+  }
+}
+
+/* Pantallas MUY bajas (~600px o netbooks): compactar aún más */
+@media (max-height: 640px) {
+  .custom-dialog > .relative {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  #sabores-modal-title {
+    font-size: 1.125rem; /* text-lg */
+  }
+  #sabores-form {
+    gap: 0.5rem;
+  }
+  /* checkboxes LGPD/maioridade: texto un punto más chico para ahorrar líneas */
+  #sabores-form label.flex.items-start {
+    font-size: 0.7rem;
+    line-height: 1.15;
+  }
 }
 
 .form-label {

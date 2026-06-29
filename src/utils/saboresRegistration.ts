@@ -201,6 +201,9 @@ export function initSaboresEvents() {
         checkValidity();
         track("event_modal_opened", { event_id: id });
         modal.showModal();
+        // Bloquear el scroll de la página de fondo mientras el modal está abierto
+        // (evita el "scroll detrás" en laptops de pantalla baja).
+        document.documentElement.classList.add("modal-open");
       });
     });
 
@@ -209,7 +212,11 @@ export function initSaboresEvents() {
   modal.addEventListener("click", (e) => {
     if (e.target === modal) modal.close();
   });
-  modal.addEventListener("close", resetForm);
+  // Se dispara con cualquier cierre (botón, clic fuera, Escape) → restaura scroll.
+  modal.addEventListener("close", () => {
+    document.documentElement.classList.remove("modal-open");
+    resetForm();
+  });
 
   // ─────────────────────────── Validación ────────────────────────────────
   const validators: Record<string, (el: HTMLInputElement) => boolean> = {
@@ -376,7 +383,12 @@ export function initSaboresEvents() {
     try {
       modal!.close();
     } catch {}
-    setTimeout(() => feedback?.showModal(), 120);
+    setTimeout(() => {
+      feedback?.showModal();
+      // Mantener el scroll bloqueado también con el feedback abierto (el close
+      // del modal anterior lo había quitado).
+      document.documentElement.classList.add("modal-open");
+    }, 120);
   }
   $("sabores-feedback-ok")?.addEventListener("click", () => feedback?.close());
   $("sabores-feedback-close")?.addEventListener("click", () =>
@@ -384,6 +396,10 @@ export function initSaboresEvents() {
   );
   feedback?.addEventListener("click", (e) => {
     if (e.target === feedback) feedback.close();
+  });
+  // Restaurar scroll cuando el feedback se cierra (cualquier vía).
+  feedback?.addEventListener("close", () => {
+    document.documentElement.classList.remove("modal-open");
   });
 }
 

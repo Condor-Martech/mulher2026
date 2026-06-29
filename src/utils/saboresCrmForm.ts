@@ -177,6 +177,8 @@ export function initSaboresCrmForm() {
     if (t) t.textContent = title;
     if (m) m.textContent = message;
     feedback?.showModal();
+    // Bloquear el scroll de la página de fondo mientras el feedback está abierto.
+    document.documentElement.classList.add("modal-open");
   }
   $("sabores-feedback-ok")?.addEventListener("click", () => feedback?.close());
   $("sabores-feedback-close")?.addEventListener("click", () =>
@@ -184,6 +186,10 @@ export function initSaboresCrmForm() {
   );
   feedback?.addEventListener("click", (e) => {
     if (e.target === feedback) feedback.close();
+  });
+  // Restaurar scroll al cerrar (cualquier vía: OK, X, clic fuera, Escape).
+  feedback?.addEventListener("close", () => {
+    document.documentElement.classList.remove("modal-open");
   });
 
   checkValidity();
