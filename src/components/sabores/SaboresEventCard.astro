@@ -52,8 +52,8 @@ const REGION_NAMES: Record<string, string> = {
 };
 const regionKey = (event.region ?? "").toLowerCase().replace(/\s+/g, "");
 const city = REGION_NAMES[regionKey] ?? event.region ?? "";
-// Tienda sin el prefijo "Hiper Condor" (ya se ve en branding); fallback a la ciudad.
-const store = (event.location ?? "").replace(/^Hiper\s+Condor\s*/i, "").trim();
+// Nombre completo del supermercado (p.ej. "Hiper Condor Torres"); fallback a la ciudad.
+const store = (event.location ?? "").trim();
 
 // Link a Google Maps: override explícito por evento (data.maps_url) o búsqueda por
 // nombre de tienda + ciudad (sin API key; resuelve al pin para tiendas con nombre).

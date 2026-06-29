@@ -1077,7 +1077,7 @@
 }
 
 .sabores-card-map-place {
-  @apply text-xs font-semibold text-latte/85 truncate;
+  @apply text-sm font-semibold text-latte/85 truncate;
 }
 
 .sabores-card-map-cta {
