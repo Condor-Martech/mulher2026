@@ -21,8 +21,10 @@ const premiaLink = premia?.link;
 {premia && (
 
 <div class="flex flex-col items-center w-max select-none pb-3 lg:pb-12 pt-2 lg:pt-4 group/cluster relative">
-  <!-- Glow detrás del selo -->
-  <div class="absolute top-[10%] left-1/2 -translate-x-1/2 w-[70%] h-[30%] bg-amber-500/20 blur-[80px] rounded-full pointer-events-none z-0 transition-opacity duration-700 opacity-70 group-hover/cluster:opacity-100"></div>
+  <!-- Glow detrás del selo: gradiente radial que se desvanece a transparente en
+       sus propios bordes, así nunca deja un borde duro aunque el .hero-section
+       (overflow-hidden) lo recorte. -->
+  <div class="premia-glow absolute top-[10%] left-1/2 -translate-x-1/2 w-[120%] h-[60%] pointer-events-none z-0 transition-opacity duration-700 opacity-70 group-hover/cluster:opacity-100"></div>
 
   <!-- Selo -->
   <a
@@ -84,6 +86,18 @@ const premiaLink = premia?.link;
 <style>
   /* Radio base para que el anillo de foco (:focus-visible) quede prolijo */
   .premia-link { border-radius: 0.75rem; }
+
+  /* Halo ámbar suave detrás del selo. Usamos un radial-gradient (no blur+overflow)
+     porque se desvanece a transparente total en el borde: aunque el contenedor
+     padre lo recorte, no aparece ningún recuadro / línea dura. */
+  .premia-glow {
+    background: radial-gradient(
+      ellipse at center,
+      rgba(245, 158, 11, 0.28) 0%,
+      rgba(245, 158, 11, 0.14) 35%,
+      rgba(245, 158, 11, 0) 70%
+    );
+  }
 
   .animate-float-slow { animation: float 6s ease-in-out infinite; }
   .animate-float-medium { animation: float 5s ease-in-out infinite 1s; }
