@@ -168,11 +168,29 @@ export function initSaboresEvents() {
         if (titleEl) titleEl.textContent = tema || "Evento";
         const dateEl = $("sabores-modal-date");
         if (dateEl) dateEl.textContent = btn.dataset.eventDate || "";
+        const place = [btn.dataset.eventCity, btn.dataset.eventLocation]
+          .filter(Boolean)
+          .join(" · ");
         const cityEl = $("sabores-modal-city");
-        if (cityEl)
-          cityEl.textContent = [btn.dataset.eventCity, btn.dataset.eventLocation]
-            .filter(Boolean)
-            .join(" · ");
+        if (cityEl) cityEl.textContent = place;
+        // "Local" como link a Google Maps si el evento trae mapsUrl; si no, texto plano.
+        const mapEl = $("sabores-modal-map") as HTMLAnchorElement | null;
+        const cityPlainEl = $("sabores-modal-city-plain");
+        const mapsUrl = btn.dataset.eventMapsUrl || "";
+        if (mapEl && cityPlainEl) {
+          if (mapsUrl) {
+            mapEl.href = mapsUrl;
+            mapEl.setAttribute("aria-label", `Ver ${place} no Google Maps`);
+            mapEl.classList.remove("hidden");
+            mapEl.classList.add("flex");
+            cityPlainEl.classList.add("hidden");
+          } else {
+            cityPlainEl.textContent = place;
+            cityPlainEl.classList.remove("hidden");
+            mapEl.classList.add("hidden");
+            mapEl.classList.remove("flex");
+          }
+        }
         const palNameEl = $("sabores-modal-palestrante-name");
         const pal = btn.dataset.eventPalestrante || "";
         if (palNameEl) palNameEl.textContent = pal;
