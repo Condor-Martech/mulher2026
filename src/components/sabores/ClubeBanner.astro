@@ -18,6 +18,7 @@ const { clube } = Astro.props;
 ---
 
 {clube && (
+<Fragment>
 <section class="py-2 lg:py-8 bg-transparent relative z-10 scroll-reveal">
   <div class="container mx-auto px-6 max-w-[90rem] flex justify-center">
     <a
@@ -74,4 +75,21 @@ const { clube } = Astro.props;
     </a>
   </div>
 </section>
+<script is:inline define:vars={{ cleanUrl: clube.link }}>
+  // El href ya es limpio, pero el cross-domain linker de Google (gtag/GTM, contenedor
+  // de otro equipo) le cuelga `_gl=...` al hacer click hacia clubecondor.com. SOLO en
+  // este banner forzamos la navegación a la URL limpia con window.open (que Google no
+  // decora). No usamos stopPropagation → el tracking data-track de OpenPanel igual dispara.
+  (() => {
+    const a = document.querySelector('a[data-placement="clube_banner"]');
+    if (!a) return;
+    const openClean = (e) => {
+      e.preventDefault();
+      window.open(cleanUrl, "_blank", "noopener,noreferrer");
+    };
+    a.addEventListener("click", openClean);
+    a.addEventListener("auxclick", (e) => { if (e.button === 1) openClean(e); });
+  })();
+</script>
+</Fragment>
 )}
