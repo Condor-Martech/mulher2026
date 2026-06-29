@@ -609,10 +609,6 @@
   text-shadow: 0 0 22px rgba(212, 160, 90, 0.5);
 }
 
-.section-subtitle {
-  @apply text-latte/80 max-w-xl mx-auto mt-4 text-sm md:text-base font-medium;
-}
-
 /* ============================================================================
    CITY FILTER (badges redondeados) — sin contenedor envolvente
    ============================================================================ */
