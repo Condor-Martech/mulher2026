@@ -111,6 +111,17 @@ const REGION_NAMES: Record<string, string> = {
 const regionKey = (event.region ?? "").toLowerCase().replace(/\s+/g, "");
 const city = REGION_NAMES[regionKey] ?? event.region ?? "";
 const cityLine = [city, event.location].filter(Boolean).join(" · ");
+// Link a Google Maps: override explícito por evento (data.maps_url) o búsqueda por
+// nombre de tienda + ciudad. Mismo criterio que la card de la grilla social.
+const mapsOverride =
+  (event.data?.maps_url as string | undefined) ??
+  (event.data?.mapsUrl as string | undefined);
+const mapsQuery = [event.location, city].filter(Boolean).join(" ").trim();
+const mapsUrl =
+  mapsOverride ||
+  (mapsQuery
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`
+    : null);
 // Palestrante: se muestra en el header del form; oculta placeholders "a definir/confirmar".
 const palestrante =
   event.palestrante &&
@@ -175,7 +186,24 @@ const errCls =
               {cityLine && (
                 <div>
                   <p class="text-[0.6rem] font-bold uppercase tracking-widest text-gold/60">Local</p>
-                  <p class="text-latte text-sm font-semibold">{cityLine}</p>
+                  {mapsUrl ? (
+                    <a
+                      href={mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="group flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-latte text-sm font-semibold hover:text-gold transition-colors"
+                      aria-label={`Ver ${cityLine} no Google Maps`}
+                    >
+                      <svg class="w-3.5 h-3.5 text-gold shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
+                        <circle cx="12" cy="11" r="3" />
+                      </svg>
+                      <span>{cityLine}</span>
+                      <span class="text-2xs font-bold uppercase tracking-wider text-gold underline underline-offset-2 opacity-80 group-hover:opacity-100">Ver no mapa</span>
+                    </a>
+                  ) : (
+                    <p class="text-latte text-sm font-semibold">{cityLine}</p>
+                  )}
                 </div>
               )}
               {palestrante && (
