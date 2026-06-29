@@ -1181,39 +1181,6 @@
 /* ═══════════════════════ sections/sponsors ═══════════════════════ */
 /* Sponsors & Supporters Stacked Infinite Marquees Styling */
 
-/* Editorial section heading with flanking gold rules */
-.sponsors-heading {
-  @apply flex items-center justify-center gap-4 md:gap-6 mb-10 md:mb-14 w-full max-w-5xl mx-auto;
-}
-
-.sponsors-heading-rule {
-  @apply hidden sm:block h-px flex-1 max-w-[10rem];
-}
-
-.sponsors-heading-rule--left {
-  @apply bg-linear-to-r from-transparent to-gold/50;
-}
-
-.sponsors-heading-rule--right {
-  @apply bg-linear-to-l from-transparent to-gold/50;
-}
-
-.sponsors-heading-title {
-  @apply text-center font-display font-extrabold text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-latte tracking-[0.08em] sm:tracking-[0.14em] uppercase select-none min-w-0 leading-tight;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-}
-
-/* Quiebre forzado a 2 líneas (sm+); en móvil el texto fluye natural */
-.sponsors-heading-break {
-  @apply hidden sm:inline;
-}
-
-/* "inverno" destacado: dorado con glow cálido para que resalte sobre el latte */
-.sponsors-heading-accent {
-  @apply text-gold;
-  text-shadow: 0 0 18px rgba(212, 160, 90, 0.45);
-}
-
 .sponsors-stack {
   @apply flex flex-col gap-6 md:gap-8 w-full relative;
 }
