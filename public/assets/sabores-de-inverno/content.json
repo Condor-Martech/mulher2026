@@ -1,0 +1,72 @@
+{
+  "hero": {
+    "bg": "/assets/sabores-de-inverno/hero-bg.webp",
+    "selo": "/assets/sabores-de-inverno/Selo-Sabores-de-Inverno.png"
+  },
+  "premia": {
+    "link": "https://www.condor.com.br/premia",
+    "image": "/assets/sabores-de-inverno/Condor-Premia.png"
+  },
+  "clube": {
+    "titleLine1": "Baixe o app do Clube Condor",
+    "titleLine2": "Faça o seu cadastro ou atualize em nosso app ou site.",
+    "cta": "Cadastrar ou Atualizar",
+    "logo": "/assets/sabores-de-inverno/clube-logo.png",
+    "link": "https://clubecondor.com/"
+  },
+  "events": {
+    "pretitle": "AGENDA EXCLUSIVA",
+    "title": "PROGRAMAÇÃO DE EVENTOS",
+    "swipeLabel": "Deslize para ver mais →"
+  },
+  "status": {
+    "OPEN":     { "label": "Inscrições Abertas", "cta": "Inscrever-se", "disabled": false },
+    "SOON":     { "label": "Em breve",           "cta": "Em breve",     "disabled": true },
+    "FULL":     { "label": "Esgotado",           "cta": "Esgotado",     "disabled": true },
+    "FINISHED": { "label": "Encerrado",          "cta": "Encerrado",    "disabled": true }
+  },
+  "emCasa": {
+    "link": "https://www.condor.com.br/",
+    "logo": "/assets/sabores-de-inverno/emcasa-logo.png",
+    "title": "Não quer sair de casa?",
+    "subtitlePre": "Faça suas compras e ",
+    "subtitleStrong": "levamos até você."
+  },
+  "sponsors": {
+    "patrocinadores": [
+      { "name": "Terraustral", "logoUrl": "/assets/sabores-de-inverno/marcas/terraustral.png" },
+      { "name": "3 Corações", "logoUrl": "/assets/sabores-de-inverno/marcas/3coracoes.webp" },
+      { "name": "Leão", "logoUrl": "/assets/sabores-de-inverno/marcas/leao.webp" },
+      { "name": "Sadia", "logoUrl": "/assets/sabores-de-inverno/marcas/sadia.png" },
+      { "name": "Nescafé", "logoUrl": "/assets/sabores-de-inverno/marcas/nescafe.webp" },
+      { "name": "Santa Rita", "logoUrl": "/assets/sabores-de-inverno/marcas/santa-rita.png" },
+      { "name": "Nestlé Professional", "logoUrl": "/assets/sabores-de-inverno/marcas/nestle-professional.jpg" },
+      { "name": "Seara", "logoUrl": "/assets/sabores-de-inverno/marcas/seara.png" }
+    ],
+    "apoiadores": [
+      { "name": "Ouro Fino", "logoUrl": "/assets/sabores-de-inverno/marcas/ouro-fino.webp" },
+      { "name": "Padaria Condor", "logoUrl": "/assets/sabores-de-inverno/marcas/padaria-condor.webp" },
+      { "name": "Coca-Cola", "logoUrl": "/assets/sabores-de-inverno/marcas/coca-cola.png" },
+      { "name": "Nissin", "logoUrl": "/assets/sabores-de-inverno/marcas/nissin.png" },
+      { "name": "Galbani", "logoUrl": "/assets/sabores-de-inverno/marcas/galbani.png" },
+      { "name": "SC Johnson", "logoUrl": "/assets/sabores-de-inverno/marcas/sc-johnson.png" },
+      { "name": "Camil", "logoUrl": "/assets/sabores-de-inverno/marcas/camil.png" },
+      { "name": "Rizolli", "logoUrl": "/assets/sabores-de-inverno/marcas/rizolli.png" },
+      { "name": "Ypê", "logoUrl": "/assets/sabores-de-inverno/marcas/ype.png" },
+      { "name": "Bola Mel", "logoUrl": "/assets/sabores-de-inverno/marcas/bolamel.jpeg" }
+    ]
+  },
+  "footer": {
+    "logo": "/assets/sabores-de-inverno/hero-logo-condor.png",
+    "copyright": "© 2026 Condor. Todos os direitos reservados.",
+    "certificado": "Certificado de Autorização SPA/ME Nº04.047913/2026.",
+    "social": [
+      { "network": "facebook", "url": "https://www.facebook.com/redecondor", "color": "#1877F2", "label": "Facebook" },
+      { "network": "instagram", "url": "https://www.instagram.com/redecondor", "color": "#E4405F", "label": "Instagram" },
+      { "network": "tiktok", "url": "https://www.tiktok.com/@redecondor", "color": "#000000", "label": "TikTok" },
+      { "network": "youtube", "url": "https://www.youtube.com/redecondor", "color": "#FF0000", "label": "YouTube" },
+      { "network": "linkedin", "url": "https://www.linkedin.com/company/redecondor", "color": "#0077B5", "label": "LinkedIn" },
+      { "network": "threads", "url": "https://www.threads.net/@redecondor", "color": "#000000", "label": "Threads" }
+    ]
+  }
+}

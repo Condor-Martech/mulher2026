@@ -1,0 +1,24 @@
+{
+  "patrocinadores": [
+    { "name": "Terraustral", "logoUrl": "/assets/sabores-de-inverno/marcas/terraustral.png" },
+    { "name": "3 Corações", "logoUrl": "/assets/sabores-de-inverno/marcas/3coracoes.webp" },
+    { "name": "Leão", "logoUrl": "/assets/sabores-de-inverno/marcas/leao.webp" },
+    { "name": "Sadia", "logoUrl": "/assets/sabores-de-inverno/marcas/sadia.png" },
+    { "name": "Nescafé", "logoUrl": "/assets/sabores-de-inverno/marcas/nescafe.webp" },
+    { "name": "Santa Rita", "logoUrl": "/assets/sabores-de-inverno/marcas/santa-rita.png" },
+    { "name": "Nestlé Professional", "logoUrl": "/assets/sabores-de-inverno/marcas/nestle-professional.jpg" },
+    { "name": "Seara", "logoUrl": "/assets/sabores-de-inverno/marcas/seara.png" }
+  ],
+  "apoiadores": [
+    { "name": "Ouro Fino", "logoUrl": "/assets/sabores-de-inverno/marcas/ouro-fino.webp" },
+    { "name": "Padaria Condor", "logoUrl": "/assets/sabores-de-inverno/marcas/padaria-condor.webp" },
+    { "name": "Coca-Cola", "logoUrl": "/assets/sabores-de-inverno/marcas/coca-cola.png" },
+    { "name": "Nissin", "logoUrl": "/assets/sabores-de-inverno/marcas/nissin.png" },
+    { "name": "Galbani", "logoUrl": "/assets/sabores-de-inverno/marcas/galbani.png" },
+    { "name": "SC Johnson", "logoUrl": "/assets/sabores-de-inverno/marcas/sc-johnson.png" },
+    { "name": "Camil", "logoUrl": "/assets/sabores-de-inverno/marcas/camil.png" },
+    { "name": "Rizolli", "logoUrl": "/assets/sabores-de-inverno/marcas/rizolli.png" },
+    { "name": "Ypê", "logoUrl": "/assets/sabores-de-inverno/marcas/ype.png" },
+    { "name": "Bola Mel", "logoUrl": "/assets/sabores-de-inverno/marcas/bolamel.jpeg" }
+  ]
+}

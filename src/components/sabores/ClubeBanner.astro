@@ -1,0 +1,104 @@
+---
+// Banner "Clube Condor". Reskin cálido (marrón) para integrarlo a Sabores de Inverno:
+// base chocolate + textura madeira + acentos gold, con el lockup Clube Condor dentro
+// a la derecha (sus placas claras resaltan sobre el fondo oscuro).
+// `clube` llega ya con la URL del logo apuntando a Minio (transformado en el service).
+interface Props {
+  clube?: {
+    titleLine1: string;
+    titleLine2: string;
+    cta: string;
+    logo: string;
+    link: string;
+  };
+}
+// Guard defensivo: si el content remoto llega sin `clube`, no renderizamos el
+// banner en vez de tirar 500.
+const { clube } = Astro.props;
+---
+
+{clube && (
+<Fragment>
+<section class="py-2 lg:py-8 bg-transparent relative z-10 scroll-reveal">
+  <div class="container mx-auto px-6 max-w-[90rem] flex justify-center">
+    <a
+      href={clube.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-track="promo_banner_clicked"
+      data-destination="clube"
+      data-placement="clube_banner"
+      aria-label="Clube Condor — baixe o app e aproveite as vantagens"
+      class="group relative w-full max-w-[1100px] flex items-center"
+    >
+      <div class="relative z-10 flex w-full">
+        <!-- Banner cálido (marrón) -->
+        <div
+          class="relative overflow-hidden w-full flex flex-col-reverse md:flex-row items-center justify-between gap-6 md:gap-8
+                 rounded-[18px] lg:rounded-[24px] border border-gold/35 bg-chocolate-medium bg-tabua
+                 p-6 md:px-10 lg:px-12 xl:px-16 md:py-8 lg:py-10
+                 shadow-[0_14px_44px_rgba(26,13,8,0.55)]
+                 transition-all duration-500 group-hover:border-gold/60 group-hover:shadow-[0_20px_60px_rgba(26,13,8,0.7)]
+                 text-center md:text-left"
+        >
+          <!-- Glow cálido -->
+          <span
+            class="pointer-events-none absolute inset-0 z-0
+                   bg-[radial-gradient(ellipse_at_85%_30%,rgba(234,168,36,0.16),transparent_55%),radial-gradient(ellipse_at_20%_90%,rgba(120,20,10,0.35),transparent_55%)]"
+          ></span>
+
+          <div class="relative z-10 flex-1">
+            <h2
+              class="font-sans font-extrabold text-cream text-xl md:text-2xl lg:text-[1.9rem] tracking-tight leading-tight mb-1.5 text-warm-glow"
+            >
+              {clube.titleLine1}
+            </h2>
+            <p
+              class="font-sans text-latte/90 text-base md:text-lg lg:text-xl leading-snug"
+            >
+              {clube.titleLine2}
+            </p>
+          </div>
+
+          <!-- Logo Clube Condor - dentro a la derecha -->
+          <div class="relative z-10 shrink-0">
+            <img
+              src={clube.logo}
+              alt="Clube Condor"
+              width="300"
+              height="200"
+              class="h-24 md:h-28 lg:h-32 xl:h-36 w-auto drop-shadow-2xl transition-transform duration-500 group-hover:scale-105"
+            />
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+<script is:inline define:vars={{ cleanUrl: clube.link }}>
+  // El href ya es limpio en el HTML, pero el cross-domain linker de Google (gtag/GTM,
+  // contenedor de otro equipo) le cuelga `_gl=...` al link hacia clubecondor.com. SOLO
+  // en este banner: (1) mantenemos el href limpio (lo que se ve en la barra de estado y
+  // el "abrir en pestaña nueva" del click derecho) y (2) forzamos la navegación a la URL
+  // limpia con window.open, que Google no decora. Sin stopPropagation → el data-track de
+  // OpenPanel igual dispara.
+  (() => {
+    const a = document.querySelector('a[data-placement="clube_banner"]');
+    if (!a) return;
+    // (1) Cada vez que Google decore el href con _gl, lo reseteamos a la URL limpia.
+    const keepClean = () => {
+      if ((a.getAttribute("href") || "").includes("_gl=")) a.setAttribute("href", cleanUrl);
+    };
+    keepClean();
+    new MutationObserver(keepClean).observe(a, { attributes: true, attributeFilter: ["href"] });
+    // (2) Navegación: abrir siempre la URL limpia (window.open no es decorado por Google).
+    const openClean = (e) => {
+      e.preventDefault();
+      window.open(cleanUrl, "_blank", "noopener,noreferrer");
+    };
+    a.addEventListener("click", openClean);
+    a.addEventListener("auxclick", (e) => { if (e.button === 1) openClean(e); });
+  })();
+</script>
+</Fragment>
+)}

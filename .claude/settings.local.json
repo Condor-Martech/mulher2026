@@ -4,7 +4,32 @@
       "mcp__claude_ai_Supabase__list_projects",
       "mcp__claude_ai_Supabase__execute_sql",
       "Bash(git fetch --tags --force origin)",
-      "Bash(git pull origin main)"
+      "Bash(git pull origin main)",
+      "Bash(curl -s http://localhost:4321/mulher/)",
+      "Bash(curl -s \"http://localhost:4321/maes/\")",
+      "Bash(curl -s -o /tmp/b -w 'POST /track → HTTP %{http_code}\\\\n' -X POST https://opapi.cndr.me/track -H 'Content-Type: application/json' -H 'Origin: http://localhost:4321' -H 'openpanel-client-id: 55c9b35e-0171-4e02-b645-27233741a011' -H 'openpanel-sdk-name: web' -H 'openpanel-sdk-version: 1.4.1' --data '{\"type\":\"track\",\"payload\":{\"name\":\"__diag__\",\"properties\":{}}}')",
+      "Read(//tmp/**)",
+      "Read(//home/diego/.cache/ms-playwright/**)",
+      "Bash(./node_modules/.bin/playwright --version)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:4321/mulher/)",
+      "Bash(ln -sf /home/diego/armando/LPS/mulher2026/node_modules /tmp/claude-1000/-home-diego-armando-LPS-mulher2026/f5e361e3-c927-472f-9675-448757abd884/scratchpad/node_modules)",
+      "Bash(node corner.mjs corner.png)",
+      "Bash(node /tmp/claude-1000/-home-diego-armando-LPS-mulher2026/f5e361e3-c927-472f-9675-448757abd884/scratchpad/shot.mjs /tmp/claude-1000/-home-diego-armando-LPS-mulher2026/f5e361e3-c927-472f-9675-448757abd884/scratchpad/after-wide.png)",
+      "Bash(convert galbani.png -format '%[pixel:p{1798,1900}]' info:)",
+      "Bash(echo \"center pixel: $\\(convert galbani.png -format '%[pixel:p{1798,1900}]' info:\\)\")",
+      "Bash(convert galbani.png -fuzz 45% -fill black +opaque '#cf142b' -fuzz 35% -transparent '#cf142b' null:)",
+      "Bash(convert galbani.png -channel RGB -separate +channel '\\(' -clone 0 -clone 1 -clone 2 -fx '\\(u[0]-u[1]>0.25 && u[0]-u[2]>0.25\\) ? 1 : 0' '\\)' -delete 0-2 -threshold 50% -negate -format 'red-oval bbox: %@\\\\n' info:)",
+      "Bash(awk '{printf \"%8.1f KB  %s\\\\n\", $1/1024, $2}')",
+      "Bash(curl -s http://localhost:4321/sabores-de-inverno/)",
+      "Bash(env)",
+      "Bash(echo \"=== Claves en /home/diego/.env \\(valores ocultos\\) ===\"; grep -iE \"plane|api|token|key|url|workspace|project\" /home/diego/.env 2>/dev/null | sed -E 's/=.*/=<oculto>/'; echo; echo \"=== ¿Algún match real de 'plane' en LPS \\(excluyendo basura\\)? ===\"; grep -rniE \"plane\\\\.so|api\\\\.plane|PLANE_|X-API-Key.*plane\" /home/diego/armando/LPS 2>/dev/null | grep -viE \"node_modules|package-lock|\\\\.next/|airplane\" | head)",
+      "Read(//home/diego/**)",
+      "Read(//home/diego/armando/LPS/**)",
+      "Bash(echo \"build exit: $?\")",
+      "Bash(git check-ignore *)",
+      "Bash(echo \"exit:$?\")",
+      "Bash(git rm *)",
+      "Bash(git commit --quiet -m ' *)"
     ]
   }
 }

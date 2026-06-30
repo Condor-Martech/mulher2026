@@ -28,3 +28,8 @@ pnpm-debug.log*
 
 # Vercel build output
 .vercel/
+
+# Claude Code tooling (local, not part of the app)
+.agents/
+.claude/settings.json
+skills-lock.json

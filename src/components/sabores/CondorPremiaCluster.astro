@@ -1,0 +1,34 @@
+---
+// Bloque promocional Condor Premia: una sola imagen composite (selo "R$ Meio Milhão
+// Todo Mês" + corazones vales-compras / 1 ano + Z-ON + regulamento), con fondo
+// transparente. Va envuelta en un link a la página de Premia con tracking, porque
+// ese es el propósito del bloque (la propia imagen remite a condor.com.br/premia).
+// Content-driven (Minio) con fallback local.
+interface Props {
+  premia?: {
+    link?: string;
+    image?: string;
+  };
+}
+const { premia } = Astro.props;
+const premiaLink = premia?.link ?? "https://www.condor.com.br/premia";
+const image = premia?.image ?? "/assets/sabores-de-inverno/Condor-Premia.png";
+---
+
+<a
+  href={premiaLink}
+  target="_blank"
+  rel="noopener noreferrer"
+  data-track="promo_banner_clicked"
+  data-destination="premia"
+  data-placement="hero_cluster"
+  data-label="condor_premia"
+  class="premia-banner"
+  aria-label="Condor Premia — R$ Meio Milhão Todo Mês. Vales-compras todos os dias e 1 ano de supermercado grátis. Consulte o regulamento completo em condor.com.br/premia"
+>
+  <img
+    src={image}
+    alt="Condor Premia — R$ Meio Milhão Todo Mês. Vales-compras todos os dias e 1 ano de supermercado grátis."
+    class="w-full h-auto"
+  />
+</a>

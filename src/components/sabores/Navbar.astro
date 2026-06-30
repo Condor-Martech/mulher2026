@@ -1,0 +1,71 @@
+---
+// Navbar responsivo de Sabores: pill flotante en desktop (md+) y hamburguesa +
+// overlay full-screen en mobile. Reusa el handler genérico initNavbarHandler
+// (IDs mobile-menu-toggle / mobile-menu / close-menu / .mobile-nav-link).
+import MenuIcon from "../icons/Menu.astro";
+import CloseIcon from "../icons/Close.astro";
+
+const links = [
+  { href: "#home", label: "Home" },
+  { href: "#programacao", label: "Programação" },
+  { href: "#patrocinio", label: "Patrocinadores" },
+];
+---
+
+<header class="floating-header">
+  <!-- Desktop: pill flotante (visibilidad en el wrapper, porque .floating-nav
+       fija display:flex sin capa y ganaría sobre `hidden`) -->
+  <div class="hidden md:block pointer-events-auto">
+    <nav class="floating-nav">
+      {links.map((l) => (
+        <a href={l.href} class="nav-link">{l.label}</a>
+      ))}
+    </nav>
+  </div>
+
+  <!-- Mobile: botón hamburguesa -->
+  <div class="md:hidden pointer-events-auto">
+    <button
+      id="mobile-menu-toggle"
+      class="p-3 rounded-2xl bg-chocolate-dark/80 backdrop-blur-xl text-gold border border-gold/30 shadow-[0_4px_24px_rgba(0,0,0,0.5)] active:scale-95 transition-transform"
+      aria-label="Abrir menu"
+    >
+      <MenuIcon class="w-7 h-7" />
+    </button>
+  </div>
+
+  <!-- Mobile: overlay full-screen -->
+  <div
+    id="mobile-menu"
+    class="fixed inset-0 z-60 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-all duration-500 md:hidden"
+    style="background: linear-gradient(180deg, #32231A 0%, #2B1D14 50%, #1A110B 100%);"
+  >
+    <button
+      id="close-menu"
+      class="absolute top-8 right-8 p-3 rounded-2xl bg-gold text-[#1F110B] shadow-lg active:scale-95 transition-transform"
+      aria-label="Fechar menu"
+    >
+      <CloseIcon class="w-7 h-7" />
+    </button>
+
+    <div class="flex flex-col items-center gap-8 relative z-10">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          class="mobile-nav-link font-display italic text-3xl sm:text-4xl font-bold tracking-wide text-gold hover:scale-105 active:scale-95 transition-transform"
+        >
+          {l.label}
+        </a>
+      ))}
+    </div>
+
+    <div class="absolute bottom-12 text-center opacity-40">
+      <p class="text-[10px] uppercase font-black tracking-[0.3em] text-latte">Sabores de Inverno · Condor</p>
+    </div>
+  </div>
+</header>
+
+<script>
+  import { initNavbarHandler } from "../../utils/navbarHandler";
+  initNavbarHandler();
+</script>

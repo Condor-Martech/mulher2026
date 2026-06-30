@@ -1,0 +1,114 @@
+---
+import LayoutSaboresInverno from "../../layouts/LayoutSaboresInverno.astro";
+import FloatingLeaves from "../../components/sabores/FloatingLeaves.astro";
+import Navbar from "../../components/sabores/Navbar.astro";
+import Hero from "../../components/sabores/Hero.astro";
+import ClubeBanner from "../../components/sabores/ClubeBanner.astro";
+import Sponsors from "../../components/sabores/Sponsors.astro";
+import EmCasaBanner from "../../components/sabores/EmCasaBanner.astro";
+import Footer from "../../components/sabores/Footer.astro";
+import SaboresEventGrid from "../../components/sabores/SaboresEventGrid.astro";
+import { fetchSaboresEvents } from "../../services/saboresEventService";
+import { getSaboresContent } from "../../services/saboresContentService";
+
+// Grilla de eventos en vivo (Supabase, campanha sabores-de-inverno-2026), agrupada
+// por fecha. El modal de inscripción social viene dentro de SaboresEventGrid.
+// Content editorial (textos + assets) desde Minio con fallback local; un solo
+// fetch por request, prop-drilled a los componentes que lo necesitan.
+const [events, contentRaw] = await Promise.all([
+  fetchSaboresEvents(),
+  getSaboresContent(),
+]);
+// Red de seguridad final: el service siempre devuelve un objeto, pero garantizamos
+// que `content` nunca sea null/undefined para los accesos `content.hero` etc.
+const content = contentRaw ?? {};
+
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=30, stale-while-revalidate=60",
+);
+---
+
+<LayoutSaboresInverno title="Sabores de Inverno 2026 - Condor">
+  {/* Rescate de imágenes: los assets se sirven desde Minio (toSaboresCdn reescribe
+      /assets/… → s3.cndr.me/…). Si un asset todavía no está en Minio (404/red), el
+      <img> cae solo a la copia local `/assets/sabores-de-inverno/…` que va en el
+      build. is:inline + arriba del body para registrarse antes de que carguen las
+      imágenes. No cubre backgrounds CSS (p.ej. hero-bg), solo elementos <img>. */}
+  <script is:inline>
+    (function () {
+      var FROM = "https://s3.cndr.me/lp-content/sabores-de-inverno/";
+      var TO = "/assets/sabores-de-inverno/";
+      function rescue(img) {
+        if (!img || img.tagName !== "IMG" || img.dataset.localFallback) return;
+        if (img.src.indexOf(FROM) === -1) return;
+        img.dataset.localFallback = "1";
+        img.src = img.src.replace(FROM, TO);
+      }
+      // error no burbujea → capture. Atrapa fallos futuros de carga.
+      document.addEventListener("error", function (e) { rescue(e.target); }, true);
+      // Y las que ya fallaron antes de correr este script.
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("img").forEach(function (img) {
+          if (img.complete && img.naturalWidth === 0) rescue(img);
+        });
+      });
+    })();
+  </script>
+
+  <FloatingLeaves />
+  <Navbar />
+
+  <main class="relative z-10">
+    <Hero hero={content.hero} premia={content.premia} />
+    <ClubeBanner clube={content.clube} />
+
+    <!-- Slice 2: grilla de eventos por ciudad + modal de inscripción social -->
+    <SaboresEventGrid events={events} content={content} />
+
+    <Sponsors sponsors={content.sponsors} />
+    <EmCasaBanner emCasa={content.emCasa} />
+  </main>
+
+  <Footer footer={content.footer} />
+
+  <script>
+    // Scroll reveal (progressive enhancement): los `.scroll-reveal` arrancan ocultos
+    // (solo con JS) y aparecen al entrar al viewport.
+    function initScrollReveal() {
+      const els = document.querySelectorAll(".scroll-reveal");
+      if (els.length === 0) return;
+
+      els.forEach((el) => {
+        el.classList.add(
+          "opacity-0",
+          "translate-y-12",
+          "transition-all",
+          "duration-1000",
+          "ease-[cubic-bezier(0.16,1,0.3,1)]",
+          "motion-reduce:transition-none",
+          "motion-reduce:opacity-100",
+          "motion-reduce:transform-none",
+        );
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.remove("opacity-0", "translate-y-12");
+              entry.target.classList.add("opacity-100", "translate-y-0");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { root: null, threshold: 0.1, rootMargin: "0px 0px -80px 0px" },
+      );
+
+      els.forEach((el) => observer.observe(el));
+    }
+
+    initScrollReveal();
+    document.addEventListener("astro:page-load", initScrollReveal);
+  </script>
+</LayoutSaboresInverno>

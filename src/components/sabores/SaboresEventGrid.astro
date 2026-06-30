@@ -1,0 +1,195 @@
+---
+import type { Event } from "../../types/event";
+import SaboresEventCard from "./SaboresEventCard.astro";
+import SaboresEventModal from "./SaboresEventModal.astro";
+import SaboresFeedbackModal from "./SaboresFeedbackModal.astro";
+
+// `content` llega desde la página (con assets ya apuntando a Minio). Pasamos
+// `sponsors` y `status` a cada card por props para evitar imports de JSON dentro
+// de la card (que se renderiza en loop).
+interface Props {
+  events: Event[];
+  content: any;
+}
+const { events, content } = Astro.props;
+// Guards defensivos: si el content remoto llega incompleto, caemos a valores
+// seguros en vez de romper la grilla (la copy queda vacía, sin 500).
+const eventsCopy = content?.events ?? {};
+const sponsors = content?.sponsors ?? { patrocinadores: [], apoiadores: [] };
+const statusMap = content?.status ?? {};
+
+// Título híbrido: la última palabra va en dorado. Partimos el string del JSON
+// (p.ej. "PROGRAMAÇÃO DE EVENTOS" → head "PROGRAMAÇÃO DE " + tail "EVENTOS").
+const titleRaw: string = eventsCopy.title ?? "";
+const lastSpace = titleRaw.lastIndexOf(" ");
+const titleHead = lastSpace === -1 ? "" : titleRaw.slice(0, lastSpace + 1);
+const titleTail = lastSpace === -1 ? titleRaw : titleRaw.slice(lastSpace + 1);
+
+// Agrupación POR CIUDAD (decisión de gerencia). Cada tab = una ciudad; dentro,
+// los eventos quedan ordenados por fecha (las 5 quartas de julho).
+const REGION_NAMES: Record<string, string> = {
+  curitiba: "Curitiba",
+  maringa: "Maringá",
+  pontagrossa: "Ponta Grossa",
+};
+const REGION_ORDER = ["curitiba", "maringa", "pontagrossa"];
+const keyOf = (e: Event) =>
+  (e.region ?? "").toLowerCase().replace(/\s+/g, "") || "outros";
+
+const byCity = new Map<string, Event[]>();
+for (const e of events) {
+  const k = keyOf(e);
+  if (!byCity.has(k)) byCity.set(k, []);
+  byCity.get(k)!.push(e);
+}
+
+const cities = [...byCity.keys()]
+  .sort((a, b) => {
+    const ia = REGION_ORDER.indexOf(a);
+    const ib = REGION_ORDER.indexOf(b);
+    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+  })
+  .map((key) => {
+    const list = byCity
+      .get(key)!
+      .slice()
+      .sort(
+        (a, b) =>
+          new Date(a.data_evento).getTime() - new Date(b.data_evento).getTime(),
+      );
+    return {
+      key,
+      name: REGION_NAMES[key] ?? list[0]?.region ?? "Outros",
+      count: list.length,
+      list,
+    };
+  });
+---
+
+<section
+  id="programacao"
+  class="content-section bg-transparent relative overflow-hidden"
+>
+  <div class="container mx-auto px-6 max-w-[90rem] relative z-10">
+    <div class="section-title-group">
+      <div class="section-title-rules">
+        <span class="section-title-rule section-title-rule--left"></span>
+        <h2 class="section-main-title">{titleHead}<span class="section-title-accent">{titleTail}</span></h2>
+        <span class="section-title-rule section-title-rule--right"></span>
+      </div>
+    </div>
+
+    {
+      events.length === 0 ? (
+        <div class="mx-auto max-w-xl rounded-3xl border border-gold/20 bg-chocolate-dark/40 backdrop-blur-md px-8 py-12 text-center">
+          <p class="font-display italic text-2xl text-gold mb-3">
+            Programação em breve
+          </p>
+          <p class="text-latte/70">
+            Estamos finalizando as datas. Volte logo para garantir a sua vaga.
+          </p>
+        </div>
+      ) : (
+        <Fragment>
+          {/* Filtro = badges redondeados de ciudad (sin contenedor envolvente) */}
+          <div class="city-filter" role="tablist">
+            {cities.map((c, i) => (
+              <button
+                type="button"
+                role="tab"
+                data-city-tab={c.key}
+                aria-selected={i === 0 ? "true" : "false"}
+                class:list={["city-badge", { active: i === 0 }]}
+              >
+                {c.name}
+              </button>
+            ))}
+          </div>
+
+          {/* Indicador de deslizar — badge solo visible en carrusel (<1280px) */}
+          <div class="carousel-hint" aria-hidden="true">
+            <span class="carousel-hint-pill">
+              <span>Deslize para ver mais</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 6l6 6-6 6M13 6l6 6-6 6" />
+              </svg>
+            </span>
+          </div>
+
+          {/* Un carrusel por ciudad: flechas + track scrollable con las cards */}
+          {cities.map((c, i) => (
+            <div
+              data-city-panel={c.key}
+              role="tabpanel"
+              class:list={["city-panel events-carousel", { "hidden-panel": i !== 0 }]}
+            >
+              <button
+                type="button"
+                class="carousel-arrow carousel-prev"
+                data-dir="-1"
+                aria-label="Ver edições anteriores"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+
+              <div class="events-grid" data-events-track>
+                {c.list.map((event) => (
+                  <SaboresEventCard event={event} sponsors={sponsors} statusMap={statusMap} />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                class="carousel-arrow carousel-next"
+                data-dir="1"
+                aria-label="Ver mais edições"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6" />
+                </svg>
+              </button>
+
+              {/* Barra de control solo-mobile: flecha ‹ · puntos · flecha › */}
+              <div class="carousel-controls" aria-hidden="true">
+                <button
+                  type="button"
+                  class="carousel-arrow-m carousel-prev-m"
+                  data-dir="-1"
+                  aria-label="Edição anterior"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+
+                {/* Puntos generados en JS (uno por card) */}
+                <div class="carousel-dots" data-dots></div>
+
+                <button
+                  type="button"
+                  class="carousel-arrow-m carousel-next-m"
+                  data-dir="1"
+                  aria-label="Próxima edição"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 6l6 6-6 6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          ))}
+        </Fragment>
+      )
+    }
+  </div>
+
+  <SaboresEventModal />
+  <SaboresFeedbackModal />
+</section>
+
+<script>
+  import { initSaboresEvents } from "../../utils/saboresRegistration";
+  initSaboresEvents();
+</script>
