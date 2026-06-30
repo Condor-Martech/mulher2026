@@ -204,13 +204,23 @@ export function initSaboresEvents() {
         // Bloquear el scroll de la página de fondo mientras el modal está abierto
         // (evita el "scroll detrás" en laptops de pantalla baja).
         document.documentElement.classList.add("modal-open");
+        // Foco en el primer campo para que el usuario empiece a tipear directo
+        // (en vez de quedar en el botón de cerrar).
+        $("sabores-nome")?.focus({ preventScroll: true });
       });
     });
 
   // Cerrar.
   $("sabores-close")?.addEventListener("click", () => modal.close());
+  // Light dismiss SOLO si el click empezó en el backdrop. Evita que el modal se
+  // cierre cuando el usuario hace mousedown dentro del form (p.ej. seleccionando
+  // texto en un input) y suelta el mouse fuera: ahí el `click` apunta al backdrop.
+  let pressOnBackdrop = false;
+  modal.addEventListener("pointerdown", (e) => {
+    pressOnBackdrop = e.target === modal;
+  });
   modal.addEventListener("click", (e) => {
-    if (e.target === modal) modal.close();
+    if (e.target === modal && pressOnBackdrop) modal.close();
   });
   // Se dispara con cualquier cierre (botón, clic fuera, Escape) → restaura scroll.
   modal.addEventListener("close", () => {
