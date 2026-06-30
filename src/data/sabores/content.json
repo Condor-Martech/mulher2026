@@ -65,7 +65,7 @@
       { "network": "instagram", "url": "https://www.instagram.com/redecondor", "color": "#E4405F", "label": "Instagram" },
       { "network": "tiktok", "url": "https://www.tiktok.com/@redecondor", "color": "#000000", "label": "TikTok" },
       { "network": "youtube", "url": "https://www.youtube.com/redecondor", "color": "#FF0000", "label": "YouTube" },
-      { "network": "linkedin", "url": "https://www.linkedin.com/company/condor-super-center-ltda-", "color": "#0077B5", "label": "LinkedIn" },
+      { "network": "linkedin", "url": "https://www.linkedin.com/company/redecondor", "color": "#0077B5", "label": "LinkedIn" },
       { "network": "threads", "url": "https://www.threads.net/@redecondor", "color": "#000000", "label": "Threads" }
     ]
   }
