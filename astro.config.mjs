@@ -11,7 +11,7 @@ const isVercel = typeof process !== 'undefined' && !!process.env.VERCEL;
 // https://astro.build/config
 export default defineConfig({
   base: '/',
-  trailingSlash: 'always',
+  trailingSlash: 'ignore',
   output: 'server',
   adapter: isVercel ? vercel() : node({ mode: 'standalone' }),
   redirects: {
