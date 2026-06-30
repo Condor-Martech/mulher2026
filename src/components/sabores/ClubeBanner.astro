@@ -76,13 +76,22 @@ const { clube } = Astro.props;
   </div>
 </section>
 <script is:inline define:vars={{ cleanUrl: clube.link }}>
-  // El href ya es limpio, pero el cross-domain linker de Google (gtag/GTM, contenedor
-  // de otro equipo) le cuelga `_gl=...` al hacer click hacia clubecondor.com. SOLO en
-  // este banner forzamos la navegación a la URL limpia con window.open (que Google no
-  // decora). No usamos stopPropagation → el tracking data-track de OpenPanel igual dispara.
+  // El href ya es limpio en el HTML, pero el cross-domain linker de Google (gtag/GTM,
+  // contenedor de otro equipo) le cuelga `_gl=...` al link hacia clubecondor.com. SOLO
+  // en este banner: (1) mantenemos el href limpio (lo que se ve en la barra de estado y
+  // el "abrir en pestaña nueva" del click derecho) y (2) forzamos la navegación a la URL
+  // limpia con window.open, que Google no decora. Sin stopPropagation → el data-track de
+  // OpenPanel igual dispara.
   (() => {
     const a = document.querySelector('a[data-placement="clube_banner"]');
     if (!a) return;
+    // (1) Cada vez que Google decore el href con _gl, lo reseteamos a la URL limpia.
+    const keepClean = () => {
+      if ((a.getAttribute("href") || "").includes("_gl=")) a.setAttribute("href", cleanUrl);
+    };
+    keepClean();
+    new MutationObserver(keepClean).observe(a, { attributes: true, attributeFilter: ["href"] });
+    // (2) Navegación: abrir siempre la URL limpia (window.open no es decorado por Google).
     const openClean = (e) => {
       e.preventDefault();
       window.open(cleanUrl, "_blank", "noopener,noreferrer");
