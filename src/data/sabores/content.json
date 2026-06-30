@@ -59,10 +59,14 @@
   "footer": {
     "logo": "/assets/sabores-de-inverno/hero-logo-condor.png",
     "copyright": "© 2026 Condor. Todos os direitos reservados.",
+    "certificado": "Certificado de Autorização SPA/ME Nº04.047913/2026.",
     "social": [
-      { "network": "facebook", "url": "https://facebook.com/redecondor", "color": "#1877F2", "label": "Facebook" },
-      { "network": "instagram", "url": "https://instagram.com/redecondor", "color": "#E4405F", "label": "Instagram" },
-      { "network": "youtube", "url": "https://youtube.com/redecondor", "color": "#FF0000", "label": "YouTube" }
+      { "network": "facebook", "url": "https://www.facebook.com/redecondor", "color": "#1877F2", "label": "Facebook" },
+      { "network": "instagram", "url": "https://www.instagram.com/redecondor", "color": "#E4405F", "label": "Instagram" },
+      { "network": "tiktok", "url": "https://www.tiktok.com/@redecondor", "color": "#000000", "label": "TikTok" },
+      { "network": "youtube", "url": "https://www.youtube.com/redecondor", "color": "#FF0000", "label": "YouTube" },
+      { "network": "linkedin", "url": "https://www.linkedin.com/company/condor-super-center-ltda-", "color": "#0077B5", "label": "LinkedIn" },
+      { "network": "threads", "url": "https://www.threads.net/@redecondor", "color": "#000000", "label": "Threads" }
     ]
   }
 }
