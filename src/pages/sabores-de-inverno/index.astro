@@ -30,6 +30,32 @@ Astro.response.headers.set(
 ---
 
 <LayoutSaboresInverno title="Sabores de Inverno 2026 - Condor">
+  {/* Rescate de imágenes: los assets se sirven desde Minio (toSaboresCdn reescribe
+      /assets/… → s3.cndr.me/…). Si un asset todavía no está en Minio (404/red), el
+      <img> cae solo a la copia local `/assets/sabores-de-inverno/…` que va en el
+      build. is:inline + arriba del body para registrarse antes de que carguen las
+      imágenes. No cubre backgrounds CSS (p.ej. hero-bg), solo elementos <img>. */}
+  <script is:inline>
+    (function () {
+      var FROM = "https://s3.cndr.me/lp-content/sabores-de-inverno/";
+      var TO = "/assets/sabores-de-inverno/";
+      function rescue(img) {
+        if (!img || img.tagName !== "IMG" || img.dataset.localFallback) return;
+        if (img.src.indexOf(FROM) === -1) return;
+        img.dataset.localFallback = "1";
+        img.src = img.src.replace(FROM, TO);
+      }
+      // error no burbujea → capture. Atrapa fallos futuros de carga.
+      document.addEventListener("error", function (e) { rescue(e.target); }, true);
+      // Y las que ya fallaron antes de correr este script.
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("img").forEach(function (img) {
+          if (img.complete && img.naturalWidth === 0) rescue(img);
+        });
+      });
+    })();
+  </script>
+
   <FloatingLeaves />
   <Navbar />
 
