@@ -66,5 +66,14 @@
       { "name": "Ypê", "logoUrl": "/assets/sabores-de-inverno/marcas/ype.png" },
       { "name": "Bola Mel", "logoUrl": "/assets/sabores-de-inverno/marcas/bolamel.jpeg" }
     ]
+  },
+  "footer": {
+    "logo": "/assets/sabores-de-inverno/hero-logo-condor.png",
+    "copyright": "© 2026 Condor. Todos os direitos reservados.",
+    "social": [
+      { "network": "facebook", "url": "https://facebook.com/redecondor", "color": "#1877F2", "label": "Facebook" },
+      { "network": "instagram", "url": "https://instagram.com/redecondor", "color": "#E4405F", "label": "Instagram" },
+      { "network": "youtube", "url": "https://youtube.com/redecondor", "color": "#FF0000", "label": "YouTube" }
+    ]
   }
 }
