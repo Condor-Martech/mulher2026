@@ -406,7 +406,7 @@ export function initSaboresEvents() {
 function errorTitle(code?: string): string {
   switch (code) {
     case "ALREADY_REGISTERED":
-      return "Inscrição duplicada";
+      return "CPF já cadastrado no evento";
     case "QUOTA_FULL":
       return "Vagas esgotadas";
     case "NOT_OPEN_YET":
