@@ -1,22 +1,11 @@
 {
   "hero": {
     "bg": "/assets/sabores-de-inverno/hero-bg.webp",
-    "tituloSabores": "/assets/sabores-de-inverno/titulo-sabores.png",
-    "tituloDe": "/assets/sabores-de-inverno/titulo-de.png",
-    "tituloInverno": "/assets/sabores-de-inverno/titulo-inverno.png",
-    "logoCondor": "/assets/sabores-de-inverno/hero-logo-condor.png",
-    "signWood": "/assets/sabores-de-inverno/tabua.webp",
-    "signText": "/assets/sabores-de-inverno/hero-sign-text.webp"
+    "selo": "/assets/sabores-de-inverno/Selo-Sabores-de-Inverno.png"
   },
   "premia": {
     "link": "https://www.condor.com.br/premia",
-    "selo": "/assets/sabores-de-inverno/selo-condor-premia.webp",
-    "coracao1": "/assets/sabores-de-inverno/premia-coracao-1.png",
-    "valesCompras": "/assets/sabores-de-inverno/premia-vales-compras.png",
-    "coracao2": "/assets/sabores-de-inverno/premia-coracao-2.png",
-    "umAnoSupermercado": "/assets/sabores-de-inverno/premia-1-ano-supermercado.png",
-    "zon": "/assets/sabores-de-inverno/premia-zon.png",
-    "regulamento": "/assets/sabores-de-inverno/premia-regulamento.png"
+    "image": "/assets/sabores-de-inverno/Condor-Premia.png"
   },
   "clube": {
     "titleLine1": "Baixe o app do Clube Condor",

@@ -488,15 +488,17 @@
   /* Changed back to min-h to prevent clipping the bottom content, but keeping it 100vh as base */
   @apply relative w-full overflow-hidden flex flex-col justify-center;
   background-color: transparent;
-  @apply min-h-[85svh] lg:min-h-[85vh];
+  @apply min-h-[92svh] lg:min-h-[94vh];
 }
 
 /* Layer 0 — natural background photo; bottom fades organically into the page */
 .hero-bg-img {
   @apply absolute inset-0 w-full h-full object-cover object-center z-0 select-none pointer-events-none;
   animation: subtle-zoom 30s ease-out infinite alternate;
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 90%);
-  mask-image: linear-gradient(to bottom, black 0%, black 50%, transparent 90%);
+  /* La foto se mantiene opaca más abajo (hasta 72%) y recién ahí se desvanece, así
+     cubre el hero alto sin dejar tanta franja de fondo marrón al final. */
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 72%, transparent 100%);
 }
 
 .hero-top-vignette {
@@ -511,61 +513,42 @@
 }
 
 /* ---------- LEFT BLOCK ---------- */
+/* lg:mt-* baja el branding en desktop: el selo es bastante más alto que el banner
+   Premia de la derecha, así que con items-center su centro queda demasiado arriba.
+   Este empujón lo asienta a una altura más equilibrada. */
 .hero-left-block {
-  @apply flex flex-col items-center gap-3 lg:gap-6 w-full lg:w-auto opacity-0;
+  @apply flex flex-col items-center gap-3 lg:gap-6 w-full lg:w-auto opacity-0
+         lg:mt-12 xl:mt-16;
   animation: fade-in-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
 }
 
-.hero-title {
-  @apply flex flex-col items-center;
-  filter: drop-shadow(0 12px 22px rgba(26, 13, 8, 0.55));
-}
-
-.ht-sabores {
-  @apply w-56 sm:w-72 lg:w-[380px] xl:w-[460px] h-auto;
-}
-
-.ht-line2 {
-  @apply flex items-start gap-2 lg:gap-3 -mt-2 lg:-mt-4;
-}
-
-.ht-de {
-  @apply w-12 sm:w-14 lg:w-20 xl:w-24 h-auto mt-1 lg:mt-3;
-}
-
-.ht-inverno {
-  @apply w-48 sm:w-64 lg:w-[340px] xl:w-[410px] h-auto;
-}
-
-.hero-logo {
-  @apply w-56 sm:w-72 lg:w-[24rem] xl:w-[28rem] h-auto;
-  filter: drop-shadow(0 10px 20px rgba(26, 13, 8, 0.5));
-}
-
-.hero-sign {
-  @apply relative inline-flex items-center justify-center mt-1 lg:mt-3 transition-transform hover:scale-105 duration-500;
-}
-
-.hero-sign-wood {
-  @apply w-64 sm:w-80 lg:w-[460px] xl:w-[540px] h-auto;
-  filter:
-    drop-shadow(0 4px 4px rgba(26, 13, 8, 0.40))
-    drop-shadow(0 16px 22px rgba(26, 13, 8, 0.32));
-}
-
-.hero-sign-text {
-  @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[78%] h-auto;
-  filter:
-    drop-shadow(0 1px 0.5px rgba(26, 13, 8, 0.85))      /* cut edge — dark, tight */
-    drop-shadow(0 -1px 0.5px rgba(255, 243, 224, 0.35)) /* lit upper lip = carved */
-    drop-shadow(0 2px 3px rgba(26, 13, 8, 0.45));        /* ambient occlusion */
+/* Branding del hero en una sola imagen: título "Sabores de Inverno" + logo Condor
+   + cartel "…momentos que ficam." + aviso legal de bebidas. Fondo transparente,
+   así que va directo sobre la foto del hero con una sombra suave para despegarlo. */
+.hero-selo {
+  @apply w-72 sm:w-96 lg:w-[34rem] xl:w-[40rem] h-auto;
+  filter: drop-shadow(0 14px 26px rgba(26, 13, 8, 0.5));
 }
 
 /* ---------- RIGHT BLOCK (holds the CondorPremiaCluster component) ---------- */
 .hero-right-block {
-  /* Reduced margin to align with logo without overflowing the bottom of the screen */
-  @apply flex justify-center lg:justify-end w-full lg:w-auto opacity-0 lg:mt-16 xl:mt-24;
+  @apply flex justify-center lg:justify-end w-full lg:w-auto opacity-0;
   animation: fade-in-left 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+}
+
+/* Banner Condor Premia: una sola imagen composite (selo "R$ Meio Milhão Todo Mês"
+   + corazones + Z-ON + regulamento), clickable a la página de Premia. Hover sutil +
+   sombra para despegarlo del fondo. Fondo transparente. */
+.premia-banner {
+  @apply block w-72 sm:w-80 md:w-96 lg:w-[26rem] xl:w-[30rem] h-auto rounded-2xl
+         transition-all duration-500 hover:scale-105 hover:brightness-105;
+  filter: drop-shadow(0 16px 32px rgba(26, 13, 8, 0.45));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premia-banner {
+    @apply transition-none hover:scale-100;
+  }
 }
 
 /* ---------- Animations ---------- */
@@ -1189,7 +1172,7 @@
    Controles interactivos sobre fondo oscuro → anillo dorado. */
 .sabores-card-map:focus-visible,
 .city-badge:focus-visible,
-.premia-link:focus-visible {
+.premia-banner:focus-visible {
   outline: 2px solid var(--color-gold);
   outline-offset: 3px;
 }

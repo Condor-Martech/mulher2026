@@ -1,120 +1,34 @@
 ---
-// Cluster promocional Condor Premia: selo + dos corazones escalonados + Z-ON + botón
-// regulamento. Los assets + el link llegan por props (content.premia, ya en Minio).
+// Bloque promocional Condor Premia: una sola imagen composite (selo "R$ Meio Milhão
+// Todo Mês" + corazones vales-compras / 1 ano + Z-ON + regulamento), con fondo
+// transparente. Va envuelta en un link a la página de Premia con tracking, porque
+// ese es el propósito del bloque (la propia imagen remite a condor.com.br/premia).
+// Content-driven (Minio) con fallback local.
 interface Props {
   premia?: {
-    link: string;
-    selo: string;
-    coracao1: string;
-    valesCompras: string;
-    coracao2: string;
-    umAnoSupermercado: string;
-    zon: string;
-    regulamento: string;
+    link?: string;
+    image?: string;
   };
 }
 const { premia } = Astro.props;
-// Guard defensivo: si el content remoto llega incompleto (sin `premia`), no
-// renderizamos el cluster en vez de tirar 500. La página sigue viva.
-const premiaLink = premia?.link;
+const premiaLink = premia?.link ?? "https://www.condor.com.br/premia";
+const image = premia?.image ?? "/assets/sabores-de-inverno/Condor-Premia.png";
 ---
-{premia && (
 
-<div class="flex flex-col items-center w-max select-none pb-3 lg:pb-12 pt-2 lg:pt-4 group/cluster relative">
-  <!-- Glow detrás del selo: gradiente radial que se desvanece a transparente en
-       sus propios bordes, así nunca deja un borde duro aunque el .hero-section
-       (overflow-hidden) lo recorte. -->
-  <div class="premia-glow absolute top-[10%] left-1/2 -translate-x-1/2 w-[120%] h-[60%] pointer-events-none z-0 transition-opacity duration-700 opacity-70 group-hover/cluster:opacity-100"></div>
-
-  <!-- Selo -->
-  <a
-    href={premiaLink}
-    target="_blank"
-    rel="noopener noreferrer"
-    data-track="promo_banner_clicked"
-    data-destination="premia"
-    data-placement="hero_cluster"
-    data-label="selo"
-    class="premia-link block w-[19.2rem] sm:w-64 md:w-72 lg:w-80 xl:w-[24rem] transition-all duration-500 hover:scale-110 hover:brightness-110 hover:drop-shadow-[0_20px_40px_rgba(255,180,80,0.15)] drop-shadow-[0_16px_32px_rgba(26,13,8,0.5)] z-30 relative animate-float-slow"
-    aria-label="Condor Premia — R$ Meio Milhão Todo Mês"
-  >
-    <img src={premia.selo} alt="Condor Premia — R$ Meio Milhão Todo Mês" class="w-full h-auto" />
-  </a>
-
-  <!-- Corazones, escalonados en diagonal -->
-  <div class="relative flex items-start justify-center -mt-8 sm:-mt-10 lg:-mt-12 z-20">
-    <div class="relative w-36 sm:w-44 md:w-52 lg:w-60 drop-shadow-[0_6px_12px_rgba(26,13,8,0.35)] z-20 animate-float-medium transition-transform duration-500 hover:scale-105 hover:-rotate-2 hover:brightness-110 cursor-default">
-      <img src={premia.coracao1} alt="" aria-hidden="true" class="w-full h-auto" />
-      <div class="absolute inset-0 flex items-center justify-center translate-y-[-2%] px-2">
-        <img src={premia.valesCompras} alt="Vales-Compras todos os dias" class="w-[50%] h-auto" />
-      </div>
-    </div>
-
-    <div class="relative w-32 sm:w-40 md:w-48 lg:w-56 -ml-8 sm:-ml-10 md:-ml-12 lg:-ml-16 mt-6 sm:mt-8 md:mt-10 lg:mt-12 drop-shadow-[0_9px_16px_rgba(26,13,8,0.45)] z-10 animate-float-delayed transition-transform duration-500 hover:scale-105 hover:rotate-3 hover:brightness-110 hover:z-30 cursor-default">
-      <img src={premia.coracao2} alt="" aria-hidden="true" class="w-full h-auto" />
-      <div class="absolute inset-0 flex items-center justify-center translate-y-[0%] px-2">
-        <img src={premia.umAnoSupermercado} alt="1 Ano de supermercado grátis" class="w-[64%] h-auto" />
-      </div>
-    </div>
-  </div>
-
-  <!-- Z-ON + regulamento -->
-  <div class="flex flex-col items-center gap-1 lg:gap-3 mt-2 sm:mt-6 lg:mt-8 z-10">
-    <img
-      src={premia.zon}
-      alt="Z-ON — Receba o seu prêmio em dinheiro na conta digital do Z-ON"
-      class="w-56 sm:w-64 md:w-72 lg:w-80 xl:w-[22rem] h-auto drop-shadow-[0_8px_14px_rgba(26,13,8,0.38)] transition-all duration-300 hover:brightness-110"
-    />
-
-    <a
-      href={premiaLink}
-      target="_blank"
-      rel="noopener noreferrer"
-      data-track="promo_banner_clicked"
-      data-destination="premia"
-      data-placement="hero_cluster"
-      data-label="regulamento"
-      class="premia-link block w-60 sm:w-64 md:w-72 lg:w-[22rem] xl:w-[24rem] transition-all duration-300 hover:scale-105 hover:-translate-y-1 hover:brightness-110 drop-shadow-[0_6px_12px_rgba(26,13,8,0.40)] hover:drop-shadow-[0_12px_20px_rgba(26,13,8,0.50)]"
-      aria-label="Consulte o regulamento completo em condor.com.br/premia"
-    >
-      <img src={premia.regulamento} alt="Consulte o regulamento completo no site condor.com.br/premia" class="w-full h-auto" />
-    </a>
-  </div>
-</div>
-)}
-
-<style>
-  /* Radio base para que el anillo de foco (:focus-visible) quede prolijo */
-  .premia-link { border-radius: 0.75rem; }
-
-  /* Halo ámbar suave detrás del selo. Usamos un radial-gradient (no blur+overflow)
-     porque se desvanece a transparente total en el borde: aunque el contenedor
-     padre lo recorte, no aparece ningún recuadro / línea dura. */
-  .premia-glow {
-    background: radial-gradient(
-      ellipse at center,
-      rgba(245, 158, 11, 0.28) 0%,
-      rgba(245, 158, 11, 0.14) 35%,
-      rgba(245, 158, 11, 0) 70%
-    );
-  }
-
-  .animate-float-slow { animation: float 6s ease-in-out infinite; }
-  .animate-float-medium { animation: float 5s ease-in-out infinite 1s; }
-  .animate-float-delayed { animation: float 5.5s ease-in-out infinite 2.5s; }
-
-  @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-    100% { transform: translateY(0px); }
-  }
-
-  /* Accesibilidad: respetar la preferencia de menos movimiento */
-  @media (prefers-reduced-motion: reduce) {
-    .animate-float-slow,
-    .animate-float-medium,
-    .animate-float-delayed {
-      animation: none;
-    }
-  }
-</style>
+<a
+  href={premiaLink}
+  target="_blank"
+  rel="noopener noreferrer"
+  data-track="promo_banner_clicked"
+  data-destination="premia"
+  data-placement="hero_cluster"
+  data-label="condor_premia"
+  class="premia-banner"
+  aria-label="Condor Premia — R$ Meio Milhão Todo Mês. Vales-compras todos os dias e 1 ano de supermercado grátis. Consulte o regulamento completo em condor.com.br/premia"
+>
+  <img
+    src={image}
+    alt="Condor Premia — R$ Meio Milhão Todo Mês. Vales-compras todos os dias e 1 ano de supermercado grátis."
+    class="w-full h-auto"
+  />
+</a>
