@@ -1,0 +1,47 @@
+/* Tailwind para /sabordoveraokellanova/, aislado a esta campaña.
+   ============================================================================
+
+   Se importan tema y utilidades, PERO NO preflight
+   ------------------------------------------------
+   El CSS de esta LP es el del WordPress de origen, portado literalmente y sin
+   capas, y ya trae su propio reset (`reset.css` era una de las 24 hojas). Que
+   lo de Tailwind caiga en `@layer` —y que en la cascada lo sin capa gane a lo
+   que está en una capa— solo protege los elementos que el origen SÍ estiliza.
+   Preflight además fija defaults en elementos que el origen no toca, y ahí no
+   hay nada sin capa que le gane.
+
+   Medido en este repo, con `@import "tailwindcss"` entero: la página pasa de
+   3454 px a 3516 px de alto y difieren 5.000.098 píxeles. Sin preflight: 0.
+   (El CLAUDE.md del proyecto de origen afirma 0 px con preflight incluido; en
+   este repo no se sostiene. No lo reintroduzcas sin volver a medir.)
+
+   Y por eso va con prefijo `tw:`
+   ------------------------------
+   Sin prefijo, Tailwind emite `.size-full{width:100%;height:100%}`, y
+   `size-full` es una clase que WordPress dejó en 8 imágenes de esta página. La
+   protección de "lo sin capa gana" solo cubre las propiedades que el origen SÍ
+   declara, y en esas imágenes nunca declara `height`. Resultado medido: el
+   `<img>` del pódium crecía 62 px y arrastraba la página entera.
+
+   Con `prefix(tw)` ninguna clase de WordPress puede volver a colisionar, ni
+   ésta ni las que aparezcan. Las utilidades se escriben `tw:flex`, `tw:gap-4`…
+   **No quites el prefijo.**
+
+   Por qué `source(none)`
+   ----------------------
+   Cada hoja con `@import "tailwindcss"` hace su propio escaneo, y por defecto
+   ese escaneo es TODO el proyecto. Sin `source(none)`, esta hoja se llevaría
+   dentro las utilidades de mulher, maes, pascoa y sabores —que esta página no
+   usa ni carga— y engordaría por nada. Con `source(none)` la detección
+   automática se apaga y solo se declara lo de esta campaña.
+
+   El movimiento espejo está en las otras cuatro hojas: sus `@source not`
+   excluyen esta campaña para que los tokens de WordPress no se cuelen allí.
+   ========================================================================== */
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme) prefix(tw);
+@import "tailwindcss/utilities.css" layer(utilities) source(none) prefix(tw);
+
+@source "../../components/kellanova";
+@source "../../pages/sabordoveraokellanova";

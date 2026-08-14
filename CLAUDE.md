@@ -88,9 +88,24 @@ the standalone repo `Sites/sabores-kellanova` (whose `MIGRATION-MAP.md` and `CLA
 stay there). Fidelity to the original render is the acceptance criterion, so it does **not** follow this repo's
 conventions and should not be "aligned" with them:
 
-- **No layout, no Tailwind, no React, no Supabase.** Its CSS is the WordPress CSS, pruned, in
+- **No layout, no React, no Supabase.** Its CSS is the WordPress CSS, pruned, in
   `src/styles/kellanova/{fuentes,origem,mejoras}.css` — imported in that order, because the cascade *is* the
   order. All of it is namespaced under the `sv-` prefix.
+- **Tailwind is available here, but only through the `tw:` prefix** (`src/styles/kellanova/tailwind.css`).
+  Write `tw:flex`, `tw:gap-4`. Three constraints hold it in place, each of them measured, and none is
+  cosmetic — the file's own comment carries the details and the exact class names:
+  - **No preflight.** Only `theme.css` and `utilities.css` are imported. Preflight sets defaults on elements
+    the ported CSS never touches, and there the "unlayered beats layered" rule protects nothing. With the full
+    `@import "tailwindcss"`, the page goes from 3454px to 3516px and 5,000,098 pixels change.
+  - **`prefix(tw)`.** Unprefixed, Tailwind emits a utility whose name matches one WordPress left on 8 images
+    here, and the origin CSS never declares that property on them, so the utility wins by default — the podium
+    image grew 62px and dragged the whole page down with it. The prefix makes any future WordPress/Tailwind
+    name collision impossible.
+  - **`source(none)` + explicit `@source`.** Every sheet with a Tailwind import scans the whole project by
+    default; without this, this sheet would carry the other four campaigns' utilities, which this page never
+    uses.
+
+  Net cost with nothing using it yet: **237 bytes**. Verified at 0 pixels of difference against the origin.
 - **Every static file lives under `public/assets/sabordoveraokellanova/`** — the repo convention, and with
   *everything* inside it: images, fonts, the regulation PDF, the favicon and the OG image. Nothing of this
   campaign sits anywhere else under `public/`.
@@ -131,17 +146,25 @@ conventions and should not be "aligned" with them:
   campaign's historical data lives in that container. It does not mount `<Analytics>`.
 - **Swiper is pinned to 8.4.7** and only this campaign uses it. Its package declares no `types` entry, hence
   the `paths` override in `tsconfig.json`.
-- **Tailwind must not scan it.** Its WordPress markup carries class names that collide with Tailwind utility
+- **Tailwind must not scan it from the *other* sheets.** Its WordPress markup carries class names that collide with Tailwind utility
   names; left alone, Tailwind emits those rules into *the other four campaigns'* stylesheets, which this
   campaign does not even load. The four Tailwind entry files (`global.css`, `maes.css`, `globalPascoa.css`,
   `saboresInverno.css`) each carry three `@source not` lines for this, with a comment naming the exact classes.
   Removing them silently changes the CSS of the live LPs.
 
   The wider trap, worth knowing before you write docs: **Tailwind v4 scans every file in the project, `.md`
-  included.** Naming one of those colliding classes in prose — in this file, in the README — is enough to
-  generate the rule. It happened once here. CSS files are *not* scanned, which is why the exact class names
-  are safe to spell out in the comment inside those four stylesheets, and are deliberately not spelled out
-  here.
+  included.** Naming one of those colliding classes in prose — in this file, in the README, in a commit
+  message that lands in a doc — is enough to generate the rule in all four production stylesheets. It has
+  happened three times while writing this very section.
+
+  So the rule is: **the literal class names live in the comment inside `src/styles/kellanova/tailwind.css` and
+  in the four `@source not` blocks, never in markdown.** CSS files are not scanned, so those comments are
+  safe. Markdown describes the collision; it does not spell it. To check before committing a doc change:
+
+  ```bash
+  grep -rn "size-" --include="*.md" . | grep -v node_modules   # must not name a real utility
+  pnpm build && ls -la dist/client/_astro/index.*.css          # the four live sheets must not change size
+  ```
 
 ### Cache strategy
 

@@ -11,13 +11,17 @@ import Regulamento from '../../components/kellanova/Regulamento.astro'
 import Rodape from '../../components/kellanova/Rodape.astro'
 import PopupOutraCampanha from '../../components/kellanova/PopupOutraCampanha.astro'
 
-// El orden ES la cascada: el CSS va sin capas, así que entre reglas de igual
-// especificidad gana la última cargada. Estas tres líneas son la única
+// El orden ES la cascada: el CSS portado va sin capas, así que entre reglas de
+// igual especificidad gana la última cargada. Estas cuatro líneas son la única
 // declaración de ese orden en todo el proyecto — antes estaba repartido entre
 // aquí y los 24 @import de global.css.
+//   tailwind → va primero y da igual dónde: todo lo suyo cae en @layer, y en la
+//              cascada lo sin capa gana a lo que está en una capa. Está aquí
+//              para que la campaña pueda usar utilidades de ahora en adelante.
 //   fuentes  → @font-face, generado
 //   origem   → las 24 hojas del WordPress, en su orden, generado
 //   mejoras  → lo escrito a mano, corrige encima del origen
+import '../../styles/kellanova/tailwind.css'
 import '../../styles/kellanova/fuentes.css'
 import '../../styles/kellanova/origem.css'
 import '../../styles/kellanova/mejoras.css'
