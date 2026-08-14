@@ -1,0 +1,73 @@
+---
+// MIGRATION-MAP §10, con las mejoras de semántica acordadas.
+//
+// DOS juegos de rótulos, no un flag que vacíe campos: la tarjeta de la vitrina
+// dice «✓ CONFIRMADO» y «Nº»; la plantilla del modal dice «✓ GANHADOR
+// CONFIRMADO» y «Nº DA SORTE», y añade la × de cierre.
+//
+// Cambios respecto al origen, todos sin efecto visual (ver src/styles/mejoras.css):
+//   <div role="button" tabindex="0">  →  <button type="button">
+//   <h2> del importe                  →  <p class="v-prize-value">
+//   <h3> del nombre                   →  <p class="v-winner-name">
+// El importe y el nombre no son encabezados de sección: son datos de una ficha.
+// Como <h2>/<h3> ensuciaban el esquema de encabezados de toda la página.
+import type { Ganhador } from '../../data/kellanova/ganhadores'
+import { fmt, ui } from '../../data/kellanova/textos'
+
+interface Props {
+  variante: 'vitrina' | 'modal'
+  ganhador?: Ganhador
+}
+const { variante, ganhador } = Astro.props
+const esModal = variante === 'modal'
+---
+
+{esModal ? (
+  <div class="v-ticket-box" data-modal-ticket>
+    <button type="button" class="v-close-btn" data-cerrar-ticket aria-label={ui.ticket.cerrar}>×</button>
+    <div class="v-prize-tag">
+      <small>{ui.ticket.valePremio}</small>
+      <p id="modal-prize" class="v-prize-value"></p>
+    </div>
+    <div class="v-info-tag">
+      <div class="v-confirm-tag">{ui.ticket.confirmadoModal}</div>
+      <p id="modal-name" class="v-winner-name"></p>
+      <div class="v-data-grid" style="gap: 25px">
+        <div class="v-data-item"><span class="v-data-lbl">{ui.ticket.serie}</span><span id="modal-serie" class="v-data-val"></span></div>
+        <div class="v-data-item"><span class="v-data-lbl">{ui.ticket.numeroModal}</span><span id="modal-lucky" class="v-data-val red"></span></div>
+        <div class="v-data-item"><span class="v-data-lbl">{ui.ticket.data}</span><span id="modal-date" class="v-data-val"></span></div>
+      </div>
+    </div>
+  </div>
+) : (
+  // Los 5 valores van en data-*, no dentro de una cadena JS en onclick: un
+  // apóstrofo en un nombre rompería ese ticket en silencio (MIGRATION-MAP §10).
+  <button
+    type="button"
+    class="v-ticket-box"
+    data-ticket
+    data-nome={ganhador!.nome}
+    data-serie={ganhador!.serie}
+    data-numero={ganhador!.numero}
+    data-data={ganhador!.data}
+    data-premio={ganhador!.premio}
+    aria-label={fmt(ui.vitrina.verDetalle, { nome: ganhador!.nome })}
+  >
+    <span class="v-prize-tag">
+      <small>{ui.ticket.valePremio}</small>
+      {ganhador!.tipoVisible && <small>{ganhador!.tipoVisible}</small>}
+      {/* v-prize-long baja la fuente de 16px a 10px. La llevan 4 de los 14
+          tickets en el origen; sin ella la tarjeta pasa de 90px a 168px. */}
+      <span class={`v-prize-value${ganhador!.premioLargo ? ' v-prize-long' : ''}`}>{ganhador!.montanteVisible}</span>
+    </span>
+    <span class="v-info-tag">
+      <span class="v-confirm-tag">{ui.ticket.confirmado}</span>
+      <span class="v-winner-name">{ganhador!.nome}</span>
+      <span class="v-data-grid">
+        <span class="v-data-item"><span class="v-data-lbl">{ui.ticket.serie}</span><span class="v-data-val">{ganhador!.serie}</span></span>
+        <span class="v-data-item"><span class="v-data-lbl">{ui.ticket.numero}</span><span class="v-data-val red">{ganhador!.numero}</span></span>
+        <span class="v-data-item"><span class="v-data-lbl">{ui.ticket.data}</span><span class="v-data-val">{ganhador!.data}</span></span>
+      </span>
+    </span>
+  </button>
+)}

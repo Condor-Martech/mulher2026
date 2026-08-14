@@ -1,0 +1,152 @@
+---
+// Única ruta — MIGRATION-MAP §1, §2, §5, §12.
+// Sin layout: con una sola página, un BaseLayout tendría exactamente un
+// consumidor. Es indirección sin beneficio (§5).
+import { seo, GTM_ID, jsonLd } from '../../data/kellanova/seo'
+import { ui } from '../../data/kellanova/textos'
+import TopoCampanha from '../../components/kellanova/TopoCampanha.astro'
+import Aceleradores from '../../components/kellanova/Aceleradores.astro'
+import Faq from '../../components/kellanova/Faq.astro'
+import Regulamento from '../../components/kellanova/Regulamento.astro'
+import Rodape from '../../components/kellanova/Rodape.astro'
+import PopupOutraCampanha from '../../components/kellanova/PopupOutraCampanha.astro'
+
+// El orden ES la cascada: el CSS va sin capas, así que entre reglas de igual
+// especificidad gana la última cargada. Estas tres líneas son la única
+// declaración de ese orden en todo el proyecto — antes estaba repartido entre
+// aquí y los 24 @import de global.css.
+//   fuentes  → @font-face, generado
+//   origem   → las 24 hojas del WordPress, en su orden, generado
+//   mejoras  → lo escrito a mano, corrige encima del origen
+import '../../styles/kellanova/fuentes.css'
+import '../../styles/kellanova/origem.css'
+import '../../styles/kellanova/mejoras.css'
+
+// La página no depende de nada en tiempo de petición: ni base de datos, ni
+// parámetros de URL, ni cabeceras. Se construye una vez y se sirve como HTML
+// estático dentro de un proyecto que por defecto es SSR (astro.config.mjs
+// declara `output: 'server'`). Es lo que hacía en origen, y de paso la deja
+// fuera del coste por request del resto de campañas.
+export const prerender = true
+
+const favicon = '/assets/sabordoveraokellanova/condor.png'
+// Absoluta y literal, desde seo.json. En origen se componía con `Astro.site`,
+// que aquí NO está definido — este proyecto no declara `site` porque aloja
+// varias campañas y ninguna otra lo necesita. Componerla en tiempo de build
+// rompería la construcción entera, no solo esta ruta.
+const ogImage = seo.ogImage
+---
+
+<!doctype html>
+<html lang={seo.lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/* Google Tag Manager — MIGRATION-MAP §19: se replica el contenedor. Lo que
+        dispare en tiempo de ejecución es [DYNAMIC], no determinable del HTML. */}
+    <script is:inline set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','${GTM_ID}');`} />
+
+    {/* Marca que hay JavaScript, antes de pintar. De esta clase cuelga en
+        mejoras.css que las animaciones de entrada solo escondan cuando haya
+        alguien para revelarlas: sin JS, el pódium y el selo se quedaban
+        invisibles para siempre. Va en línea y aquí arriba a propósito — si
+        fuese un módulo diferido, habría un instante con todo escondido. */}
+    <script is:inline>document.documentElement.classList.add('sv-js')</script>
+
+    <title set:text={seo.title} />
+    <meta name="description" content={seo.metaDescription} />
+    <link rel="canonical" href={seo.canonical} />
+    <meta name="robots" content={seo.robots} />
+
+    <meta property="og:locale" content={seo.ogLocale} />
+    <meta property="og:site_name" content={seo.ogSiteName} />
+    <meta property="og:type" content={seo.ogType} />
+    <meta property="og:title" content={seo.ogTitle} />
+    <meta property="og:description" content={seo.ogDescription} />
+    <meta property="og:url" content={seo.ogUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:secure_url" content={ogImage} />
+    <meta property="og:image:width" content="150" />
+    <meta property="og:image:height" content="40" />
+
+    <meta name="twitter:card" content={seo.twitterCard} />
+    <meta name="twitter:title" content={seo.twitterTitle} />
+    <meta name="twitter:description" content={seo.metaDescription} />
+    <meta name="twitter:image" content={seo.twitterImage} />
+
+    {/* Las 3 declaraciones del origen apuntan al mismo archivo de 143×45, que no
+        es cuadrado. Se migra tal cual — ASSET-INVENTORY §4. */}
+    <link rel="icon" href={favicon} sizes="32x32" />
+    <link rel="icon" href={favicon} sizes="192x192" />
+    <link rel="apple-touch-icon" href={favicon} />
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+  </head>
+
+  <body class="sv-kit sv-pagina">
+    <noscript
+      ><iframe
+        src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+        aria-hidden="true"></iframe></noscript
+    >
+
+    <a class="saltar-al-contenido" href="#conteudo">{ui.pagina.enlaceSalto}</a>
+
+    {/* `data-sv-id` NO es decorativo, es carga estructural. De él cuelga
+          :is(.sv-section-wrap,[data-sv-id]) > .sv-con {
+            max-width: min(100%, var(--width)) }
+        Sin el atributo, el contenedor raíz pierde su max-width y la página
+        desborda horizontalmente (1226px en un viewport de 900px). El valor da
+        igual —la regla solo mira que el atributo exista—, pero el atributo no
+        se puede quitar. */}
+    <div data-sv-id="raiz" class="sv-raiz sv">
+      <main id="conteudo" class="sv-el pagina sv-con-full sv-flex sv-con sv-padre">
+
+        {/* El origen no tiene ningún <h1>: el nombre de campaña está rasterizado
+            dentro de SELO-1.png (ASSET-INVENTORY §3). Se declara aquí, oculto a
+            la vista pero presente en el árbol de accesibilidad y para buscadores.
+            No altera el diseño ni inventa contenido: es el texto que la propia
+            imagen muestra. */}
+        <h1 class="solo-lectores">{ui.pagina.tituloAccesible}</h1>
+
+        <TopoCampanha />
+        <Aceleradores />
+
+        {/* El ancla #Perguntas es un widget de NIVEL 1 que vive FUERA del
+            contenedor del FAQ, justo antes. Convertirla en id de la sección
+            desplazaría el punto de scroll — MIGRATION-MAP §2. */}
+        <div class="sv-el ancla-perguntas sv-widget sv-widget-menu-anchor">
+          <div class="sv-widget-container">
+            <div class="sv-menu-anchor" id="Perguntas"></div>
+          </div>
+        </div>
+
+        <Faq />
+
+        <div class="sv-el separador-tras-faq sv-widget sv-widget-divider">
+          <div class="sv-widget-container">
+            <div class="sv-divider"><span class="sv-divider-separator"></span></div>
+          </div>
+        </div>
+
+        <Regulamento />
+        <Rodape />
+
+      </main>
+    </div>
+
+    <PopupOutraCampanha />
+
+    <script>
+      import '../../scripts/kellanova/efectos'
+    </script>
+  </body>
+</html>

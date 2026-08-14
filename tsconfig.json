@@ -9,6 +9,16 @@
   ],
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "react"
+    "jsxImportSource": "react",
+    // Swiper 8 (solo lo usa /sabordoveraokellanova) trae swiper.d.ts, pero su
+    // package.json declara "exports": { ".": "./swiper.esm.js" } sin entrada
+    // "types". Con la resolución moderna TypeScript respeta ese mapa y da por
+    // no tipado un paquete que sí lo está (ts7016 en scripts/kellanova/efectos.ts).
+    // Apuntar al .d.ts salta el mapa sin tocar la resolución del resto.
+    // Es un fallo de empaquetado de Swiper: si algún día se sube a Swiper 9+,
+    // esta entrada sobra.
+    "paths": {
+      "swiper": ["./node_modules/swiper/swiper.d.ts"]
+    }
   }
 }

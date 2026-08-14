@@ -1,0 +1,130 @@
+---
+// Sección faq — MIGRATION-MAP §3, §8, §9.
+// Dos columnas: la tarjeta de premios faq-premios (con el único degradado de la
+// página) y el bloque del acordeón faq-panel.
+// Imágenes desde public/sabordoveraokellanova/images/ — convención del repo
+// vive bajo esa única carpeta, fuentes y PDF incluidos: webp ya
+// optimizado y servido plano, sin pasar por el pipeline de imágenes de Astro.
+// Cada etiqueta replica atributo por atributo lo que se emitía antes.
+import { caretAbierto, caretCerrado } from './iconos'
+import { faq } from '../../data/kellanova/faq'
+import { alt, ui } from '../../data/kellanova/textos'
+
+// Las 3 imágenes de la tarjeta son las MISMAS que usa el bloque de oferta.
+// 3 archivos, 7 posiciones (MIGRATION-MAP §6): se importan una vez.
+// Orden del DOM: SELO-1 → BIKE → CARTÕES. El card es una columna estrecha, se ve.
+const tarjeta = [
+  { id: 'faq-premios-selo', src: '/assets/sabordoveraokellanova/images/SELO-1.webp',    w: 642, h: 643, wpId: '', alt: alt.selo },
+  { id: 'faq-premios-bike', src: '/assets/sabordoveraokellanova/images/SORTEIO-BIKE.webp',    w: 429, h: 169, wpId: '', alt: alt.sorteioBike },
+  { id: 'faq-premios-cartoes', src: '/assets/sabordoveraokellanova/images/SORTEIO-CARTOES-PRESENTES.webp', w: 538, h: 209, wpId: '', alt: alt.sorteioCartoes },
+]
+
+// Ids estructurales del origen, uno por ítem. Se conservan porque el CSS de
+// post-27785.css tiene un bloque de reglas por cada data-id.
+const ids = [
+  { item: 'sv-accordion-item-8570', cont: 'faq-item-1-caja', texto: 'faq-item-1-texto' },
+  { item: 'sv-accordion-item-8571', cont: 'faq-item-2-caja', texto: 'faq-item-2-texto' },
+  { item: 'sv-accordion-item-8572', cont: 'faq-item-3-caja', texto: 'faq-item-3-texto' },
+  { item: 'sv-accordion-item-8573', cont: 'faq-item-4-caja', texto: 'faq-item-4-texto' },
+  { item: 'sv-accordion-item-8574', cont: 'faq-item-5-caja', texto: 'faq-item-5-texto' },
+  { item: 'sv-accordion-item-8575', cont: 'faq-item-6-caja', texto: 'faq-item-6-texto' },
+  { item: 'sv-accordion-item-8576', cont: 'faq-item-7-caja', texto: 'faq-item-7-texto' },
+]
+
+/** Agrupa los <li> consecutivos en un <ul>, como en el origen (ítem 2).
+ *
+ *  Se agrupa por `html`, no por `texto`: ese campo trae el marcado en línea del
+ *  origen —22 elementos de énfasis en el FAQ, más los enlaces con su target—.
+ *  Antes se guardaba solo el texto plano y los enlaces se volvían a inyectar
+ *  buscando su propia cadena dentro del párrafo; eso perdía las negritas y era
+ *  frágil de por sí (si el texto del enlace aparecía dos veces, enlazaba el
+ *  primero). Ahora el marcado viene ya resuelto de la extracción. */
+function agrupar(bloques: { tag: string; html: string }[]) {
+  const salida: { tipo: 'p' | 'ul'; items: string[] }[] = []
+  for (const b of bloques) {
+    const ultimo = salida[salida.length - 1]
+    if (b.tag === 'li' && ultimo?.tipo === 'ul') ultimo.items.push(b.html)
+    else if (b.tag === 'li') salida.push({ tipo: 'ul', items: [b.html] })
+    else salida.push({ tipo: 'p', items: [b.html] })
+  }
+  return salida
+}
+---
+
+<section class="sv-el faq sv-con-full sv-flex sv-con sv-hijo" aria-labelledby="titulo-faq">
+
+  <div class="sv-el faq-premios sv-con-full sv-flex sv-con sv-hijo" data-settings='{"background_background":"gradient"}'>
+    {tarjeta.map((im) => (
+      <div class={`sv-el ${im.id} sv-widget sv-widget-image`}>
+        <div class="sv-widget-container">
+          <img src={im.src} alt={im.alt} width={im.w} height={im.h} class={`attachment-large size-large ${im.wpId}`} loading="lazy" decoding="async" fetchpriority="auto" />
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="sv-el faq-panel sv-con-full sv-flex sv-con sv-hijo">
+
+    <div class="sv-el faq-titulo sv-widget sv-widget-heading">
+      <div class="sv-widget-container">
+        <h2 id="titulo-faq" class="sv-heading-title">{ui.faq.titulo}</h2>
+      </div>
+    </div>
+
+    <div
+      class="sv-el faq-acordeon sv-widget sv-widget-n-accordion"
+     
+     
+     
+      data-settings='{"default_state":"all_collapsed","max_items_expended":"one","n_accordion_animation_duration":{"unit":"ms","size":400,"sizes":[]}}'
+    >
+      <div class="sv-widget-container">
+        <div class="sv-accordion" aria-label={ui.faq.instrucciones}>
+          {faq.map((item, i) => (
+            <details id={ids[i].item} class="sv-accordion-item">
+              <summary
+                class="sv-accordion-item-title"
+                data-accordion-index={i + 1}
+                tabindex="0"
+                aria-expanded="false"
+                aria-controls={ids[i].item}
+              >
+                <span class="sv-accordion-item-title-header">
+                  {/* El origen lo pinta con un <div>: el acordeón quedaba fuera del esquema
+                     de encabezados. Con <h3> cuelga del <h2> «Perguntas Frequentes». */}
+                  <h3 class="sv-accordion-item-title-text">{item.titulo}</h3>
+                </span>
+                <span class="sv-accordion-item-title-icon">
+                  <span class="sv-opened"><Fragment set:html={caretAbierto} /></span>
+                  <span class="sv-closed"><Fragment set:html={caretCerrado} /></span>
+                </span>
+              </summary>
+
+              <div
+                role="region"
+                aria-labelledby={ids[i].item}
+                class={`sv-el ${ids[i].cont} sv-con-full sv-flex sv-con sv-hijo`}
+               
+               
+                data-settings='{"background_background":"classic"}'
+              >
+                <div class={`sv-el ${ids[i].texto}  sv-widget sv-widget-text-editor`}>
+                  <div class="sv-widget-container">
+                    {agrupar(item.bloques).map((g) =>
+                      g.tipo === 'ul' ? (
+                        <ul>{g.items.map((li) => <li><Fragment set:html={li} /></li>)}</ul>
+                      ) : (
+                        <p><Fragment set:html={g.items[0]} /></p>
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

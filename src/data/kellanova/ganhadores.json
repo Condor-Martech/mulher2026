@@ -1,0 +1,142 @@
+[
+  {
+    "nome": "VANDERLEI BENI FERREIRA",
+    "serie": "560",
+    "numero": "81330",
+    "data": "24/01/26",
+    "premio": "CARTÃO PRESENTE R$ 500,00",
+    "tipoVisible": "CARTÃO PRESENTE",
+    "montanteVisible": "R$ 500",
+    "premioLargo": false
+  },
+  {
+    "nome": "VANDERLEI BENI FERREIRA",
+    "serie": "936",
+    "numero": "31564",
+    "data": "28/01/26",
+    "premio": "CARTÃO PRESENTE R$ 500,00",
+    "tipoVisible": "CARTÃO PRESENTE",
+    "montanteVisible": "R$ 500",
+    "premioLargo": false
+  },
+  {
+    "nome": "JULIANO DIAS",
+    "serie": "108",
+    "numero": "89326",
+    "data": "31/01/26",
+    "premio": "BIKE ELÉTRICA",
+    "tipoVisible": "",
+    "montanteVisible": "BICICLETA ELÉTRICA LIBERTY VTB2 500W",
+    "premioLargo": true
+  },
+  {
+    "nome": "EDNA DOS SANTOS CORREIA",
+    "serie": "846",
+    "numero": "71304",
+    "data": "04/02/26",
+    "premio": "CARTÃO PRESENTE R$ 500,00",
+    "tipoVisible": "CARTÃO PRESENTE",
+    "montanteVisible": "R$ 500",
+    "premioLargo": false
+  },
+  {
+    "nome": "JERUSA KATHLEEN BRITO COSTA",
+    "serie": "289",
+    "numero": "80150",
+    "data": "07/02/26",
+    "premio": "BIKE ELÉTRICA",
+    "tipoVisible": "",
+    "montanteVisible": "BICICLETA ELÉTRICA LIBERTY VTB2 500W",
+    "premioLargo": true
+  },
+  {
+    "nome": "BRUNA APARECIDA GRITEN DOS SANTOS",
+    "serie": "953",
+    "numero": "53710",
+    "data": "14/02/26",
+    "premio": "CARTÃO PRESENTE R$ 500,00",
+    "tipoVisible": "CARTÃO PRESENTE",
+    "montanteVisible": "R$ 500",
+    "premioLargo": false
+  },
+  {
+    "nome": "FRANCIELE ALVES LEAL DE ANDRADE",
+    "serie": "234",
+    "numero": "26659",
+    "data": "21/02/26",
+    "premio": "CARTÃO PRESENTE R$ 500,00",
+    "tipoVisible": "CARTÃO PRESENTE",
+    "montanteVisible": "R$ 500",
+    "premioLargo": false
+  },
+  {
+    "nome": "MARILI AMERICA BOTTI",
+    "serie": "0",
+    "numero": "15776",
+    "data": "25/02/26",
+    "premio": "BICICLETA ELETRICA LIBERTY VTB2 500W",
+    "tipoVisible": "",
+    "montanteVisible": "BICICLETA ELETRICA LIBERTY VTB2 500W",
+    "premioLargo": true
+  },
+  {
+    "nome": "LUIS SANTOS",
+    "serie": "953",
+    "numero": "77129",
+    "data": "28/02/26",
+    "premio": "CARTÃO PRESENTE R$ 500,00",
+    "tipoVisible": "CARTÃO PRESENTE",
+    "montanteVisible": "R$ 500",
+    "premioLargo": false
+  },
+  {
+    "nome": "JESSICA CRISTINA DE SOUZA CORREIA",
+    "serie": "224",
+    "numero": "4583",
+    "data": "04/03/26",
+    "premio": "01 VALE COMPRAS R$500,00",
+    "tipoVisible": "VALE COMPRAS",
+    "montanteVisible": "R$ 500",
+    "premioLargo": false
+  },
+  {
+    "nome": "ODENIR DOS SANTOS SILVA",
+    "serie": "875",
+    "numero": "85223",
+    "data": "11/03/26",
+    "premio": "BICICLETA ELÉTRICA LIBERTY VTB2 500W",
+    "tipoVisible": "",
+    "montanteVisible": "BICICLETA ELÉTRICA LIBERTY VTB2 500W",
+    "premioLargo": true
+  },
+  {
+    "nome": "NAIARA ZAGUE LOVATO",
+    "serie": "899",
+    "numero": "45406",
+    "data": "14/03/26",
+    "premio": "01 VALE COMPRAS R$500,00",
+    "tipoVisible": "VALE COMPRAS",
+    "montanteVisible": "R$ 500",
+    "premioLargo": false
+  },
+  {
+    "nome": "RONE ADRIANO",
+    "serie": "500",
+    "numero": "67051",
+    "data": "18/03/26",
+    "premio": "01 VALE COMPRAS R$500,00",
+    "tipoVisible": "VALE COMPRAS",
+    "montanteVisible": "R$ 500",
+    "premioLargo": false
+  },
+  {
+    "nome": "EDSON DE OLIVEIRA SILVA",
+    "serie": "486",
+    "numero": "96988",
+    "data": "21/03/26",
+    "premio": "01 VALE COMPRAS R$500,00",
+    "tipoVisible": "VALE COMPRAS",
+    "montanteVisible": "R$ 500",
+    "premioLargo": false
+  }
+]

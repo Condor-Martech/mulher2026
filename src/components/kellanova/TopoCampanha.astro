@@ -1,0 +1,53 @@
+---
+// Sección topo — MIGRATION-MAP §3, §6.
+// La sección más grande y la única con background CSS propio (SHAPE-RADIAL, con
+// variante distinta bajo @media(max-width:767px)).
+//
+// Los widgets de una sola imagen usados una vez —COCONUT-LEAVES y PODIUM-3D—
+// viven aquí inline: sacarlos a componente sería una pieza minúscula sin
+// reutilización (MIGRATION-MAP §3).
+// Imágenes desde public/sabordoveraokellanova/images/ — convención del repo
+// vive bajo esa única carpeta, fuentes y PDF incluidos: webp ya
+// optimizado y servido plano, sin pasar por el pipeline de imágenes de Astro.
+// Cada etiqueta replica atributo por atributo lo que se emitía antes.
+import { alt, ui } from '../../data/kellanova/textos'
+import NavMenu from './NavMenu.astro'
+import OfertaEPremios from './OfertaEPremios.astro'
+import VitrineGanhadores from './VitrineGanhadores.astro'
+---
+
+<section class="sv-el topo sv-con-full sv-flex sv-con sv-hijo" data-settings='{"background_background":"classic"}' aria-label={ui.topo.seccion}>
+
+  {/* position:fixed a nivel de viewport, oculta en tablet y móvil.
+      Es uno de los 3 únicos nodos con visibilidad condicional (MIGRATION-MAP §11). */}
+  <div
+    class="sv-el topo-selo-fijo sv-fixed sv-hidden-tablet sv-hidden-mobile sv-invisible sv-widget sv-widget-image"
+   
+   
+   
+    data-settings='{"_position":"fixed","_animation":"fadeIn"}'
+  >
+    <div class="sv-widget-container">
+      <img src="/assets/sabordoveraokellanova/images/COCONUT-LEAVES.webp" alt={alt.decorativas.coconut} width={1920} height={1080} class="attachment-full size-full" loading="eager" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <NavMenu />
+  <OfertaEPremios />
+  <VitrineGanhadores />
+
+  <div class="sv-el topo-podio-caja sv-con-full sv-flex sv-con sv-hijo">
+    <div
+      class="sv-el topo-podio sv-transform sv-invisible sv-widget sv-widget-image"
+     
+     
+     
+      data-settings='{"_transform_translateY_effect":{"unit":"px","size":30,"sizes":[]},"motion_fx_motion_fx_mouse":"yes","_animation":"fadeIn"}'
+    >
+      <div class="sv-widget-container">
+        <img src="/assets/sabordoveraokellanova/images/PODIUM-3D-RENDER.webp" alt={alt.podium} width={1132} height={402} class="attachment-full size-full" loading="lazy" decoding="async" fetchpriority="auto" />
+      </div>
+    </div>
+  </div>
+
+</section>

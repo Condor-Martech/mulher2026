@@ -1,0 +1,66 @@
+---
+// Widget nav-menu nav — MIGRATION-MAP §3, §4.
+// Elementor emite el menú DOS veces: <nav> principal (escritorio) y <nav>
+// dropdown (móvil), con los mismos 4 ítems. Un componente con las dos listas
+// produce las dos copias del HTML final sin escribir los ítems dos veces.
+import { navegacion, URL_REGULAMENTO } from '../../data/kellanova/navegacion'
+import { iconoMenuAbrir, iconoMenuCerrar } from './iconos'
+import { ui } from '../../data/kellanova/textos'
+
+// menu-item-XXXXX del origen, en orden. Se conservan: el CSS los referencia.
+const itemIds = ['27899', '27900', '27901', '27902']
+
+// «Como Participar» apunta a «#» en el origen: un ancla sin destino, porque no
+// existe ningún elemento con ese id (CONTENT-INVENTORY §3, MIGRATION-MAP §14).
+// El dato se conserva literal en navegacion.ts; el arreglo se aplica aquí, en la
+// capa de presentación, apuntándolo a la sección que explica la mecánica.
+const DESTINO_ANCLA_MUERTA = '#ComoParticipar'
+
+const href = (i: (typeof navegacion)[number]) => {
+  if (i.tipo === 'documento') return URL_REGULAMENTO
+  if (i.tipo === 'ancla-sin-destino') return DESTINO_ANCLA_MUERTA
+  return i.href
+}
+---
+
+<div
+  class="sv-el nav sv-nav-menu__align-center menu-pill sv-nav-menu--stretch sv-nav-menu--dropdown-tablet sv-nav-menu__text-align-aside sv-nav-menu--toggle sv-nav-menu--burger sv-widget sv-widget-nav-menu"
+ 
+ 
+ 
+  data-settings='{"full_width":"stretch","layout":"horizontal","toggle":"burger"}'
+>
+  <div class="sv-widget-container">
+
+    <nav aria-label={ui.nav.menu} class="sv-nav-menu--main sv-nav-menu__container sv-nav-menu--layout-horizontal sv--pointer-framed sv--animation-none">
+      <ul id="menu-1-8a3e1cf" class="sv-nav-menu">
+        {navegacion.map((i, n) => (
+          <li class={`menu-item menu-item-type-custom menu-item-object-custom menu-item-${itemIds[n]}`}>
+            {/* «Como Participar» apunta a «#», que no es un ancla real: no existe
+                ningún elemento con ese id. Se migra tal cual — MIGRATION-MAP §14. */}
+            <a href={href(i)} class={`sv-item${i.tipo === 'documento' ? '' : ' '}`}>{i.texto}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    {/* El origen usa <div role="button" tabindex="0">. Un <button> real aporta
+        foco, activación por teclado y rol nativos. El reset de sus estilos de
+        agente de usuario y del tema está en src/styles/mejoras.css. */}
+    <button type="button" class="sv-menu-toggle" aria-label={ui.nav.alternar} aria-expanded="false" aria-controls="menu-2-8a3e1cf" data-menu-toggle>
+      <Fragment set:html={iconoMenuAbrir} />
+      <Fragment set:html={iconoMenuCerrar} />
+    </button>
+
+    <nav class="sv-nav-menu--dropdown sv-nav-menu__container" aria-hidden="true">
+      <ul id="menu-2-8a3e1cf" class="sv-nav-menu">
+        {navegacion.map((i, n) => (
+          <li class={`menu-item menu-item-type-custom menu-item-object-custom menu-item-${itemIds[n]}`}>
+            <a href={href(i)} class={`sv-item${i.tipo === 'documento' ? '' : ' '}`} tabindex="-1">{i.texto}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+  </div>
+</div>

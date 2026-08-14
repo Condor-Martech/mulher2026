@@ -1,0 +1,54 @@
+---
+// Sección aceleradores — MIGRATION-MAP §3. Ancla #Aceleradoras.
+// Imágenes desde public/sabordoveraokellanova/images/ — convención del repo
+// vive bajo esa única carpeta, fuentes y PDF incluidos: webp ya
+// optimizado y servido plano, sin pasar por el pipeline de imágenes de Astro.
+// Cada etiqueta replica atributo por atributo lo que se emitía antes.
+import { alt, ui } from '../../data/kellanova/textos'
+import CarrosselMarcas from './CarrosselMarcas.astro'
+---
+
+<section class="sv-el aceleradores sv-con-full sv-flex sv-con sv-hijo" aria-labelledby="titulo-aceleradores">
+
+  <div class="sv-el ancla-aceleradoras sv-widget sv-widget-menu-anchor">
+    <div class="sv-widget-container">
+      <div class="sv-menu-anchor" id="Aceleradoras"></div>
+    </div>
+  </div>
+
+  <div class="sv-el aceleradores-separador-1 sv-widget sv-widget-divider">
+    <div class="sv-widget-container">
+      <div class="sv-divider"><span class="sv-divider-separator"></span></div>
+    </div>
+  </div>
+
+  <div class="sv-el aceleradores-titulo sv-widget sv-widget-heading">
+    <div class="sv-widget-container">
+      <h2 id="titulo-aceleradores" class="sv-heading-title">{ui.aceleradores.titulo}</h2>
+    </div>
+  </div>
+
+  <div class="sv-el aceleradores-arte sv-widget sv-widget-image">
+    <div class="sv-widget-container">
+      <img src="/assets/sabordoveraokellanova/images/ACELERADORAS.webp" alt={alt.aceleradores} width={632} height={308} class="attachment-large size-large" loading="lazy" decoding="async" fetchpriority="auto" />
+    </div>
+  </div>
+
+  <div class="sv-el aceleradores-marcas-caja sv-flex sv-con-boxed sv-con sv-hijo">
+    <div class="sv-con-inner">
+      <CarrosselMarcas />
+      <div class="sv-el aceleradores-marcas-img sv-widget sv-widget-image">
+        <div class="sv-widget-container">
+          <img src="/assets/sabordoveraokellanova/images/MARCAS-PARTICIPANTES-e1766080050595.webp" alt={alt.rotuloMarcas} width={153} height={49} class="attachment-full size-full" loading="lazy" decoding="async" fetchpriority="auto" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sv-el aceleradores-separador-2 sv-widget sv-widget-divider">
+    <div class="sv-widget-container">
+      <div class="sv-divider"><span class="sv-divider-separator"></span></div>
+    </div>
+  </div>
+
+</section>

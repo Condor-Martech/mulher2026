@@ -1,0 +1,64 @@
+---
+// Bloque de oferta y premios — MIGRATION-MAP §11.
+//
+// UNA sola autoría, DOS instancias en el HTML de salida.
+//
+// El mapa prescribía fusionarlo en una única sección responsive y marcaba la
+// paridad visual como [NEEDS VERIFICATION] y «el mayor riesgo de fidelidad de
+// toda la migración», con una alternativa documentada si la refundición no
+// conseguía paridad. Al inspeccionar post-27785.css se ve que las dos copias NO
+// difieren solo en visibilidad, sino en layout:
+//
+//   oferta-movil (móvil/tablet) : 7 reglas, --margin-left:114px, sin transform
+//   oferta-escritorio (desktop/lapt.): 4 reglas, --width:48.691%, --flex-direction:row,
+//                            --sv-con-transform-translateX:-61px
+//
+// Refundir dos rulesets independientes en uno exigiría reescribir CSS que no se
+// puede validar contra los inventarios. Se invoca la alternativa del propio §11:
+// mantener las dos copias con sus ids originales. Más marcado, cero riesgo de
+// píxel, y las 3 imágenes se importan una sola vez.
+// Imágenes desde public/sabordoveraokellanova/images/ — convención del repo
+// vive bajo esa única carpeta, fuentes y PDF incluidos: webp ya
+// optimizado y servido plano, sin pasar por el pipeline de imágenes de Astro.
+// Cada etiqueta replica atributo por atributo lo que se emitía antes.
+import { alt } from '../../data/kellanova/textos'
+
+interface Props {
+  variante: 'mobile' | 'desktop'
+}
+const { variante } = Astro.props
+
+// Cada variante tiene sus propios data-id: el CSS de origen los referencia uno a uno.
+const ids =
+  variante === 'mobile'
+    ? { cont: 'oferta-movil', clases: 'sv-hidden-desktop sv-hidden-laptop', chamada: 'oferta-movil-chamada', sub: 'oferta-movil-sub', bike: 'oferta-movil-bike', cartoes: 'oferta-movil-cartoes', settings: undefined }
+    : { cont: 'oferta-escritorio', clases: 'sv-transform sv-hidden-tablet sv-hidden-mobile', chamada: 'oferta-escritorio-chamada', sub: 'oferta-escritorio-sub', bike: 'oferta-escritorio-bike', cartoes: 'oferta-escritorio-cartoes',
+        settings: '{"_transform_translateX_effect":{"unit":"px","size":-61,"sizes":[]}}' }
+---
+
+<div
+  class={`sv-el ${ids.cont} sv-con-full ${ids.clases} sv-flex sv-con sv-hijo`}
+ 
+ 
+  data-settings={ids.settings}
+>
+  <div class={`sv-el ${ids.chamada} sv-widget sv-widget-image`}>
+    <div class="sv-widget-container">
+      <img src="/assets/sabordoveraokellanova/images/Na-compra-de-R-1500-em-produtos-participantes-concor.webp" alt={alt.chamada} width={740} height={171} class="attachment-large size-large" loading="lazy" decoding="async" fetchpriority="auto" />
+    </div>
+  </div>
+
+  <div class={`sv-el ${ids.sub} sv-con-full sv-flex sv-con sv-hijo`}>
+    <div class={`sv-el ${ids.bike} sv-invisible sv-widget sv-widget-image`} data-settings='{"_animation":"bounceInRight"}'>
+      <div class="sv-widget-container">
+        <img src="/assets/sabordoveraokellanova/images/SORTEIO-BIKE.webp" alt={alt.sorteioBike} width={429} height={169} class="sv-animation-float attachment-large size-large" loading="lazy" decoding="async" fetchpriority="auto" />
+      </div>
+    </div>
+
+    <div class={`sv-el ${ids.cartoes} sv-invisible sv-widget sv-widget-image`} data-settings='{"_animation":"bounceInRight"}'>
+      <div class="sv-widget-container">
+        <img src="/assets/sabordoveraokellanova/images/SORTEIO-CARTOES-PRESENTES.webp" alt={alt.sorteioCartoes} width={538} height={209} class="sv-animation-float attachment-large size-large" loading="lazy" decoding="async" fetchpriority="auto" />
+      </div>
+    </div>
+  </div>
+</div>

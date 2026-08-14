@@ -1,0 +1,51 @@
+{
+  "urlRegulamento": "/assets/sabordoveraokellanova/documents/Regulamento_0202509753-7_aditado-1.pdf",
+  "items": [
+    {
+      "texto": "Como Participar",
+      "href": "#",
+      "tipo": "ancla-sin-destino"
+    },
+    {
+      "texto": "Aceleradores",
+      "href": "#Aceleradoras",
+      "tipo": "ancla"
+    },
+    {
+      "texto": "FAQ",
+      "href": "#Perguntas",
+      "tipo": "ancla"
+    },
+    {
+      "texto": "Regulamento",
+      "href": "https://campanha.condor.com.br/wp-content/uploads/2026/01/Regulamento_0202509753-7_aditado-1.pdf",
+      "tipo": "documento"
+    }
+  ],
+  "redesSociales": [
+    {
+      "nombre": "Facebook",
+      "href": "https://www.facebook.com/RedeCondor/?locale=pt_BR"
+    },
+    {
+      "nombre": "Instagram",
+      "href": "https://www.instagram.com/redecondor/?hl=pt"
+    },
+    {
+      "nombre": "Youtube",
+      "href": "https://www.youtube.com/user/redecondor"
+    },
+    {
+      "nombre": "Tiktok",
+      "href": "https://www.tiktok.com/@redecondor?lang=pt-BR"
+    },
+    {
+      "nombre": "Linkedin",
+      "href": "https://www.linkedin.com/company/redecondor/posts/?feedView=all"
+    },
+    {
+      "nombre": "Threads",
+      "href": "https://www.threads.com/@redecondor"
+    }
+  ]
+}

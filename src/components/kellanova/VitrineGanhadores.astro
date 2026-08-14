@@ -1,0 +1,41 @@
+---
+// Sección vitrina / widget vitrina-widget — MIGRATION-MAP §3, §10.
+// Único bloque del origen escrito a mano: HTML + CSS + JS propios, con los
+// comentarios del CSS en español (CONTENT-INVENTORY §10).
+//
+// Mejora semántica: los 14 premiados son una LISTA, no 14 <div> hermanos.
+// El contenedor ya es display:flex, así que el cambio no altera el diseño
+// (ver .v-viewport en src/styles/mejoras.css).
+import TicketCard from './TicketCard.astro'
+import { ganhadores } from '../../data/kellanova/ganhadores'
+import { ui } from '../../data/kellanova/textos'
+---
+
+<section
+  class="sv-el vitrina sv-con-full sv-flex sv-con sv-hijo"
+ 
+ 
+  aria-labelledby="titulo-ganhadores"
+>
+  <h2 id="titulo-ganhadores" class="solo-lectores">{ui.vitrina.titulo}</h2>
+
+  <div class="sv-el vitrina-widget sv-widget">
+    <div class="sv-widget-container">
+
+      <ul class="v-viewport">
+        {ganhadores.map((g) => (
+          <li>
+            <TicketCard variante="vitrina" ganhador={g} />
+          </li>
+        ))}
+      </ul>
+
+      {/* El modal vive fuera de la lista, como en el origen. Se cierra al pulsar
+          el fondo; el ticket interior detiene la propagación. */}
+      <div id="ticketModal" data-modal-fondo role="dialog" aria-modal="true" aria-label={ui.vitrina.modal}>
+        <TicketCard variante="modal" />
+      </div>
+
+    </div>
+  </div>
+</section>

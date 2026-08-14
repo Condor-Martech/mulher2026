@@ -1,0 +1,496 @@
+/* Única hoja escrita a mano del proyecto.
+ *
+ * OJO con el orden: este archivo se carga justo después de origem.css, y la
+ * primera regla de abajo venía de global.css, que se cargaba exactamente ahí.
+ * Por eso está la primera y no agrupada con el resto — moverla cambia el bundle.
+ *
+ * Sostiene las mejoras de semántica y accesibilidad SIN alterar el diseño: cada
+ * regla existe para que un elemento más correcto se vea exactamente igual que el
+ * que había en el origen.
+ *
+ * EXCEPCIÓN, al final del archivo: el bloque «respiración de la vitrina» sí es
+ * un cambio de diseño deliberado, pedido y acotado. Está separado y marcado para
+ * que no se confunda con el resto.
+ *
+ * Se comprobó antes de tocar nada que el CSS de origen es casi todo por clase:
+ * las ÚNICAS dos reglas que dependen del nombre de etiqueta son `.v-prize-tag h2`
+ * (busca el banderín `24-inline-origen.css` en origem.css), y se replican aquí.
+ */
+
+/* El popup 23175 sale con triggers:[] y timing:[] — en el origen no se abre
+   nunca, y su invisibilidad la garantizaba el CSS de popups de Elementor Pro,
+   que NO se porta. Se reproduce con una regla propia. MIGRATION-MAP §18 (P3).
+   Venía de global.css; va la primera para conservar su sitio en la cascada. */
+.sv-location-popup[hidden] {
+  display: none !important;
+}
+
+/* ══════════════════════════════════ sin JavaScript no desaparece nada
+ *
+ * El origen esconde con `.sv-invisible { visibility: hidden }` todo lo que lleva
+ * animación de entrada, y lo revela su JS al entrar en viewport. Si el JS no
+ * corre —bundle bloqueado, red que se cae, una extensión, un capturador de
+ * pantalla— eso no degrada: BORRA. Se quedaban invisibles el pódium de las
+ * bicicletas y el selo del topo, que son dos de las imágenes que más cuentan, y
+ * la página crecía de 3454 a 3878 px porque además el carrusel no se maquetaba.
+ *
+ * El interruptor lo pone el propio JS: index.astro marca <html class="sv-js"> en
+ * un script en línea del <head>, antes de pintar. Con JS la regla del origen
+ * manda y no cambia ni un píxel; sin JS, esto gana —(0,2,1) contra (0,1,0)— y
+ * todo se ve, sin animación pero entero.
+ *
+ * Es la misma regla que ya cumple el contenido obligatorio por el reglamento:
+ * los 14 premiados, el FAQ y el PDF no dependen de JavaScript. Estas imágenes
+ * tampoco deberían, y ahora no lo hacen. */
+html:not(.sv-js) .sv-invisible {
+  visibility: visible;
+}
+
+/* Sin JS, Swiper no maqueta el carrusel y el primer logo se estira a su tamaño
+ * natural —2447 px el de Parati— empujando la página. Se reproduce en CSS el
+ * reparto que Swiper aplicaría, con los mismos cortes del data-settings del
+ * origen: 3 slides en móvil, 2 en tablet, 5 de 1024 hacia arriba. */
+html:not(.sv-js) .sv-carousel .swiper-wrapper {
+  display: flex;
+}
+
+html:not(.sv-js) .sv-carousel .swiper-slide {
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
+}
+
+@media (min-width: 768px) {
+  html:not(.sv-js) .sv-carousel .swiper-slide {
+    flex-basis: 50%;
+    max-width: 50%;
+  }
+}
+
+@media (min-width: 1024px) {
+  html:not(.sv-js) .sv-carousel .swiper-slide {
+    flex-basis: 20%;
+    max-width: 20%;
+  }
+}
+
+/* ---------------------------------------------------------- texto accesible
+ * Para el <h1> de la página y para etiquetas que deben existir en el árbol de
+ * accesibilidad sin ocupar espacio. El diseño del origen no muestra ningún
+ * encabezado de nivel 1: el nombre de campaña está rasterizado en SELO-1.png.
+ */
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Enlace de salto: invisible hasta recibir foco por teclado. */
+.saltar-al-contenido {
+  position: absolute;
+  left: -9999px;
+  z-index: 999;
+  padding: 12px 20px;
+  background: #0b5a18;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 0 0 8px 0;
+}
+.saltar-al-contenido:focus {
+  left: 0;
+  top: 0;
+}
+
+/* ------------------------------------------------- vitrina de ganadores: <ul>
+ * La lista de 14 premiados es semánticamente una lista, no 14 <div> sueltos.
+ * El contenedor ya es display:flex en el origen, así que basta con quitar los
+ * estilos por defecto de la lista.
+ */
+.v-viewport {
+  list-style: none;
+  margin: 0;
+}
+.v-viewport > li {
+  display: contents;
+}
+
+/* -------------------------------------------------- ticket: <div> → <button>
+ * El origen usa <div role="button" tabindex="0">. Un <button> real da foco,
+ * activación por teclado y rol nativo sin JS. Estas reglas neutralizan los
+ * estilos de agente de usuario para que el resultado sea idéntico.
+ */
+/* OJO: hello-sv-raiz/reset.css estiliza TODOS los <button> —borde rosa, padding,
+ * text-align:center, white-space:nowrap y un :hover que los pinta de #c36—. Hay
+ * que neutralizar cada una de esas propiedades, no solo el `appearance`.
+ * `white-space` es la crítica: con nowrap los nombres largos no envolvían, la
+ * tarjeta se ensanchaba hasta su max-width y la fila perdía 14px de alto. */
+button.v-ticket-box,
+button.v-ticket-box:hover,
+button.v-ticket-box:focus {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  text-align: inherit;
+  white-space: normal;
+  width: auto;
+  background-color: #fff;
+  text-decoration: none;
+}
+
+/* El botón de cierre del modal es un <button> nuevo: mismo problema. */
+button.v-close-btn,
+button.v-close-btn:hover,
+button.v-close-btn:focus {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  white-space: normal;
+  width: auto;
+}
+
+/* Un <button> solo admite contenido en línea, así que los <div> internos del
+ * origen pasan a <span>. El CSS de origen ya les da display:flex a .v-prize-tag,
+ * .v-info-tag, .v-data-grid y .v-data-item; los que no lo llevan necesitan
+ * comportarse como bloque para que su width y sus márgenes funcionen igual. */
+button.v-ticket-box .v-confirm-tag,
+button.v-ticket-box .v-winner-name,
+button.v-ticket-box .v-prize-value {
+  display: block;
+}
+
+/* ------------------------------------- ticket: <h2>/<h3> → <p> con su clase
+ * En el origen el importe del premio es <h2> y el nombre de la persona <h3>.
+ * No son encabezados de sección: son datos dentro de una tarjeta. Al pasarlos a
+ * <p> hay que replicar la única regla del origen que iba por etiqueta.
+ */
+.v-prize-tag .v-prize-value {
+  display: block;
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.1;
+  word-wrap: break-word;
+  width: 100%;
+}
+.v-prize-tag .v-prize-value.v-prize-long {
+  font-size: 10px;
+}
+.v-winner-name {
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .v-prize-tag .v-prize-value {
+    font-size: 14px;
+  }
+}
+
+/* ------------------------------------------- FAQ: el título pasa a <h3>
+ * El origen lo pinta con un <div>, que deja el acordeón fuera del esquema de
+ * encabezados. Con <h3> hereda tamaño y peso del contenedor, no del navegador.
+ */
+/* NO poner `font: inherit` aquí, aunque parezca lo lógico para neutralizar un
+ * <h3>. El origen fija el peso del título con
+ *   :where(.sv … .sv-accordion-item-title-text) { font-weight:600 }
+ * y `:where()` tiene especificidad CERO, así que cualquier regla propia se la
+ * lleva por delante: el título salía en 400 en vez de 600.
+ *
+ * No hace falta sustituto. Esa regla es de AUTOR y el `font-weight:bold` del
+ * <h3> es de la hoja del NAVEGADOR: el autor gana al agente de usuario aunque su
+ * especificidad sea cero. Lo mismo vale para el tamaño, que llega por
+ * `.sv-widget-n-accordion .sv-accordion-item-title-text`.
+ * Solo hay que quitarle al <h3> el margen que el navegador sí aporta. */
+.sv-accordion-item-title-text {
+  margin: 0;
+  /* La interlínea SÍ hay que devolverla: el reset del tema fija una propia para
+   * los encabezados (1.2), mientras que el <div> del origen heredaba la 1.5 del
+   * contenedor. Se nota en los títulos que ocupan dos líneas. */
+  line-height: inherit;
+}
+
+/* ------------------------------------------ encabezados que no lo eran
+ * La línea legal y el copyright son <h2> en el origen. Como texto corrido, van
+ * en <p>; .sv-heading-title (que es quien da el estilo) se conserva.
+ */
+p.sv-heading-title {
+  margin: 0;
+}
+
+/* El toggle del menú móvil pasa de <div role="button"> a <button>.
+ *
+ * Aquí el reset debe ser QUIRÚRGICO, al revés que en los tickets: Elementor ya
+ * estiliza .sv-menu-toggle (display:flex, padding:8px, font-size:32px,
+ * border:0) y `button.sv-menu-toggle` tiene MÁS especificidad que
+ * `.sv-menu-toggle`, así que un reset amplio le pisa sus propios valores
+ * y el botón encoge de 48×48 a 16×16.
+ * Solo se neutraliza lo que añade hello-sv-raiz/reset.css y Elementor no
+ * redefine: apariencia, fondo, radio, color, peso, alineación y white-space. */
+button.sv-menu-toggle,
+button.sv-menu-toggle:hover,
+button.sv-menu-toggle:focus {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  border-radius: 0;
+  color: inherit;
+  font-weight: inherit;
+  text-align: inherit;
+  white-space: normal;
+  width: auto;
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════ respiración de la vitrina
+ * ÚNICO cambio de diseño de este archivo. Todo lo de arriba existe para que algo
+ * más correcto se vea igual; esto se ve distinto a propósito.
+ *
+ * En el origen la vitrina de premiados corre de borde a borde con 15 px de aire
+ * a cada lado — a 1600 px de ancho se lee como si se saliera de la página.
+ *
+ * El contenedor es el que manda, no la tarjeta. Las tarjetas llevan
+ * `flex: 1 1 300px`, así que su ancho es CONSECUENCIA del espacio disponible:
+ * limitarles el ancho no genera aire, solo las encoge y el hueco sobrante se
+ * reparte entre ellas. El padding va en `.v-viewport`.
+ *
+ * Acotado a partir de 1024 px por medida, no por prudencia:
+ *   móvil 375 → con 48 px de padding las tarjetas caen a una por fila y la
+ *               página crece un 26 %;
+ *   tablet 900 → las tarjetas ya están en su tope de 420 px, no hay nada que
+ *               ganar;
+ *   laptop y escritorio → 88 px de aire sin mover una sola fila.
+ *
+ * 88 px es el TECHO medido: a 104 px la página crece 14 px porque un nombre
+ * pasa a una tercera línea. Sentarse justo en el límite normalmente sería mala
+ * idea, pero aquí la lista de premiados está cerrada —la campaña terminó y esos
+ * 14 registros son un acta, no un contenido que vaya a crecer—, así que no hay
+ * texto futuro que pueda desbordarlo. Si algún día se tocara `ganhadores.ts`,
+ * este número hay que volver a medirlo.
+ *
+ * El tope de 378 px arregla algo que el origen tenía torcido: al quedar solo dos
+ * tarjetas en la última fila, se estiraban hasta su max-width de 420 px y salían
+ * 55 px más anchas que las de las filas llenas.
+ *
+ * Verificado: alto idéntico al origen en los 4 breakpoints (4418 / 3921 / 3534 /
+ * 3486 px). Ojo — esa comprobación mide ALTURAS, así que confirma que no se
+ * descoloca nada, no que sea idéntico píxel a píxel: en horizontal esto SÍ se
+ * aparta del origen, que es justo lo que se pedía.
+ */
+@media (min-width: 1024px) {
+  .v-viewport {
+    padding-left: 88px;
+    padding-right: 88px;
+  }
+  .v-ticket-box {
+    max-width: 378px;
+  }
+}
+
+/* ══════════════════════════════════════════ movimiento
+ * Segundo bloque de diseño deliberado. Nada de aquí mueve un píxel en reposo:
+ * son estados de transición, así que la paridad de alturas no se toca.
+ *
+ * Una sola curva para todo el sitio. Es la que ya usaba el menú en el CSS del
+ * origen (origem/22-pagina-27785.css), lo único bien animado que había: se
+ * adopta como estándar en vez de inventar otra.
+ */
+:root {
+  --m-curva: cubic-bezier(0.4, 0, 0.2, 1);
+  --m-rapido: 160ms;
+  --m-medio: 260ms;
+  /* 400 ms no es un número elegido a ojo: es el `n_accordion_animation_duration`
+   * que el propio widget de Elementor declara en su data-settings. El origen
+   * quería esta duración y nunca llegó a aplicarla. */
+  --m-acordeon: 400ms;
+}
+
+/* --------------------------------------------------- acordeón del FAQ
+ * El <details> nativo abre de golpe: no hay transición posible sobre él… hasta
+ * `::details-content`. Con `interpolate-size: allow-keywords` se puede animar
+ * HACIA `auto`, que es lo que siempre faltó para hacer esto sin JavaScript.
+ *
+ * Que sea CSS puro importa aquí más que en otro sitio: el FAQ es contenido que
+ * el reglamento obliga a exhibir y funciona sin JS. Animarlo con JavaScript
+ * habría metido esa garantía en el mismo saco que un efecto visual.
+ *
+ * En navegadores sin `::details-content` no pasa nada: el acordeón abre de
+ * golpe, exactamente como ahora.
+ */
+:root {
+  interpolate-size: allow-keywords;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sv-accordion-item::details-content {
+    block-size: 0;
+    /* El solape de 15px SOLO existe abierto. Aplicarlo también en reposo restaba
+     * 15px a cada uno de los 7 ítems: 105px menos de página, medidos. */
+    margin-block-start: 0;
+    overflow: hidden;
+    transition:
+      block-size var(--m-acordeon) var(--m-curva),
+      margin-block-start var(--m-acordeon) var(--m-curva),
+      content-visibility var(--m-acordeon) var(--m-curva);
+    /* content-visibility es discreta: sin esto saltaría al final y el contenido
+     * aparecería de golpe sobre una caja que aún está creciendo. */
+    transition-behavior: allow-discrete;
+  }
+  .sv-accordion-item[open]::details-content {
+    block-size: auto;
+    margin-block-start: -15px;
+  }
+
+  /* Sin esto abre animado pero CIERRA de golpe, y costó encontrarlo.
+   *
+   * Elementor esconde el contenido con `display:none` cuando el item no está
+   * abierto — su forma de hacer acordeones antes de que `::details-content`
+   * existiera. Al cerrar, ese `display:none` entra de inmediato, el contenido
+   * desaparece y el pseudo-elemento se queda sin nada que encoger: `auto`
+   * resuelve a 0 al instante y no hay nada que interpolar. Al abrir no se nota,
+   * porque el contenido ya está ahí antes de empezar a crecer.
+   *
+   * Se devuelve el `display:flex` que tiene abierto y se deja que el ocultado lo
+   * haga el pseudo-elemento, que para eso trae `content-visibility`.
+   *
+   * El @supports NO es decorativo: en un navegador sin `::details-content`, esta
+   * regla dejaría las 7 respuestas del FAQ desplegadas para siempre. Y el FAQ es
+   * contenido de exhibición obligatoria. Donde no haya pseudo-elemento, se queda
+   * el `display:none` de Elementor y el acordeón abre de golpe, como hasta ahora.
+   */
+  @supports selector(::details-content) {
+    .sv-widget-n-accordion .sv-accordion-item:not([open]) .sv-con {
+      display: flex;
+    }
+
+    /* El contenido del origen sube 15px (`margin-top:-15px`) para meterse bajo
+     * el título y tapar por dentro sus esquinas redondeadas. El `overflow:hidden`
+     * que necesita la animación recortaba justo esos 15px, y en la costura
+     * asomaba una cuña naranja del fondo.
+     *
+     * El desplazamiento se traslada al pseudo-elemento (arriba, solo en [open]),
+     * así que el recorte arranca donde debe y el solape vuelve. Aquí solo hay que
+     * quitarle al contenido el suyo, o se aplicaría dos veces. */
+    .sv-accordion-item > [role='region'] {
+      margin-top: 0;
+    }
+  }
+}
+
+/* El caret: el origen cambia `display` entre dos glifos distintos (caret-down
+ * cerrado, caret-right abierto), que es un corte seco. Se apilan en la misma
+ * celda y se cruzan con opacidad y giro. Se conservan los DOS glifos del origen
+ * en vez de rotar uno solo: girar el de cerrado 180° daría un caret-up, que no
+ * es el que el origen enseña al abrir. */
+.sv-widget-n-accordion .sv-accordion-item .sv-accordion-item-title-icon {
+  display: grid;
+  place-items: center;
+}
+.sv-widget-n-accordion .sv-accordion-item .sv-accordion-item-title-icon > span {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: center;
+  transition:
+    opacity var(--m-medio) var(--m-curva),
+    transform var(--m-medio) var(--m-curva);
+}
+.sv-widget-n-accordion .sv-accordion-item .sv-accordion-item-title-icon .sv-opened {
+  display: flex;
+  opacity: 0;
+  transform: rotate(-90deg);
+}
+.sv-widget-n-accordion .sv-accordion-item[open] > .sv-accordion-item-title .sv-accordion-item-title-icon .sv-closed {
+  display: flex;
+  opacity: 0;
+  transform: rotate(90deg);
+}
+.sv-widget-n-accordion .sv-accordion-item[open] > .sv-accordion-item-title .sv-accordion-item-title-icon .sv-opened {
+  opacity: 1;
+  transform: none;
+}
+
+/* La cabecera responde al puntero. El origen declaraba `transition: all` sin
+ * duración —o sea, nada— y ningún estado :hover propio. */
+.sv .sv-el.faq-acordeon > .sv-widget-container > .sv-accordion > .sv-accordion-item > .sv-accordion-item-title {
+  transition:
+    background-color var(--m-medio) var(--m-curva),
+    border-radius var(--m-medio) var(--m-curva);
+}
+@media (hover: hover) and (pointer: fine) {
+  .sv .sv-el.faq-acordeon > .sv-widget-container > .sv-accordion > .sv-accordion-item > .sv-accordion-item-title:hover {
+    background-color: #0e7020;
+  }
+}
+
+/* El contenido cerraba en 20px y el título en 10px. Mismo radio: se leen como
+ * una pieza y no como dos que casi encajan. */
+.sv-accordion-item [role='region'] {
+  border-radius: 0 0 10px 10px;
+}
+
+/* --------------------------------------------------- resto del sitio
+ * Las tarjetas de premiado declaraban `transition: all .3s ease` y
+ * `cursor: pointer`… y ninguna regla :hover. Lo más clicable de la página no
+ * daba ninguna respuesta al puntero.
+ */
+@media (hover: hover) and (pointer: fine) {
+  .v-ticket-box[data-ticket]:hover {
+    transform: translateY(-3px);
+    filter: drop-shadow(0 10px 18px rgb(0 0 0 / 28%));
+  }
+}
+.v-ticket-box[data-ticket]:active {
+  transform: translateY(-1px);
+}
+
+/* La navegación por anclas saltaba de golpe entre secciones. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+.sv-menu-anchor,
+[id='ComoParticipar'] {
+  scroll-margin-top: 24px;
+}
+
+/* El modal de ticket aparecía y desaparecía con un corte seco de display.
+ * La clase la pone src/scripts/efectos.ts. */
+#ticketModal {
+  opacity: 0;
+  transition: opacity var(--m-medio) var(--m-curva);
+}
+#ticketModal.v-abierto {
+  opacity: 1;
+}
+/* OJO con la escala: el origen amplía la tarjeta del modal a 1.1 —esa es su
+ * razón de ser—. La entrada tiene que partir de un valor RELATIVO a ese 1.1, no
+ * de 1: escribir `scale(0.97)` aquí pisaría el 1.1 del origen y la tarjeta se
+ * quedaría más pequeña de lo que debe. 1.1 × 0.97 ≈ 1.067. */
+#ticketModal .v-ticket-box {
+  transform: scale(1.067);
+  transition: transform var(--m-medio) var(--m-curva);
+}
+#ticketModal.v-abierto .v-ticket-box {
+  transform: scale(1.1);
+}
+
+/* Quien haya pedido menos movimiento no debería recibir ninguno de estos. */
+@media (prefers-reduced-motion: reduce) {
+  #ticketModal,
+  #ticketModal .v-ticket-box {
+    transition: none;
+  }
+}

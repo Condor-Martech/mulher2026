@@ -58,8 +58,9 @@ Root `/` **redirects to `https://www.condor.com.br`** (see `astro.config.mjs`). 
 | `/maes/palestra/[id]/`   | Per-talk dual-channel landing | Dynamic SSR                   | `src/pages/maes/palestra/[id].astro`       | Direct Supabase query at request time                                   |
 | `/pascoa/`               | Páscoa Condor                 | Informational                 | `src/pages/pascoa/index.astro`             | `services/pascoaService.ts` (Minio S3 + local fallback)                 |
 | `/passeio-ciclistico/`   | Passeio Ciclístico 2026       | Informational / Static        | `src/pages/passeio-ciclistico/index.astro` | Static (no service / no DB)                                             |
+| `/sabordoveraokellanova/`| Sabor do Verão (Kellanova)    | Informational / **prerender** | `src/pages/sabordoveraokellanova/index.astro` | Static (JSON only — see below)                                       |
 
-Each campaign has its own component folder (`src/components/{maes,pascoa,pc}/`) and (where applicable) its own JSON data folder (`src/data/{maes,pascoa}/`). The `src/components/` root and `src/data/*.json` files at the top level belong to the **Mulher** campaign — they are not shared.
+Each campaign has its own component folder (`src/components/{maes,pascoa,pc,kellanova}/`) and (where applicable) its own JSON data folder (`src/data/{maes,pascoa,kellanova}/`). The `src/components/` root and `src/data/*.json` files at the top level belong to the **Mulher** campaign — they are not shared.
 
 The two campaigns that share Supabase (`mulher` and `maes`) both query the same `palestras` table but filter by `campanha_id` (`mes-da-mulher-2026` vs `dia-das-maes-2026`) and have parallel-but-separate event services. When fixing one campaign's logic, check whether the other needs the same change — they have drifted (e.g. `maesEventService.getEventStatus` is a slightly newer fork of `eventService.getEventStatus`).
 
@@ -80,6 +81,68 @@ The two campaigns that share Supabase (`mulher` and `maes`) both query the same 
 
 **Debug overrides** (browser only): `?force_status=OPEN|SOON|FULL|FINISHED` and optional `?force_event=<id>` override the computed status.
 
+### Sabor do Verão / Kellanova (`/sabordoveraokellanova/`)
+
+The odd one out, and deliberately so. It is a **literal migration of a WordPress/Elementor page**, ported from
+the standalone repo `Sites/sabores-kellanova` (whose `MIGRATION-MAP.md` and `CLAUDE.md` are the blueprint and
+stay there). Fidelity to the original render is the acceptance criterion, so it does **not** follow this repo's
+conventions and should not be "aligned" with them:
+
+- **No layout, no Tailwind, no React, no Supabase.** Its CSS is the WordPress CSS, pruned, in
+  `src/styles/kellanova/{fuentes,origem,mejoras}.css` — imported in that order, because the cascade *is* the
+  order. All of it is namespaced under the `sv-` prefix.
+- **Every static file lives under `public/assets/sabordoveraokellanova/`** — the repo convention, and with
+  *everything* inside it: images, fonts, the regulation PDF, the favicon and the OG image. Nothing of this
+  campaign sits anywhere else under `public/`.
+
+  ```
+  public/assets/sabordoveraokellanova/
+  ├── condor.png · Logo-Condor-cestas-de-natal@2x.png   favicon + og:image
+  ├── documents/   the regulation PDF
+  ├── fonts/       13 self-hosted faces
+  └── images/      14 webp + 2 CSS backgrounds + 1 svg
+  ```
+
+  This is the one place the migration departs from the origin's literal output, and it costs an edit to two
+  generated files: `fuentes.css` (13 `@font-face` sources) and `origem.css` (backgrounds + two `torus-bold`
+  faces) now point at `/assets/sabordoveraokellanova/…`. If those files are ever regenerated from the origin
+  workspace, that prefix has to be reapplied. **Careful with search-and-replace**: `/sabordoveraokellanova/`
+  is also the page's own route, and the canonical, `og:url` and JSON-LD `@id`s must keep it *without* the
+  `assets/` prefix.
+
+  Images are referenced as plain `<img src="/assets/sabordoveraokellanova/images/…">`. The origin imported
+  them through `astro:assets`; the `.webp` committed here are exactly what that pipeline produced, so the
+  render is unchanged — verified at 0 pixels of difference against the origin's build, full page at 1920px.
+  Keeping them out of `src/assets/` also stops `output: 'server'` from shipping 1.16 MB of unreferenced source
+  PNGs into `_astro`. **Do not reintroduce `<Image>` here**: the markup replicates what it emitted, attribute
+  for attribute, `fetchpriority` included.
+- **`export const prerender = true`.** It has no request-time input, so it is built once to static HTML inside
+  an otherwise SSR project. That is also why it can't set its own `Cache-Control` (see below).
+- **Content lives in `src/data/kellanova/*.json`; the sibling `*.ts` files only type and validate it.** Those
+  validators assert exact counts (`cuantos()`), so trimming an array in the JSON fails the build on purpose.
+- **Two assets carry a legal obligation**: the winners list (`ganhadores.json`) and the regulation PDF at
+  `public/sabordoveraokellanova/documents/`. The PDF is served from our own copy, referenced through the single
+  `URL_REGULAMENTO` export — if that path stops resolving, the regulation stops being public.
+- **Three things that look decorative and are not**: `data-sv-id` on the page wrapper (the root `max-width`
+  hangs off it; without the attribute the page overflows horizontally), `data-settings` (read by
+  `efectos.ts` to pick the entry animation), and the Swiper classes (`.swiper`, `.swiper-wrapper`,
+  `.swiper-slide`). `scripts/kellanova/efectos.ts` also hooks `.faq-acordeon` and `.marcas-carrusel`.
+- **Analytics is the origin's GTM container (`GTM-PCC7ZXX`), inline in the page, and no OpenPanel** — the
+  campaign's historical data lives in that container. It does not mount `<Analytics>`.
+- **Swiper is pinned to 8.4.7** and only this campaign uses it. Its package declares no `types` entry, hence
+  the `paths` override in `tsconfig.json`.
+- **Tailwind must not scan it.** Its WordPress markup carries class names that collide with Tailwind utility
+  names; left alone, Tailwind emits those rules into *the other four campaigns'* stylesheets, which this
+  campaign does not even load. The four Tailwind entry files (`global.css`, `maes.css`, `globalPascoa.css`,
+  `saboresInverno.css`) each carry three `@source not` lines for this, with a comment naming the exact classes.
+  Removing them silently changes the CSS of the live LPs.
+
+  The wider trap, worth knowing before you write docs: **Tailwind v4 scans every file in the project, `.md`
+  included.** Naming one of those colliding classes in prose — in this file, in the README — is enough to
+  generate the rule. It happened once here. CSS files are *not* scanned, which is why the exact class names
+  are safe to spell out in the comment inside those four stylesheets, and are deliberately not spelled out
+  here.
+
 ### Cache strategy
 
 Each page sets its own `Cache-Control` header for CDN/browser caching:
@@ -87,6 +150,9 @@ Each page sets its own `Cache-Control` header for CDN/browser caching:
 - `/mulher`, `/maes`: `max-age=30, stale-while-revalidate=60` (dynamic Supabase data)
 - `/pascoa`: `max-age=60, stale-while-revalidate=120` (semi-static S3 content)
 - `/passeio-ciclistico`: `max-age=300, stale-while-revalidate=600` (static content)
+- `/sabordoveraokellanova`: none of its own. Being prerendered, it is a static file and the adapter serves it
+  with `max-age=0`; the hashed `_astro` assets are immutable-cached as usual. Set the HTML TTL at the CDN if
+  you want one.
 
 ### Registration flow
 
@@ -113,6 +179,7 @@ Two independent stacks run side by side and do **not** share state: **GTM** (`GT
 - **`src/lib/analyticsContext.ts`** — `getAnalyticsGlobals(Astro.url, referer)` computes `globalProperties` **server-side** so they ride every event (including the auto `screen_view`). Derives `campaign`, `route`, `page_type`, UTM params, and external `referrer_host`. Adds `source` (crm/social) only for the quota campaigns (`mulher`, `maes`) — using the **same channel-resolution rule** as `utils/formHandler.ts` and the `[id].astro` pages. Keep these three in sync.
 - **`src/lib/track.ts`** — the only way to emit a custom event: `track(event, props)`. `event` is typed against the `AnalyticsEvent` union (the catalog) so typos fail the build. **PII guard**: keys in `PII_KEYS` (cpf, email, telefone, nome, nascimento_filho, …) are stripped before sending (LGPD). Calls `window.op` via optional chaining and swallows all errors — analytics must never break the page. When adding an event, add its name to the `AnalyticsEvent` union.
 - **Declarative tracking**: `data-track` attributes on elements (consumed by OpenPanel's `trackAttributes`) are used across campaign components (`Hero`, `Footer`, banners, FAQ, `[id].astro`, etc.) for click events without inline JS.
+- **One exception, on purpose**: `/sabordoveraokellanova/` uses neither of these stacks. It carries the origin campaign's own GTM container (`GTM-PCC7ZXX`, inline in the page, id in `data/kellanova/seo.json`) and no OpenPanel, so its historical data stays continuous. It has no layout, so nothing mounts `<Analytics>` for it.
 
 ### Layouts
 
@@ -128,6 +195,17 @@ Tailwind v4 configured via `@tailwindcss/vite` plugin — there is no `tailwind.
 - `src/styles/global.css` — Mulher tokens (primary `#f43f5e` rose, accent `#1e293b`), shared utilities (`.glass`, `.glass-white`, `.glass-dark`, `.bg-grain`).
 - `src/styles/maes.css` — Maes-specific tokens (e.g. `maes-primary`, `maes-wine`, `bg-maes-bg`, `font-maes-sans`), imported in LayoutMaes.
 - `src/styles/globalPascoa.css` — Pascoa-specific tokens, imported from the Pascoa page.
+
+Every file that starts with `@import "tailwindcss"` also carries a block of `@source not` rules: they exclude
+the Kellanova campaign from Tailwind's project scan (see the Sabor do Verão section) **and all `*.md` files**.
+`src/styles/kellanova/` is the one stylesheet folder with no Tailwind in it at all.
+
+The markdown exclusion is not cosmetic. Tailwind v4 scans every file in the project, `.md` included, so a class
+name mentioned in prose in this very file generates a real CSS rule in all four production stylesheets. That is
+how the Kellanova leak came back the first time it was documented. No markdown here renders to the site (there
+are no content collections), so none of it should generate CSS. Adding the rule removed exactly one utility
+that had been living off documentation prose — `.inline`, 23 bytes, matched by the word "inline" in this file
+and used by no page's markup.
 
 ### React islands
 

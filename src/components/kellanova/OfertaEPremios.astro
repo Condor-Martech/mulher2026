@@ -1,0 +1,34 @@
+---
+// Contenedor agrupador como-participar — MIGRATION-MAP §3.
+// El selo (como-participar-selo-caja) y las dos variantes responsive del bloque de oferta, en el
+// mismo orden del DOM de origen.
+// Imágenes desde public/sabordoveraokellanova/images/ — convención del repo
+// vive bajo esa única carpeta, fuentes y PDF incluidos: webp ya
+// optimizado y servido plano, sin pasar por el pipeline de imágenes de Astro.
+// Cada etiqueta replica atributo por atributo lo que se emitía antes.
+import { alt } from '../../data/kellanova/textos'
+import OfertaPremios from './OfertaPremios.astro'
+---
+
+{/* Destino del ítem de menú «Como Participar», que en el origen apuntaba a
+    «#» sin destino. Esta es la sección que explica la mecánica. */}
+<div id="ComoParticipar" class="sv-el como-participar sv-con-full sv-flex sv-con sv-hijo">
+
+  <div class="sv-el como-participar-selo-caja sv-con-full sv-flex sv-con sv-hijo">
+    <div
+      class="sv-el como-participar-selo sv-invisible sv-widget sv-widget-image"
+     
+     
+     
+      data-settings='{"motion_fx_motion_fx_scrolling":"yes","_animation":"slideInLeft","motion_fx_devices":["desktop","laptop","tablet","mobile"]}'
+    >
+      <div class="sv-widget-container">
+        <img src="/assets/sabordoveraokellanova/images/SELO-1.webp" alt={alt.selo} width={642} height={643} class="attachment-large size-large" loading="eager" decoding="async" fetchpriority="auto" />
+      </div>
+    </div>
+  </div>
+
+  <OfertaPremios variante="mobile" />
+  <OfertaPremios variante="desktop" />
+
+</div>

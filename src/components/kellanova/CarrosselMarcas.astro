@@ -1,0 +1,69 @@
+---
+// Widget n-carousel marcas-carrusel — MIGRATION-MAP §3, §15.
+//
+// Sigue siendo un carrusel real. Su configuración está en ASSET-INVENTORY §6
+// (data-settings del widget): 5 slides visibles en escritorio, 2 en tablet, 3 en
+// móvil, autoplay cada 5000 ms, infinito, 500 ms de transición y pausa al pasar
+// el ratón o interactuar. Sustituirlo por una rejilla estática o por scroll-snap
+// sin autoplay cambiaría el comportamiento documentado.
+//
+// Se conserva la estructura DOM de Swiper para heredar su CSS; la inicialización
+// va en src/scripts/efectos.ts, sin arrastrar el bundle de Elementor Pro.
+// Imágenes desde public/sabordoveraokellanova/images/ — convención del repo
+// vive bajo esa única carpeta, fuentes y PDF incluidos: webp ya
+// optimizado y servido plano, sin pasar por el pipeline de imágenes de Astro.
+// Cada etiqueta replica atributo por atributo lo que se emitía antes.
+import { alt, fmt, ui } from '../../data/kellanova/textos'
+
+// Orden del DOM del origen. Dos slides usan sv-con-boxed (con .sv-con-inner
+// intermedio) y tres sv-con-full: la diferencia es estructural y se conserva.
+const slides = [
+  { n: 1, cont: 'marcas-slide-parati', boxed: false, widget: 'marcas-logo-parati', src: '/assets/sabordoveraokellanova/images/logo-parati-Vermelha.webp',     w: 2447, h: 576,  wp: '', alt: alt.marcas.parati },
+  { n: 2, cont: 'marcas-slide-trink', boxed: true,  widget: 'marcas-logo-trink', src: '/assets/sabordoveraokellanova/images/marca_Trink-R_Prancheta-1-copia-scaled.webp',      w: 2560, h: 1718, wp: '', alt: alt.marcas.trink },
+  { n: 3, cont: 'marcas-slide-hotcracker', boxed: true,  widget: 'marcas-logo-hotcracker', src: '/assets/sabordoveraokellanova/images/logo-Hot-cracker-25.webp', w: 422,  h: 313,  wp: '', alt: alt.marcas.hotcracker },
+  { n: 4, cont: 'marcas-slide-minueto', boxed: false, widget: 'marcas-logo-minueto', src: '/assets/sabordoveraokellanova/images/Logo-Minueto.webp',    w: 2525, h: 1178, wp: '', alt: alt.marcas.minueto },
+  { n: 5, cont: 'marcas-slide-zoo', boxed: false, widget: 'marcas-logo-zoo', src: '/assets/sabordoveraokellanova/images/logo-Zoo-Cartoon-25.webp',        w: 1402, h: 615,  wp: '', alt: alt.marcas.zoo },
+]
+
+const ajustes = {
+  slides_to_show: '5', slides_to_scroll: '3', slides_to_show_tablet: '2', slides_to_show_mobile: '3',
+  autoplay: 'yes', autoplay_speed: 5000, pause_on_hover: 'yes', pause_on_interaction: 'yes',
+  infinite: 'yes', speed: 500, offset_sides: 'none',
+}
+---
+
+<div
+  class="sv-el marcas-carrusel sv-widget sv-widget-n-carousel"
+ 
+ 
+ 
+  data-settings={JSON.stringify(ajustes)}
+>
+  <div class="sv-widget-container">
+    <div class="sv-carousel swiper" role="region" aria-roledescription="carousel" aria-label={ui.aceleradores.carrusel} dir="ltr">
+      <div class="swiper-wrapper" aria-live="off">
+        {slides.map((s) => (
+          <div class="swiper-slide" data-slide={s.n} role="group" aria-roledescription="slide" aria-label={fmt(ui.aceleradores.slide, { n: s.n, total: slides.length })}>
+            <div class={`sv-el ${s.cont} ${s.boxed ? 'sv-flex sv-con-boxed' : 'sv-con-full sv-flex'} sv-con sv-hijo`}>
+              {s.boxed ? (
+                <div class="sv-con-inner">
+                  <div class={`sv-el ${s.widget} sv-widget sv-widget-image`}>
+                    <div class="sv-widget-container">
+                      <img src={s.src} alt={s.alt} width={s.w} height={s.h} class={`attachment-full size-full ${s.wp}`} loading="lazy" decoding="async" fetchpriority="auto" />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div class={`sv-el ${s.widget} sv-widget sv-widget-image`}>
+                  <div class="sv-widget-container">
+                    <img src={s.src} alt={s.alt} width={s.w} height={s.h} class={`attachment-full size-full ${s.wp}`} loading="lazy" decoding="async" fetchpriority="auto" />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>

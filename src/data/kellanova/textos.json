@@ -1,0 +1,72 @@
+{
+  "pagina": {
+    "enlaceSalto": "Ir para o conteúdo",
+    "tituloAccesible": "Sabor do Verão — uma explosão de prêmios | Kellanova e Condor"
+  },
+  "topo": {
+    "seccion": "Campanha Sabor do Verão"
+  },
+  "nav": {
+    "menu": "Menu",
+    "alternar": "Alternar menu"
+  },
+  "vitrina": {
+    "titulo": "Ganhadores confirmados",
+    "modal": "Detalhe do prêmio",
+    "verDetalle": "Ver detalhe do prêmio de {nome}"
+  },
+  "ticket": {
+    "valePremio": "VALE-PRÊMIO",
+    "confirmado": "✓ CONFIRMADO",
+    "confirmadoModal": "✓ GANHADOR CONFIRMADO",
+    "serie": "SÉRIE",
+    "numero": "Nº",
+    "numeroModal": "Nº DA SORTE",
+    "data": "DATA",
+    "cerrar": "Fechar"
+  },
+  "aceleradores": {
+    "titulo": "Aceleradores",
+    "carrusel": "Carrossel",
+    "slide": "{n} de {total}"
+  },
+  "faq": {
+    "titulo": "Perguntas Frequentes",
+    "instrucciones": "Accordion. Open links with Enter or Space, close with Escape, and navigate with Arrow Keys"
+  },
+  "regulamento": {
+    "titulo": "REGULAMENTO DA CAMPANHA",
+    "boton": "CONFIRA AQUI",
+    "legal": "Promoção válida de 19/01/2026 a 23/03/2026. consulte o regulamento completo em www.kellanova.com.br imagens meramente ilustrativas."
+  },
+  "rodape": {
+    "copyright": "©Condor 2025. Todos os direitos reservados."
+  },
+  "popup": {
+    "titulo": "Cuidados com os Cabelos",
+    "subtitulo": "Com Siàge e Vult",
+    "mensaje": "Período de inscrições encerrado!"
+  },
+  "alt": {
+    "selo": "Sabor do Verão — uma explosão de prêmios. Kellanova e Condor.",
+    "chamada": "Na compra de R$ 15,00 em produtos participantes, concorra a prêmios incríveis!",
+    "sorteioBike": "4 sorteios de bicicletas Liberty",
+    "sorteioCartoes": "10 cartões-presente de R$ 500,00",
+    "podium": "Ilustração das quatro bicicletas elétricas sorteadas, sobre um deck de praia",
+    "aceleradores": "Na compra de qualquer Trink sabores exclusivos no verão, ganhe mais um número da sorte para concorrer",
+    "rotuloMarcas": "Marcas participantes:",
+    "logoCondorRodape": "Condor",
+    "marcas": {
+      "parati": "Parati",
+      "trink": "Trink",
+      "hotcracker": "Hot Cracker Recheado",
+      "minueto": "Minueto",
+      "zoo": "Zoo CartoOn"
+    },
+    "decorativas": {
+      "coconut": "",
+      "shapeRadial": "",
+      "rectangle": ""
+    }
+  }
+}

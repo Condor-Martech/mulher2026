@@ -1,4 +1,15 @@
 @import "tailwindcss";
+/* /sabordoveraokellanova es una migración literal de un WordPress: su marcado
+   trae clases del origen (`size-full`, `size-large`, `attachment-full`…) que
+   por casualidad coinciden con utilidades de Tailwind. Sin esta exclusión,
+   Tailwind las detecta al escanear el proyecto y emite las reglas en ESTA hoja,
+   que la campaña de kellanova ni siquiera carga — engordaba las 4 hojas vivas
+   con utilidades que nadie usa. Esa LP no usa Tailwind en absoluto: su CSS es
+   el del origen, en src/styles/kellanova/. */
+@source not "../**/kellanova/**";
+@source not "../pages/sabordoveraokellanova/**";
+@source not "../../public/assets/sabordoveraokellanova/**";
+
 
 @theme {
   --color-maes-primary: #713334;

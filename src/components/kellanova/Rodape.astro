@@ -1,0 +1,57 @@
+---
+// Sección rodape — MIGRATION-MAP §3, §8.
+// Es"pie" solo por posición: la plantilla es canvas, no hay footer de tema.
+// Imágenes desde public/sabordoveraokellanova/images/ — convención del repo
+// vive bajo esa única carpeta, fuentes y PDF incluidos: webp ya
+// optimizado y servido plano, sin pasar por el pipeline de imágenes de Astro.
+// Cada etiqueta replica atributo por atributo lo que se emitía antes.
+import { iconosSociales } from './iconos'
+import { alt, ui } from '../../data/kellanova/textos'
+import { redesSociales } from '../../data/kellanova/navegacion'
+
+// Nombre y URL de las 6 redes salen de navegacion.json, extraídos del origen.
+// Lo que se queda aquí es lo que NO es contenido: el id de repetidor que el CSS
+// del origen referencia una por una, en el mismo orden. Cada red lleva además su
+// propio glifo en iconos.ts — no son un icono parametrizado (MIGRATION-MAP §4).
+const itemIds = ['b6af65a', '840738e', '6e073af', '9626434', 'b7093ff', '02b069c']
+const redes = redesSociales.map((r, i) => ({ ...r, item: itemIds[i] }))
+---
+
+<footer class="sv-el rodape sv-flex sv-con-boxed sv-con sv-hijo">
+  <div class="sv-con-inner">
+
+    <div class="sv-el rodape-logo sv-widget sv-widget-image">
+      <div class="sv-widget-container">
+        <img src="/assets/sabordoveraokellanova/images/Logo-Condor-com-sombra.webp" alt={alt.logoCondorRodape} width={159} height={43} class="attachment-large size-large" loading="lazy" decoding="async" fetchpriority="auto" />
+      </div>
+    </div>
+
+    <div class="sv-el rodape-copyright sv-widget sv-widget-heading">
+      <div class="sv-widget-container">
+        {/* Literal del origen: sin espacio tras © y año 2025 en una campaña de 2026.
+            CONTENT-INVENTORY §4 lo marca [ORIGINAL - POSSIBLE TYPO]; se migra tal cual. */}
+        <p class="sv-heading-title">{ui.rodape.copyright}</p>
+      </div>
+    </div>
+
+    <div class="sv-el rodape-sociales sv-shape-circle sv-grid-0 sv-widget sv-widget-social-icons">
+      <div class="sv-widget-container">
+        <ul class="sv-grid">
+          {redes.map((r) => (
+            <li class="sv-grid-item">
+              <a
+                class={`sv-icon sv-social-icon sv-social-icon-${r.nombre.toLowerCase()} sv-repeater-item-${r.item}`}
+                href={r.href}
+                target="_blank"
+              >
+                <span class="sv-screen-only">{r.nombre}</span>
+                <Fragment set:html={iconosSociales[r.nombre.toLowerCase()]} />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</footer>

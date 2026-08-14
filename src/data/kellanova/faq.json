@@ -1,0 +1,146 @@
+[
+  {
+    "titulo": "Quem pode participar?",
+    "bloques": [
+      {
+        "tag": "p",
+        "texto": "Podem participar consumidores pessoas físicas, com 18 anos ou mais, residentes e domiciliados no Brasil, que tenham CPF válido, sejam cadastrados no Clube Condor com cadastro completo e realizem compras qualificadas em lojas Condor nos estados do Paraná e Santa Catarina, dentro do período da promoção.",
+        "html": "Podem participar consumidores pessoas físicas, com 18 anos ou mais, residentes e domiciliados no Brasil, que tenham CPF válido, sejam cadastrados no Clube Condor com cadastro completo e realizem compras qualificadas em lojas Condor nos estados do Paraná e Santa Catarina, dentro do período da promoção."
+      },
+      {
+        "tag": "p",
+        "texto": "Não podem participar: menores de idade, pessoas jurídicas, participantes com cadastro incompleto, colaboradores do Condor e empresas envolvidas diretamente na campanha.",
+        "html": "Não podem participar: menores de idade, pessoas jurídicas, participantes com cadastro incompleto, colaboradores do Condor e empresas envolvidas diretamente na campanha."
+      }
+    ],
+    "links": []
+  },
+  {
+    "titulo": "Como faço para participar?",
+    "bloques": [
+      {
+        "tag": "p",
+        "texto": "Basta:",
+        "html": "Basta:"
+      },
+      {
+        "tag": "li",
+        "texto": "Ser cadastrado no Clube Condor (cadastro completo).",
+        "html": "<b>Ser cadastrado no Clube Condor</b> (cadastro completo)."
+      },
+      {
+        "tag": "li",
+        "texto": "Informar seu CPF no caixa antes do início do registro da compra.",
+        "html": "<b>Informar seu CPF no caixa antes do início do registro da compra.</b>"
+      },
+      {
+        "tag": "li",
+        "texto": "Comprar R$ 15,00 em produtos participantes da marca Kellanova em uma loja Condor dentro do período da promoção.",
+        "html": "Comprar <b>R$ 15,00 em produtos participantes da marca Kellanova</b> em uma loja Condor dentro do período da promoção."
+      },
+      {
+        "tag": "li",
+        "texto": "A cada R$ 15,00, você recebe 1 Número da Sorte.",
+        "html": "A cada R$ 15,00, você recebe <b>1 Número da Sorte</b>."
+      },
+      {
+        "tag": "li",
+        "texto": "Se comprar produtos aceleradores, você ganha 1 Número da Sorte adicional por unidade.",
+        "html": "Se comprar <b>produtos aceleradores</b>, você ganha <b>1 Número da Sorte adicional por unidade</b>."
+      },
+      {
+        "tag": "li",
+        "texto": "Pagando com Z-ON Card, seus números são dobrados automaticamente.",
+        "html": "Pagando com <b>Z-ON Card</b>, seus números são <b>dobrados</b> automaticamente."
+      },
+      {
+        "tag": "p",
+        "texto": "Os números da sorte ficam disponíveis no aplicativo Clube Condor, em até 72 horas após a compra.",
+        "html": "Os números da sorte ficam disponíveis no <b>aplicativo Clube Condor</b>, em até <b>72 horas após a compra.</b>"
+      }
+    ],
+    "links": []
+  },
+  {
+    "titulo": "Se eu comprar mais que R$ 15,00, ganho mais Números da Sorte?",
+    "bloques": [
+      {
+        "tag": "p",
+        "texto": "Para gerar números da sorte, a compra precisa ser de R$ 15,00 ou seus múltiplos. Valores residuais que não completem múltiplos de R$ 15,00 não serão acumulados para compras futuras.",
+        "html": "<strong>Para gerar números da sorte, a compra precisa ser de R$ 15,00 ou seus múltiplos. Valores residuais que não completem múltiplos de R$ 15,00 não serão acumulados para compras futuras.</strong>"
+      },
+      {
+        "tag": "p",
+        "texto": "O resultado também pode ser divulgado no site da promoçao nas redes sociaes e materiais de ponto de venda, em até 20 dias após cada sorteio.",
+        "html": "<strong>O resultado também pode ser divulgado no site da promoçao nas redes sociaes e materiais de ponto de venda, em até 20 dias após cada sorteio.</strong>"
+      }
+    ],
+    "links": []
+  },
+  {
+    "titulo": "Eu não tenho cadastro no Clube Condor e agora?",
+    "bloques": [
+      {
+        "tag": "p",
+        "texto": "Baixe o aplicativo Clube Condor em sua loja de aplicativos ou acesse o site www.clubecondor.com e cadastre-se.",
+        "html": "<strong>Baixe o aplicativo Clube Condor em sua loja de aplicativos ou acesse o site <u><a href=\"http://www.clubecondor.com/\">www.clubecondor.com</a></u> e cadastre-se.</strong>"
+      }
+    ],
+    "links": [
+      {
+        "texto": "www.clubecondor.com",
+        "href": "http://www.clubecondor.com/",
+        "target": null
+      }
+    ]
+  },
+  {
+    "titulo": "E se eu não atualizar meu cadastro no Clube Condor?",
+    "bloques": [
+      {
+        "tag": "p",
+        "texto": "Você pode se cadastrar gratuitamente a qualquer momento pelo site www.clubecondor.com ou pelo aplicativo Clube Condor, preenchendo todos os dados obrigatórios:nome completo, endereço, CPF, data de nascimento, sexo, telefone celular e e-mail",
+        "html": "Você pode se cadastrar gratuitamente a qualquer momento pelo <b>site </b><u><a href=\"http://www.clubecondor.com/\" target=\"_new\"><b>www.clubecondor.com</b></a></u> ou pelo <b>aplicativo Clube Condor</b>, preenchendo todos os dados obrigatórios:<br>nome completo, endereço, CPF, data de nascimento, sexo, telefone celular e e-mail"
+      },
+      {
+        "tag": "p",
+        "texto": "Somente participantes com cadastro completo concorrem aos prêmios.",
+        "html": "Somente participantes com <b>cadastro completo</b> concorrem aos prêmios."
+      }
+    ],
+    "links": [
+      {
+        "texto": "www.clubecondor.com",
+        "href": "http://www.clubecondor.com/",
+        "target": "_new"
+      }
+    ]
+  },
+  {
+    "titulo": "Como saberei se fui contemplado?",
+    "bloques": [
+      {
+        "tag": "p",
+        "texto": "Os contemplados serão comunicados pela promotora por telefone ou e-mail, conforme dados cadastrados no Clube Condor.O resultado também pode ser divulgado no site da promoção, nas redes sociais e materiais de ponto de venda, em até 20 dias após cada sorteio",
+        "html": "Os contemplados serão comunicados pela promotora <b>por telefone ou e-mail</b>, conforme dados cadastrados no Clube Condor.<br>O resultado também pode ser divulgado no <b>site da promoção</b>, nas <b>redes sociais</b> e materiais de ponto de venda, em até 20 dias após cada sorteio"
+      }
+    ],
+    "links": []
+  },
+  {
+    "titulo": "Não achei a minha dúvida. Como devo proceder?",
+    "bloques": [
+      {
+        "tag": "p",
+        "texto": "As dúvidas devem ser direcionadas primeiramente à empresa promotora, conforme previsto no regulamento.",
+        "html": "As dúvidas devem ser direcionadas primeiramente à <b>empresa promotora</b>, conforme previsto no regulamento."
+      },
+      {
+        "tag": "p",
+        "texto": "Você pode entrar em contato pelo SAC Condor – sac@condor.com.br, que realizará os esclarecimentos conforme as regras oficiais da promoção",
+        "html": "Você pode entrar em contato pelo <b>SAC Condor – sac@condor.com.br</b>, que realizará os esclarecimentos conforme as regras oficiais da promoção"
+      }
+    ],
+    "links": []
+  }
+]

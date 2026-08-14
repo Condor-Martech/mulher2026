@@ -1,0 +1,66 @@
+---
+// Sección regulamento — MIGRATION-MAP §3, §8, §14.
+import { URL_REGULAMENTO } from '../../data/kellanova/navegacion'
+import { ui } from '../../data/kellanova/textos'
+---
+
+<section class="sv-el regulamento sv-flex sv-con-boxed sv-con sv-hijo" aria-labelledby="titulo-regulamento">
+  <div class="sv-con-inner">
+
+    <div class="sv-el regulamento-caja sv-con-full sv-flex sv-con sv-hijo" data-settings='{"background_background":"classic"}'>
+
+      <div class="sv-el regulamento-titulo sv-widget sv-widget-heading">
+        <div class="sv-widget-container">
+          <h2 id="titulo-regulamento" class="sv-heading-title">{ui.regulamento.titulo}</h2>
+        </div>
+      </div>
+
+      <div class="sv-el regulamento-boton sv-mobile-align-justify sv-align-center sv-widget sv-widget-button">
+        <div class="sv-widget-container">
+          <div class="">
+            <a class="sv-button sv-animation-grow" href={URL_REGULAMENTO} target="_blank">
+              <span class="sv-button-content-wrapper">
+                <span class="sv-button-text">{ui.regulamento.boton}</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sv-el regulamento-separador-1 sv-widget sv-widget-divider">
+      <div class="sv-widget-container">
+        <div class="sv-divider"><span class="sv-divider-separator"></span></div>
+      </div>
+    </div>
+
+    <div class="sv-el regulamento-legal-caja sv-con-full sv-flex sv-con sv-hijo">
+
+      {/* El ancla va AQUÍ, después del botón, no al principio de la sección.
+          MIGRATION-MAP §2: moverla desplazaría el punto de scroll del menú. */}
+      <div class="sv-el ancla-regulamento sv-widget sv-widget-menu-anchor">
+        <div class="sv-widget-container">
+          <div class="sv-menu-anchor" id="Regulamento"></div>
+        </div>
+      </div>
+
+      <div class="sv-el regulamento-legal sv-widget sv-widget-heading">
+        <div class="sv-widget-container">
+          {/* Literal: «consulte» en minúscula tras punto e «imagens» sin punto previo.
+              CONTENT-INVENTORY §4 lo marca [ORIGINAL - POSSIBLE TYPO]. */}
+          {/* Texto legal corrido, no un encabezado de sección: en el origen era <h2>. */}
+          <p class="sv-heading-title">{ui.regulamento.legal}</p>
+        </div>
+      </div>
+
+      <div class="sv-el regulamento-separador-2 sv-widget sv-widget-divider">
+        <div class="sv-widget-container">
+          <div class="sv-divider"><span class="sv-divider-separator"></span></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>

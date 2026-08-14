@@ -1,0 +1,49 @@
+---
+// Documento Elementor 23175 — MIGRATION-MAP §3, §13, §18 (P3).
+//
+// El contenido NO pertenece a esta campaña: habla de cuidado capilar con las
+// marcas Siàge y Vult, mientras la landing es la promoción de verano de
+// Kellanova (CONTENT-INVENTORY §8). Se inventaría y se migra porque existe.
+//
+// En el origen NO se abre nunca: data-sv-settings trae
+// {"triggers":[],"timing":[]} — sin disparadores ni temporización. Aquí se
+// reproduce oculto con una regla propia en vez de arrastrar la maquinaria de
+// popups de Elementor Pro.
+//
+// El formulario no existe en el HTML público: JetFormBuilder tiene la
+// programación vencida y emite solo el mensaje. Sus campos son
+// [DYNAMIC - EXTRACTION REQUIRED] y su endpoint [BACKEND UNKNOWN] (§13).
+import { ui } from '../../data/kellanova/textos'
+---
+
+<div
+ 
+  data-sv-id="popup"
+  class="sv-raiz sv-popup-doc sv-location-popup"
+  data-sv-settings='{"a11y_navigation":"yes","triggers":[],"timing":[]}'
+  hidden
+>
+  <div class="sv-el popup sv-flex sv-con-boxed sv-con sv-padre">
+    <div class="sv-con-inner">
+
+      <div class="sv-el popup-titulo sv-widget sv-widget-heading">
+        <div class="sv-widget-container">
+          <h2 class="sv-heading-title">{ui.popup.titulo}</h2>
+        </div>
+      </div>
+
+      <div class="sv-el popup-subtitulo sv-widget sv-widget-heading">
+        <div class="sv-widget-container">
+          <h2 class="sv-heading-title">{ui.popup.subtitulo}</h2>
+        </div>
+      </div>
+
+      <div class="sv-el popup-form sv-widget">
+        <div class="sv-widget-container">
+          <div class="jet-form-schedule-message expired-message">{ui.popup.mensaje}</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,114 @@
+{
+  "title": "sabordoveraokellanova - Campanhas Condor",
+  "metaDescription": "VALE-PRÊMIO CARTÃO PRESENTE R$ 500 ✓ CONFIRMADO VANDERLEI BENI FERREIRA SÉRIE560 Nº81330 DATA24/01/26 VALE-PRÊMIO CARTÃO PRESENTE R$ 500 ✓ CONFIRMADO VANDERLEI BENI FERREIRA SÉRIE936 Nº31564 DATA28/01/26 VALE-PRÊMIO BICICLETA ELÉTRICA LIBERTY VTB2 500W ✓ CONFIRMADO JULIANO DIAS SÉRIE108 Nº89326 DATA31/01/26 VALE-PRÊMIO CARTÃO PRESENTE R$ 500 ✓ CONFIRMADO EDNA DOS SANTOS CORREIA SÉRIE846 Nº71304 DATA04/02/26 VALE-PRÊMIO BICICLETA",
+  "canonical": "https://lp.condor.com.br/sabordoveraokellanova/",
+  "robots": "max-image-preview:large",
+  "ogTitle": "sabordoveraokellanova - Campanhas Condor",
+  "ogDescription": "VALE-PRÊMIO CARTÃO PRESENTE R$ 500 ✓ CONFIRMADO VANDERLEI BENI FERREIRA SÉRIE560 Nº81330 DATA24/01/26 VALE-PRÊMIO CARTÃO PRESENTE R$ 500 ✓ CONFIRMADO VANDERLEI BENI FERREIRA SÉRIE936 Nº31564 DATA28/01/26 VALE-PRÊMIO BICICLETA ELÉTRICA LIBERTY VTB2 500W ✓ CONFIRMADO JULIANO DIAS SÉRIE108 Nº89326 DATA31/01/26 VALE-PRÊMIO CARTÃO PRESENTE R$ 500 ✓ CONFIRMADO EDNA DOS SANTOS CORREIA SÉRIE846 Nº71304 DATA04/02/26 VALE-PRÊMIO BICICLETA",
+  "ogUrl": "https://lp.condor.com.br/sabordoveraokellanova/",
+  "ogLocale": "pt_BR",
+  "ogType": "article",
+  "twitterCard": "summary_large_image",
+  "twitterTitle": "sabordoveraokellanova - Campanhas Condor",
+  "ogImage": "https://lp.condor.com.br/assets/sabordoveraokellanova/Logo-Condor-cestas-de-natal@2x.png",
+  "twitterImage": "https://lp.condor.com.br/assets/sabordoveraokellanova/Logo-Condor-cestas-de-natal@2x.png",
+  "lang": "pt-BR",
+  "ogSiteName": "Campanhas Condor -",
+  "gtmId": "GTM-PCC7ZXX",
+  "jsonLd": {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://lp.condor.com.br/sabordoveraokellanova/#breadcrumblist",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "@id": "https://www.condor.com.br#listItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.condor.com.br",
+            "nextItem": {
+              "@type": "ListItem",
+              "@id": "https://lp.condor.com.br/sabordoveraokellanova/#listItem",
+              "name": "sabordoveraokellanova"
+            }
+          },
+          {
+            "@type": "ListItem",
+            "@id": "https://lp.condor.com.br/sabordoveraokellanova/#listItem",
+            "position": 2,
+            "name": "sabordoveraokellanova",
+            "previousItem": {
+              "@type": "ListItem",
+              "@id": "https://www.condor.com.br#listItem",
+              "name": "Home"
+            }
+          }
+        ]
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://lp.condor.com.br/#organization",
+        "name": "Campanhas Condor",
+        "url": "https://lp.condor.com.br/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://lp.condor.com.br/assets/sabordoveraokellanova/Logo-Condor-cestas-de-natal@2x.png",
+          "@id": "https://lp.condor.com.br/sabordoveraokellanova/#organizationLogo",
+          "width": 150,
+          "height": 40
+        },
+        "image": {
+          "@id": "https://lp.condor.com.br/sabordoveraokellanova/#organizationLogo"
+        }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://campanha.condor.com.br/author/armando/#author",
+        "url": "https://campanha.condor.com.br/author/armando/",
+        "name": "Armando Castro",
+        "image": {
+          "@type": "ImageObject",
+          "@id": "https://lp.condor.com.br/sabordoveraokellanova/#authorImage",
+          "url": "https://secure.gravatar.com/avatar/5b9d0b83729274ffaf45ad964976f4febe8d5c71a61f30177e69dad3071cf084?s=96&d=mm&r=g",
+          "width": 96,
+          "height": 96,
+          "caption": "Armando Castro"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://lp.condor.com.br/sabordoveraokellanova/#webpage",
+        "url": "https://lp.condor.com.br/sabordoveraokellanova/",
+        "name": "sabordoveraokellanova - Campanhas Condor",
+        "description": "VALE-PRÊMIO CARTÃO PRESENTE R$ 500 ✓ CONFIRMADO VANDERLEI BENI FERREIRA SÉRIE560 Nº81330 DATA24/01/26 VALE-PRÊMIO CARTÃO PRESENTE R$ 500 ✓ CONFIRMADO VANDERLEI BENI FERREIRA SÉRIE936 Nº31564 DATA28/01/26 VALE-PRÊMIO BICICLETA ELÉTRICA LIBERTY VTB2 500W ✓ CONFIRMADO JULIANO DIAS SÉRIE108 Nº89326 DATA31/01/26 VALE-PRÊMIO CARTÃO PRESENTE R$ 500 ✓ CONFIRMADO EDNA DOS SANTOS CORREIA SÉRIE846 Nº71304 DATA04/02/26 VALE-PRÊMIO BICICLETA",
+        "inLanguage": "pt-BR",
+        "isPartOf": {
+          "@id": "https://lp.condor.com.br/#website"
+        },
+        "breadcrumb": {
+          "@id": "https://lp.condor.com.br/sabordoveraokellanova/#breadcrumblist"
+        },
+        "author": {
+          "@id": "https://campanha.condor.com.br/author/armando/#author"
+        },
+        "creator": {
+          "@id": "https://campanha.condor.com.br/author/armando/#author"
+        },
+        "datePublished": "2025-12-15T16:07:09-03:00",
+        "dateModified": "2026-03-24T15:45:37-03:00"
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://lp.condor.com.br/#website",
+        "url": "https://lp.condor.com.br/",
+        "name": "Campanhas Condor",
+        "inLanguage": "pt-BR",
+        "publisher": {
+          "@id": "https://lp.condor.com.br/#organization"
+        }
+      }
+    ]
+  }
+}

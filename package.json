@@ -22,6 +22,7 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "sharp": "^0.34.5",
+    "swiper": "8.4.7",
     "tailwindcss": "^4.2.1"
   },
   "devDependencies": {
