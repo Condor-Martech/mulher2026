@@ -1,3 +1,10 @@
+-- Fica em src/data/encontro-de-sabores/ e não em supabase/migrations/ porque as
+-- quatro folhas de estilo em produção varrem o repositório inteiro atrás de
+-- nomes de classe e só excluem as pastas `encontro-de-sabores`. Um .sql fora
+-- delas acrescentava 37 bytes de CSS morto a maes, mulher, pascoa e sabores.
+-- Medido. Enquanto essas folhas não usarem `source(none)`, tudo o que for desta
+-- campanha mora debaixo de uma pasta com este nome.
+
 -- Encontro de Sabores Condor — cadastro da campanha e do evento.
 --
 -- Duas linhas novas. Não toca nenhuma outra campanha.
