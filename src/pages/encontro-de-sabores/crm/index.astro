@@ -18,16 +18,51 @@
 import LayoutEncontroSabores from "../../../layouts/LayoutEncontroSabores.astro";
 import FormularioInscricao from "../../../components/encontro-de-sabores/FormularioInscricao.astro";
 import RodapeEncontro from "../../../components/encontro-de-sabores/RodapeEncontro.astro";
-import content from "../../../data/encontro-de-sabores/content.json";
 import { obterEstado } from "../../../services/encontroEventService";
+import { getEncontroContent } from "../../../services/encontroContentService";
 
+// Mesmo padrão da rota web: um fetch por requisição, prop-drilled.
+const [{ status: estado, eventId }, conteudoBruto] = await Promise.all([
+  obterEstado("crm"),
+  getEncontroContent(),
+]);
+const content = conteudoBruto ?? {};
 const { seo, evento, programacao, mensagens, hero } = content;
-const { status: estado, eventId } = await obterEstado("crm");
 
 Astro.response.headers.set("Cache-Control", "no-store");
 ---
 
 <LayoutEncontroSabores title={seo.tituloCrm}>
+  {/* Resgate de imagens: os assets são servidos do Minio (toEncontroCdn reescreve
+      /assets/… → s3.cndr.me/…). Se um asset ainda não estiver no Minio (404/rede),
+      o <img> cai sozinho na cópia local `/assets/encontro-de-sabores/…` que foi no
+      build. is:inline e no topo do body para se registrar antes de as imagens
+      carregarem. Não cobre backgrounds de CSS, só elementos <img>. */}
+  <script is:inline>
+    (function () {
+      var FROM = "https://s3.cndr.me/lp-content/encontro-de-sabores/";
+      var TO = "/assets/encontro-de-sabores/";
+      function resgatar(img) {
+        if (!img || img.tagName !== "IMG" || img.dataset.localFallback) return;
+        if (img.src.indexOf(FROM) === -1 && (img.srcset || "").indexOf(FROM) === -1) return;
+        img.dataset.localFallback = "1";
+        // O srcset ANTES do src: com srcset presente o browser ignora o src, e
+        // trocar só o src deixaria a imagem quebrada. O hero é o único <img>
+        // com srcset da página, e foi exatamente onde isto apareceu.
+        if (img.srcset) img.srcset = img.srcset.split(FROM).join(TO);
+        img.src = img.src.split(FROM).join(TO);
+      }
+      // `error` não borbulha → capture. Pega falhas futuras de carregamento.
+      document.addEventListener("error", function (e) { resgatar(e.target); }, true);
+      // E as que já falharam antes deste script rodar.
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("img").forEach(function (img) {
+          if (img.complete && img.naturalWidth === 0) resgatar(img);
+        });
+      });
+    })();
+  </script>
+
   <main class="min-h-screen w-full bg-encontro-tijolo px-6 py-10 md:py-16 lg:px-8">
     <div class="mx-auto w-full max-w-[720px]">
       <img
@@ -60,7 +95,7 @@ Astro.response.headers.set("Cache-Control", "no-store");
             <p class="mt-6 flex min-h-[56px] items-center justify-center rounded-encontro-sm bg-encontro-tijolo px-5 text-center font-bold text-encontro-creme text-[clamp(14px,1.3vw,18px)]">
               {programacao.destaque}
             </p>
-            <FormularioInscricao source="crm" eventId={eventId} />
+            <FormularioInscricao source="crm" eventId={eventId} content={content} />
           </>
         )}
 
@@ -90,10 +125,10 @@ Astro.response.headers.set("Cache-Control", "no-store");
     </div>
   </main>
 
-  <RodapeEncontro />
+  <RodapeEncontro rodape={content.rodape} />
 </LayoutEncontroSabores>
 
 <script>
-  import { montarFormulario } from "../../../scripts/encontro-de-sabores/formulario";
+  import { montarFormulario } from "../../../utils/encontroRegistration";
   montarFormulario();
 </script>

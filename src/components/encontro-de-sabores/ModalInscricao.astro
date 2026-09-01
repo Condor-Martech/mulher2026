@@ -14,14 +14,15 @@
 //   FULL      15 vagas ocupadas
 //   FINISHED  passou de 07/09 23:59
 // FULL e FINISHED mostram o mesmo texto: é o que o briefing pede.
-import content from "../../data/encontro-de-sabores/content.json";
+import type { ConteudoEncontro } from "../../services/encontroContentService";
 import FormularioInscricao from "./FormularioInscricao.astro";
 
 interface Props {
   estado: "SOON" | "OPEN" | "FULL" | "FINISHED";
   eventId?: string;
+  content: ConteudoEncontro;
 }
-const { estado, eventId = "" } = Astro.props;
+const { estado, eventId = "", content } = Astro.props;
 const { mensagens, evento, programacao, formulario } = content;
 ---
 
@@ -78,13 +79,13 @@ const { mensagens, evento, programacao, formulario } = content;
         <p class="mt-2 text-center text-[clamp(12px,1.2vw,16px)]">
           {evento.dataCurta} às {evento.horario} · {evento.local}
         </p>
-        <FormularioInscricao eventId={eventId} source="social" />
+        <FormularioInscricao eventId={eventId} source="social" content={content} />
       </>
     )}
   </div>
 </dialog>
 
 <script>
-  import { montarModalInscricao } from "../../scripts/encontro-de-sabores/formulario";
+  import { montarModalInscricao } from "../../utils/encontroRegistration";
   montarModalInscricao();
 </script>

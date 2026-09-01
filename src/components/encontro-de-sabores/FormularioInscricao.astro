@@ -6,15 +6,23 @@
 // para que uma correção de validação ou de acessibilidade não precise ser
 // feita duas vezes.
 //
-// Campos e critérios: os do briefing. Os três checkboxes são obrigatórios e
-// vêm DESMARCADOS por padrão.
-import content from "../../data/encontro-de-sabores/content.json";
+// Cada edição do evento traz regras próprias, então NADA disso está no
+// JavaScript: o que é obrigatório vem de `formulario.aceites[].obrigatorio` no
+// content.json, vira o atributo `required` aqui, e o validador só obedece ao
+// `required` (mesmo critério do saboresRegistration.ts). Mudar o que se exige
+// na próxima edição é subir o content.json ao Minio — sem deploy, sem tocar JS.
+//
+// As mensagens de erro viajam no próprio markup, em `data-erro`, em vez de
+// serem importadas pelo script do cliente. Assim o texto continua vindo do
+// Minio e o bundle não carrega nenhuma string.
+import type { ConteudoEncontro } from "../../services/encontroContentService";
 
 interface Props {
   eventId?: string;
   source: "social" | "crm";
+  content: ConteudoEncontro;
 }
-const { eventId = "", source } = Astro.props;
+const { eventId = "", source, content } = Astro.props;
 const { evento, mensagens, formulario } = content;
 
 const CAMPOS = formulario.campos;
@@ -41,7 +49,19 @@ const CHECKS = formulario.aceites;
   </p>
 </div>
 
-<form id="form-inscricao" data-event-id={eventId} data-source={source} novalidate class="mt-6">
+<form
+  id="form-inscricao"
+  data-event-id={eventId}
+  data-source={source}
+  data-erro-formulario={formulario.erros.formulario}
+  data-erro-cpf-duplicado={formulario.erros.cpfDuplicado}
+  data-erro-esgotado={formulario.erros.esgotado}
+  data-erro-envio={formulario.erros.envio}
+  data-enviando={formulario.enviando}
+  data-enviar={formulario.enviar}
+  novalidate
+  class="mt-6"
+>
   <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
     {CAMPOS.map((c) => (
       <div class:list={["flex flex-col gap-1", c.nome === "nome" && "sm:col-span-2"]}>
@@ -61,6 +81,7 @@ const CHECKS = formulario.aceites;
           required
           aria-required="true"
           aria-describedby={`erro-${c.nome}`}
+          data-erro={formulario.erros[c.nome as keyof typeof formulario.erros]}
           class="min-h-[48px] w-full rounded-encontro-sm border-2 border-transparent bg-white px-4 text-encontro-vinho placeholder:text-encontro-vinho/40 text-[clamp(14px,1.2vw,16px)] transition-colors duration-150 focus-visible:border-encontro-creme focus-visible:outline-none aria-[invalid=true]:border-encontro-red"
         />
         <p id={`erro-${c.nome}`} aria-live="polite" class="min-h-[1.05em] font-medium text-encontro-creme text-[clamp(12px,1vw,13px)]"></p>
@@ -79,12 +100,15 @@ const CHECKS = formulario.aceites;
               id={c.nome}
               name={c.nome}
               type="checkbox"
-              required
-              aria-required="true"
+              required={c.obrigatorio}
+              aria-required={c.obrigatorio ? "true" : "false"}
               aria-describedby={`erro-${c.nome}`}
+              data-erro={formulario.erros[c.nome as keyof typeof formulario.erros]}
               class="mt-[3px] h-5 w-5 shrink-0 accent-encontro-creme focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme"
             />
-            <span class="leading-[1.35] text-[clamp(12px,1.1vw,14px)]">{c.texto}</span>
+            <span class="leading-[1.35] text-[clamp(12px,1.1vw,14px)]">
+              {c.texto}{c.obrigatorio && <span aria-hidden="true"> *</span>}
+            </span>
           </label>
           <p id={`erro-${c.nome}`} aria-live="polite" class="min-h-[1.05em] pl-8 font-medium text-encontro-creme text-[clamp(12px,1vw,13px)]"></p>
         </div>
