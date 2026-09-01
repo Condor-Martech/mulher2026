@@ -120,6 +120,44 @@ function classificarRecusa(motivo: string): MotivoRecusa {
  * clique fora do quadro também (compara-se o ponto com o rect do diálogo,
  * porque o <dialog> ocupa a tela toda e o ::backdrop não recebe cliques).
  */
+/**
+ * Devolve o modal ao estado inicial ao ser reaberto.
+ *
+ * Depois de uma inscrição concluída o formulário fica escondido e o bloco de
+ * sucesso visível. Sem isto, quem reabre o modal volta a ver «Inscrição
+ * realizada com sucesso» em vez de um formulário — o mesmo ecrã de sempre,
+ * como se nada tivesse acontecido.
+ *
+ * Se a inscrição anterior foi concluída, os campos são limpos: quem reabre é
+ * outra pessoa. Se o modal foi fechado a meio, os valores ficam — quem estava
+ * a preencher não quer recomeçar.
+ */
+function reiniciar(
+  modal: HTMLDialogElement,
+  form: HTMLFormElement | null,
+): void {
+  const sucesso = modal.querySelector<HTMLElement>("#form-sucesso");
+  const aviso = modal.querySelector<HTMLElement>("#form-aviso");
+
+  if (form && sucesso && !sucesso.hidden) {
+    form.reset();
+    for (const err of form.querySelectorAll<HTMLElement>('[id^="erro-"]')) {
+      err.textContent = "";
+    }
+    for (const el of form.querySelectorAll<HTMLInputElement>("[name]")) {
+      delete el.dataset.tocado;
+      el.setAttribute("aria-invalid", "false");
+    }
+    sucesso.hidden = true;
+    form.hidden = false;
+  }
+
+  if (aviso) {
+    aviso.textContent = "";
+    delete aviso.dataset.tipo;
+  }
+}
+
 export function montarModalInscricao(): void {
   const modal = document.querySelector<HTMLDialogElement>("#encontro-modal");
   if (!modal) return;
@@ -129,8 +167,9 @@ export function montarModalInscricao(): void {
   )) {
     disparador.addEventListener("click", (ev) => {
       ev.preventDefault();
-      modal.showModal();
       const form = modal.querySelector<HTMLFormElement>("#form-inscricao");
+      reiniciar(modal, form);
+      modal.showModal();
       track("event_modal_opened", {
         event_id: form?.dataset.eventId ?? "",
         source: form?.dataset.source ?? "social",
