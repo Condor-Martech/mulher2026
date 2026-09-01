@@ -94,6 +94,28 @@ function mascaraTelefone(v: string): string {
 }
 
 /**
+ * Classifica o motivo que a RPC `inscrever_participante` devolve em
+ * `{ success: false, error }`.
+ *
+ * A RPC responde com códigos em maiúsculas — `NOT_OPEN_YET` foi o primeiro
+ * observado, ao testar antes da data de abertura. Não temos acesso ao corpo da
+ * função, então casamos por trechos em vez de listar códigos exatos: um código
+ * novo ainda cai numa categoria plausível em vez de virar o genérico «verifique
+ * seus dados», que engana quando o problema não são os dados.
+ *
+ * A ordem importa: `NOT_OPEN_YET` é testado antes de tudo.
+ */
+type MotivoRecusa = 'nao_aberto' | 'esgotado' | 'cpf_duplicado' | 'erro_rpc';
+
+function classificarRecusa(motivo: string): MotivoRecusa {
+  const m = motivo.toUpperCase();
+  if (/NOT_OPEN|NAO_ABERT|NOT_STARTED|BEFORE/.test(m)) return 'nao_aberto';
+  if (/FULL|SOLD|ESGOTAD|LOTAD|NO_SLOT|SEM_VAGA|CAPACITY/.test(m)) return 'esgotado';
+  if (/DUPLIC|ALREADY|CPF|EXISTS/.test(m)) return 'cpf_duplicado';
+  return 'erro_rpc';
+}
+
+/**
  * Modal da LP web. Padrão do repo: <dialog> nativo, Esc fecha de graça e o
  * clique fora do quadro também (compara-se o ponto com o rect do diálogo,
  * porque o <dialog> ocupa a tela toda e o ::backdrop não recebe cliques).
@@ -241,24 +263,28 @@ export function montarFormulario(): void {
         return;
       }
       // Erros de negócio que a RPC devolve.
-      const motivo = String(res.error ?? "");
-      const duplicado = /duplic|already|CPF/i.test(motivo);
-      const esgotado = /full|esgotad|lotad/i.test(motivo);
-      track("registration_failed", {
-        event_id: eventId,
-        source,
-        reason: duplicado ? "cpf_duplicado" : esgotado ? "esgotado" : "erro_rpc",
-      });
-      if (esgotado) track("vagas_esgotadas_viewed", { event_id: eventId, source });
+      // O motivo TEM que aparecer no console: sem isto uma recusa que não case
+      // com nenhum padrão vira a mensagem genérica sem deixar rasto — foi
+      // exatamente o que aconteceu ao testar, e custou uma ida e volta.
+      console.error("[Encontro] RPC recusou a inscrição:", res);
+      const motivo = classificarRecusa(String(res.error ?? ""));
+      track("registration_failed", { event_id: eventId, source, reason: motivo });
+      if (motivo === "esgotado") {
+        track("vagas_esgotadas_viewed", { event_id: eventId, source });
+      }
       if (aviso) {
-        aviso.textContent = duplicado
-          ? (d.erroCpfDuplicado ?? "")
-          : esgotado
-            ? (d.erroEsgotado ?? "")
-            : (d.erroEnvio ?? "");
+        aviso.textContent =
+          motivo === "nao_aberto"
+            ? (d.erroNaoAberto ?? "")
+            : motivo === "esgotado"
+              ? (d.erroEsgotado ?? "")
+              : motivo === "cpf_duplicado"
+                ? (d.erroCpfDuplicado ?? "")
+                : (d.erroEnvio ?? "");
         aviso.dataset.tipo = "erro";
       }
-    } catch {
+    } catch (err) {
+      console.error("[Encontro] Exceção ao enviar a inscrição:", err);
       track("registration_failed", {
         event_id: eventId,
         source,

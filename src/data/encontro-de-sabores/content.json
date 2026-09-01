@@ -195,6 +195,7 @@
       "formulario": "Verifique os campos destacados.",
       "cpfDuplicado": "Este CPF já possui inscrição confirmada para o evento.",
       "esgotado": "As inscrições estão encerradas. Agradecemos o seu interesse!",
+      "naoAberto": "As inscrições ainda não estão abertas.",
       "envio": "Não foi possível concluir sua inscrição. Verifique seus dados e tente novamente."
     }
   }
