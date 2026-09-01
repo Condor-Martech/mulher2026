@@ -1,0 +1,99 @@
+---
+// Canal CRM do Encontro de Sabores Condor.
+//
+// É o segundo dos dois canais do briefing: 15 vagas pela LP e 15 pelo CRM.
+// Mesmo padrão de /maes/palestra/[id] e /sabores-de-inverno/palestra/[id]: uma
+// página própria, com o formulário EM LINHA (não em modal) e sua própria cota.
+//
+//   web  → /encontro-de-sabores/            modal   source=social  cota qtd_social
+//   CRM  → /encontro-de-sabores/crm/  em linha source=crm    cota qtd_crm
+//
+// SSR sem cache: o estado das vagas é consultado a cada requisição, nunca é
+// calculado no build nem servido do cache.
+//
+// O estado vem de services/encontroEventService.ts com source='crm': ele busca a
+// linha do evento em `palestras` com campanha_id = 'encontro-de-sabores' e o
+// estado sai de utils/eventStatus.ts. Enquanto essa linha não existir, o serviço
+// devolve SOON — não há mais nenhum estado fixo aqui.
+import LayoutEncontroSabores from "../../../layouts/LayoutEncontroSabores.astro";
+import FormularioInscricao from "../../../components/encontro-de-sabores/FormularioInscricao.astro";
+import RodapeEncontro from "../../../components/encontro-de-sabores/RodapeEncontro.astro";
+import content from "../../../data/encontro-de-sabores/content.json";
+import { obterEstado } from "../../../services/encontroEventService";
+
+const { seo, evento, programacao, mensagens, hero } = content;
+const { status: estado, eventId } = await obterEstado("crm");
+
+Astro.response.headers.set("Cache-Control", "no-store");
+---
+
+<LayoutEncontroSabores title={seo.tituloCrm}>
+  <main class="min-h-screen w-full bg-encontro-tijolo px-6 py-10 md:py-16 lg:px-8">
+    <div class="mx-auto w-full max-w-[720px]">
+      <img
+        src={hero.selo}
+        alt={hero.seloAlt}
+        width="1200"
+        height="656"
+        fetchpriority="high"
+        decoding="async"
+        class="mx-auto w-[min(100%,340px)] md:w-[min(100%,420px)]"
+      />
+
+      <div
+        class="mt-8 rounded-encontro-lg bg-encontro-vinho px-6 py-8 sm:px-8 md:mt-12 md:px-10 md:py-10"
+      >
+        <h1
+          class="text-center font-bold leading-tight text-encontro-creme text-[clamp(22px,3.2vw,36px)]"
+        >
+          {evento.nome}
+        </h1>
+        <p
+          class="mt-4 text-center font-normal leading-[1.5] text-encontro-branco text-[clamp(13px,1.4vw,18px)]"
+        >
+          {evento.data} · {evento.horario}<br />
+          {evento.local} — {evento.endereco}
+        </p>
+
+        {estado === "OPEN" && (
+          <>
+            <p class="mt-6 flex min-h-[56px] items-center justify-center rounded-encontro-sm bg-encontro-tijolo px-5 text-center font-bold text-encontro-creme text-[clamp(14px,1.3vw,18px)]">
+              {programacao.destaque}
+            </p>
+            <FormularioInscricao source="crm" eventId={eventId} />
+          </>
+        )}
+
+        {/* SOON não é a mesma coisa que encerrado: «ainda não abriu» e «já
+            fechou» são mensagens diferentes. Manter as duas juntas num ternário
+            dizia que as inscrições tinham acabado antes mesmo de começar. */}
+        {estado === "SOON" && (
+          <p
+            class="mt-6 text-center leading-relaxed text-encontro-branco text-[clamp(13px,1.3vw,17px)]"
+          >
+            As inscrições abrem em <strong>{evento.aberturaInscricoes}</strong>.
+            Reserve sua agenda: {evento.dataCurta} às {evento.horario}, no{" "}
+            {evento.local}.
+          </p>
+        )}
+
+        {(estado === "FULL" || estado === "FINISHED") && (
+          /* Encerrado: o formulário é SUBSTITUÍDO pela mensagem, não fica
+             visível e desabilitado. É o que o briefing pede. */
+          <p
+            class="mt-6 text-center leading-relaxed text-encontro-branco text-[clamp(13px,1.3vw,17px)]"
+          >
+            {estado === "FULL" ? mensagens.esgotado : mensagens.encerrado}
+          </p>
+        )}
+      </div>
+    </div>
+  </main>
+
+  <RodapeEncontro />
+</LayoutEncontroSabores>
+
+<script>
+  import { montarFormulario } from "../../../scripts/encontro-de-sabores/formulario";
+  montarFormulario();
+</script>
