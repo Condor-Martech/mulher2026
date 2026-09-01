@@ -23,7 +23,8 @@ import { getEncontroContent } from "../../../services/encontroContentService";
 
 // Mesmo padrão da rota web: um fetch por requisição, prop-drilled.
 const [{ status: estado, eventId }, conteudoBruto] = await Promise.all([
-  obterEstado("crm"),
+  // Astro.url só alimenta o `?force_status` de desenvolvimento; no build vira ruído inerte.
+  obterEstado("crm", Astro.url),
   getEncontroContent(),
 ]);
 const content = conteudoBruto ?? {};

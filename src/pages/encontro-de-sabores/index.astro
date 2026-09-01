@@ -37,7 +37,8 @@ import RodapeEncontro from "../../components/encontro-de-sabores/RodapeEncontro.
 // padrão do sabores-de-inverno. Editar um texto passa a ser subir o
 // content.json ao Minio, sem build nem deploy.
 const [{ status: estado, eventId }, conteudoBruto] = await Promise.all([
-  obterEstado("social"),
+  // Astro.url só alimenta o `?force_status` de desenvolvimento; no build vira ruído inerte.
+  obterEstado("social", Astro.url),
   getEncontroContent(),
 ]);
 // Rede de segurança: o serviço sempre devolve objeto, mas garantimos que

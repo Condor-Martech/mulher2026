@@ -18,6 +18,31 @@ import type { Event, EventStatus } from '../types/event';
 
 export const CAMPANHA_ID = 'encontro-de-sabores';
 
+const ESTADOS_VALIDOS = ['OPEN', 'SOON', 'FULL', 'FINISHED'] as const;
+
+/**
+ * Override de estado para desenvolvimento: `?force_status=OPEN|SOON|FULL|FINISHED`.
+ *
+ * SÓ em `pnpm dev`. `import.meta.env.DEV` é substituído por `false` no build,
+ * então em produção esta função inteira vira `return null` e o parâmetro é
+ * simplesmente ignorado. É deliberado: são 30 vagas, e um parâmetro de URL que
+ * abrisse o formulário antes de 04/09 seria uma porta para se inscrever fora do
+ * prazo — e para furar a cota, já que quem decide de verdade é a RPC.
+ *
+ * POR QUE ESTÁ AQUI E NÃO NO NAVEGADOR: as outras quatro campanhas têm um bloco
+ * parecido nos seus serviços (eventService.ts:14, maesEventService.ts:13,
+ * saboresEventService.ts:22), mas envolvido em `typeof window !== 'undefined'`,
+ * que é FALSO em SSR. Como todas calculam o estado no frontmatter, esse bloco
+ * nunca roda: é código morto nas quatro, verificado comparando o HTML servido
+ * com e sem o parâmetro. Aqui o override é aplicado onde o estado é de facto
+ * decidido — no servidor, antes de montar o HTML.
+ */
+function estadoForcado(url?: URL): EventStatus | null {
+  if (!import.meta.env.DEV || !url) return null;
+  const valor = url.searchParams.get('force_status')?.toUpperCase();
+  return ESTADOS_VALIDOS.includes(valor as any) ? (valor as EventStatus) : null;
+}
+
 export interface EstadoInscricao {
   /** null enquanto a linha do evento não existir em `palestras`. */
   event: Event | null;
@@ -29,7 +54,11 @@ export interface EstadoInscricao {
 
 export async function obterEstado(
   source: 'social' | 'crm',
+  /** `Astro.url` da requisição. Só serve ao override de dev; em produção é ignorada. */
+  url?: URL,
 ): Promise<EstadoInscricao> {
+  const forcado = estadoForcado(url);
+
   // Sem linha ainda → SOON. É o estado honesto antes de o evento existir,
   // e mantém a página de pé em vez de estourar com um 500.
   const vacio: EstadoInscricao = {
@@ -60,7 +89,11 @@ export async function obterEstado(
       .maybeSingle(),
   ]);
 
-  if (error || !palestra) return vacio;
+  // O override vale TAMBÉM aqui, e é o caso mais útil: enquanto a fila não
+  // existir em `palestras`, é a única maneira de ver o formulário. Nesse
+  // estado o `eventId` fica vazio de propósito — a RPC recusa, então dá para
+  // testar render, máscaras e validação sem poder gravar nada no banco.
+  if (error || !palestra) return { ...vacio, status: forcado ?? vacio.status };
 
   const cupo =
     source === 'crm' ? (palestra.qtd_crm ?? 0) : (palestra.qtd_social ?? 0);
@@ -105,7 +138,7 @@ export async function obterEstado(
     // fecha as inscrições em 07/09 às 23:59, dois dias antes do evento
     // (09/09). Sem isso o formulário continuaria aberto nesses dois dias.
     // As outras quatro campanhas não pedem a opção e seu comportamento não muda.
-    status: computeEventStatus(event, { source, enforceDeadline: true }),
+    status: forcado ?? computeEventStatus(event, { source, enforceDeadline: true }),
     ocupadas,
     cupo,
   };
