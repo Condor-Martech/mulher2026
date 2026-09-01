@@ -66,6 +66,24 @@
     55%  { transform: scaleY(1); transform-origin: bottom; }
     100% { transform: scaleY(0); transform-origin: bottom; }
   }
+
+  /* Entrada do modal de inscrição. Sem isto ele aparece de um fotograma para o
+     outro, o que a esta escala — ocupa quase o ecrã todo — assusta. */
+  @keyframes entrada-modal {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes entrada-fundo {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
 }
 
 /* ═══════════════════════ base ═══════════════════════ */
@@ -102,6 +120,24 @@
     }
   }
 
+  /* O <dialog> não anima ao abrir por si: passa de display:none a visível num
+     fotograma. A curva é ease-out acentuada — arranca depressa e assenta — que
+     é o que dá a sensação de leve em vez de lento.
+
+     Só a ABERTURA. Fechar exigiria segurar o close() com JS ou depender de
+     @starting-style, e o salto ao fechar não incomoda: o que se olha nesse
+     momento é a página que volta, não o que desaparece.
+
+     Quem desliga é o bloco de prefers-reduced-motion no fim deste ficheiro,
+     que zera a duração de qualquer animação. */
+  #encontro-modal[open] {
+    animation: entrada-modal 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #encontro-modal[open]::backdrop {
+    animation: entrada-fundo 0.28s ease-out;
+  }
+
   /* O hero é uma foto escura sangrada; declarar o fundo aqui evita o
      flash branco entre o primeiro paint e o carregamento da imagem. */
   body {
@@ -112,7 +148,11 @@
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
-    *::after {
+    *::after,
+    /* O ::backdrop do <dialog> não é descendente de nada, então o seletor
+       universal não lhe chega: sem esta linha o fundo do modal continuava a
+       animar para quem pede menos movimento. */
+    *::backdrop {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
