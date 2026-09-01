@@ -33,3 +33,7 @@ pnpm-debug.log*
 .agents/
 .claude/settings.json
 skills-lock.json
+
+# Originais de design (PSD/PNG/JPG do cliente). Ficam fora de public/ para não
+# irem parar no site publicado e fora do git para não pesarem no histórico.
+design/
