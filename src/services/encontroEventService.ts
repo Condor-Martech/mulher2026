@@ -40,13 +40,25 @@ export async function obterEstado(
     cupo: 0,
   };
 
-  const { data: palestra, error } = await supabase
-    .from('palestras')
-    .select('*')
-    .eq('active', true)
-    .eq('campanha_id', CAMPANHA_ID)
-    .limit(1)
-    .maybeSingle();
+  // As duas consultas em paralelo. `campanha_active` NÃO é coluna de
+  // `palestras` — mora em `campanhas.active`, e é preciso buscá-la à parte.
+  // Lê-la do select de palestras devolvia `undefined`, e como o eventStatus
+  // compara `=== false`, desativar a campanha não fechava a LP: falhava aberto.
+  // Mesmo desenho do saboresEventService.
+  const [{ data: palestra, error }, { data: campanha }] = await Promise.all([
+    supabase
+      .from('palestras')
+      .select('*')
+      .eq('active', true)
+      .eq('campanha_id', CAMPANHA_ID)
+      .limit(1)
+      .maybeSingle(),
+    supabase
+      .from('campanhas')
+      .select('active')
+      .eq('id', CAMPANHA_ID)
+      .maybeSingle(),
+  ]);
 
   if (error || !palestra) return vacio;
 
@@ -76,7 +88,10 @@ export async function obterEstado(
     link_inscripcion: palestra.link_inscripcion ?? 'interno',
     tipo_evento: palestra.tipo_evento ?? 'Evento',
     is_active: palestra.active,
-    campanha_active: palestra.campanha_active,
+    // `?? true` deliberado: se a linha da campanha ainda não existir, não
+    // é motivo para dar o evento por encerrado. Só um `active: false`
+    // explícito fecha. É o mesmo critério do sabores.
+    campanha_active: campanha?.active ?? true,
     qtd_crm: palestra.qtd_crm,
     qtd_social: palestra.qtd_social,
     current_crm: source === 'crm' ? ocupadas : (palestra.current_crm ?? 0),
