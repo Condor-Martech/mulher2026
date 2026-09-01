@@ -51,6 +51,14 @@ const fontsHref =
         })(window,document,'script','dataLayer',gtmId);
       </script>
     )}
+    {/* Marca o <html> ANTES do primeiro paint: é isto que ativa, no CSS, o
+        estado inicial escondido das secções que se revelam ao rolar. Feito
+        aqui e não no script diferido para não haver um instante em que a
+        secção aparece e volta a esconder-se. Se não correr, nada se esconde. */}
+    <script is:inline>
+      if (matchMedia("(prefers-reduced-motion: no-preference)").matches)
+        document.documentElement.dataset.js = "";
+    </script>
     <Analytics />
 
     <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -103,5 +111,32 @@ const fontsHref =
       </noscript>
     )}
     <slot />
+
+    <script>
+      // Revela cada secção quando entra no ecrã. Uma vez só: voltar a animar
+      // ao subir cansa depois da segunda passagem.
+      const raiz = document.documentElement;
+      const alvos = document.querySelectorAll("[data-revelar]");
+
+      if (!("IntersectionObserver" in window)) {
+        // Sem suporte, tira a marca: senão as secções ficavam escondidas para
+        // sempre, que é muito pior do que não ter animação.
+        delete raiz.dataset.js;
+      } else if (raiz.dataset.js !== undefined && alvos.length) {
+        const observador = new IntersectionObserver(
+          (entradas) => {
+            for (const entrada of entradas) {
+              if (!entrada.isIntersecting) continue;
+              (entrada.target as HTMLElement).dataset.visivel = "";
+              observador.unobserve(entrada.target);
+            }
+          },
+          // Dispara um pouco antes de a secção chegar ao fundo do ecrã, para
+          // que a animação termine quando o olho lá chega.
+          { rootMargin: "0px 0px -12% 0px" },
+        );
+        for (const alvo of alvos) observador.observe(alvo);
+      }
+    </script>
   </body>
 </html>

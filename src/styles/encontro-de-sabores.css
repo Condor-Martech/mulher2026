@@ -70,6 +70,38 @@
 
 /* ═══════════════════════ base ═══════════════════════ */
 @layer base {
+  /* Deslocamento suave nas âncoras do menu (#home, #programacao,
+     #patrocinadores). O bloco de prefers-reduced-motion no fim devolve o
+     salto instantâneo a quem o pedir. */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* A secção não encosta no topo do ecrã ao ser alcançada. */
+  :target {
+    scroll-margin-top: 24px;
+  }
+
+  /* Revelação ao entrar no ecrã.
+     O estado escondido existe SÓ sob `html[data-js]`, marcado por um script
+     inline no <head>. Sem JS, com o JS desligado ou se o script falhar, nada
+     se esconde: o pior caso é a página sem animação, nunca a página em
+     branco. */
+  @media (prefers-reduced-motion: no-preference) {
+    html[data-js] [data-revelar] {
+      opacity: 0;
+      transform: translateY(18px);
+      transition:
+        opacity 0.55s ease-out,
+        transform 0.55s ease-out;
+    }
+
+    html[data-js] [data-revelar][data-visivel] {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   /* O hero é uma foto escura sangrada; declarar o fundo aqui evita o
      flash branco entre o primeiro paint e o carregamento da imagem. */
   body {
