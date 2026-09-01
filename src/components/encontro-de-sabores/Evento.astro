@@ -40,7 +40,12 @@
 //   · pílula       vinho com texto creme (8,2:1) em vez de branco sobre
 //                  #F6F6F6 (1,1:1), que era a mensagem de maior valor comercial
 //                  da página com a ênfase mais fraca do card
-import content from "../../data/encontro-de-sabores/content.json";
+import type { ConteudoEncontro } from "../../services/encontroContentService";
+
+interface Props {
+  content: ConteudoEncontro;
+}
+const { content } = Astro.props;
 const { agenda, evento, programacao, hero } = content;
 
 // Link para o Google Maps. Mesmo critério de sabores (SaboresEventCard.astro e

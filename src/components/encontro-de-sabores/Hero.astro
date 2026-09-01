@@ -12,20 +12,32 @@
 // As posições vão em % do contêiner (não em px fixos) para o bloco escalar
 // junto com a largura mantendo a proporção do design. Em 1440 caem no pixel
 // exato; abaixo disso interpolam.
-import content from "../../data/encontro-de-sabores/content.json";
+import {
+  toEncontroCdn,
+  type ConteudoEncontro,
+} from "../../services/encontroContentService";
 
 // O menu do Figma tem quatro entradas, mas só duas seções existem nesta
 // página. «Trajeto» veio de outra campanha (um passeio ciclístico) e não faz
 // sentido num jantar; «Dúvidas» e «Regulamento» não foram desenhadas.
 // Linkamos o que existe e deixamos anotado para o design resolver — a lista
 // mora em hero.menu no content.json.
-const { hero } = content;
+interface Props {
+  hero: ConteudoEncontro["hero"];
+}
+const { hero } = Astro.props;
+
+// A foto do hero não passa pelo content.json (são três variantes de largura
+// para o srcset), então o caminho vai pelo helper na mão. É para isso que o
+// toEncontroCdn existe, igual ao toSaboresCdn.
+const FOTO = (largura: number) =>
+  toEncontroCdn(`/assets/encontro-de-sabores/images/hero-${largura}.webp`);
 ---
 
 <section id="home" class="relative w-full overflow-hidden">
   <img
-    src="/assets/encontro-de-sabores/images/hero-1280.webp"
-    srcset="/assets/encontro-de-sabores/images/hero-768.webp 768w, /assets/encontro-de-sabores/images/hero-1280.webp 1280w, /assets/encontro-de-sabores/images/hero-1920.webp 1920w"
+    src={FOTO(1280)}
+    srcset={`${FOTO(768)} 768w, ${FOTO(1280)} 1280w, ${FOTO(1920)} 1920w`}
     sizes="100vw"
     alt=""
     aria-hidden="true"

@@ -169,15 +169,18 @@
     "aceites": [
       {
         "nome": "maioridade",
-        "texto": "Declaro que sou maior de 18 anos."
+        "texto": "Declaro que sou maior de 18 anos.",
+        "obrigatorio": true
       },
       {
         "nome": "restricao",
-        "texto": "Declaro que não possuo restrição alimentar."
+        "texto": "Declaro que não possuo restrição alimentar.",
+        "obrigatorio": true
       },
       {
         "nome": "lgpd",
-        "texto": "Li e aceito os Termos de Participação e a Política de Privacidade."
+        "texto": "Li e aceito os Termos de Participação e a Política de Privacidade.",
+        "obrigatorio": true
       }
     ],
     "erros": {

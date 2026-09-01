@@ -15,6 +15,7 @@ import Hero from "../../components/encontro-de-sabores/Hero.astro";
 import Evento from "../../components/encontro-de-sabores/Evento.astro";
 import ModalInscricao from "../../components/encontro-de-sabores/ModalInscricao.astro";
 import { obterEstado } from "../../services/encontroEventService";
+import { getEncontroContent } from "../../services/encontroContentService";
 import Patrocinadores from "../../components/encontro-de-sabores/Patrocinadores.astro";
 import RodapeEncontro from "../../components/encontro-de-sabores/RodapeEncontro.astro";
 
@@ -31,20 +32,60 @@ import RodapeEncontro from "../../components/encontro-de-sabores/RodapeEncontro.
 // Estado real, a cada requisição. Enquanto a linha do evento não existir em
 // `palestras` com campanha_id = 'encontro-de-sabores', devolve SOON e a página
 // continua de pé: não estoura por causa de uma linha que ainda não está lá.
-const { status: estado, eventId } = await obterEstado("social");
+// Conteúdo editorial (textos + assets) do Minio, com fallback local. UM só
+// fetch por requisição, passado por props aos componentes que precisam —
+// padrão do sabores-de-inverno. Editar um texto passa a ser subir o
+// content.json ao Minio, sem build nem deploy.
+const [{ status: estado, eventId }, conteudoBruto] = await Promise.all([
+  obterEstado("social"),
+  getEncontroContent(),
+]);
+// Rede de segurança: o serviço sempre devolve objeto, mas garantimos que
+// `content` nunca seja null para os acessos `content.hero` etc.
+const content = conteudoBruto ?? {};
 
 // Dados ao vivo: nada de cache enquanto houver vagas a contar.
 Astro.response.headers.set("Cache-Control", "no-store");
 ---
 
-<LayoutEncontroSabores>
+<LayoutEncontroSabores title={content.seo?.title} description={content.seo?.description}>
+  {/* Resgate de imagens: os assets são servidos do Minio (toEncontroCdn reescreve
+      /assets/… → s3.cndr.me/…). Se um asset ainda não estiver no Minio (404/rede),
+      o <img> cai sozinho na cópia local `/assets/encontro-de-sabores/…` que foi no
+      build. is:inline e no topo do body para se registrar antes de as imagens
+      carregarem. Não cobre backgrounds de CSS, só elementos <img>. */}
+  <script is:inline>
+    (function () {
+      var FROM = "https://s3.cndr.me/lp-content/encontro-de-sabores/";
+      var TO = "/assets/encontro-de-sabores/";
+      function resgatar(img) {
+        if (!img || img.tagName !== "IMG" || img.dataset.localFallback) return;
+        if (img.src.indexOf(FROM) === -1 && (img.srcset || "").indexOf(FROM) === -1) return;
+        img.dataset.localFallback = "1";
+        // O srcset ANTES do src: com srcset presente o browser ignora o src, e
+        // trocar só o src deixaria a imagem quebrada. O hero é o único <img>
+        // com srcset da página, e foi exatamente onde isto apareceu.
+        if (img.srcset) img.srcset = img.srcset.split(FROM).join(TO);
+        img.src = img.src.split(FROM).join(TO);
+      }
+      // `error` não borbulha → capture. Pega falhas futuras de carregamento.
+      document.addEventListener("error", function (e) { resgatar(e.target); }, true);
+      // E as que já falharam antes deste script rodar.
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("img").forEach(function (img) {
+          if (img.complete && img.naturalWidth === 0) resgatar(img);
+        });
+      });
+    })();
+  </script>
+
   <main>
-    <Hero />
-    <Evento />
-    <Patrocinadores />
+    <Hero hero={content.hero} />
+    <Evento content={content} />
+    <Patrocinadores patrocinio={content.patrocinio} />
   </main>
 
   {/* Fora do <main>: é um diálogo, não conteúdo da página. */}
-  <ModalInscricao estado={estado} eventId={eventId} />
-  <RodapeEncontro />
+  <ModalInscricao estado={estado} eventId={eventId} content={content} />
+  <RodapeEncontro rodape={content.rodape} />
 </LayoutEncontroSabores>

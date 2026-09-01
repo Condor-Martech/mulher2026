@@ -23,8 +23,12 @@
 //   Baden Baden 28.4 · Pomarola 27.7 · Elefante 15.6
 // Igualar por altura inchava os logotipos-palavra (Elefante triplicava de
 // tamanho). Essas porcentagens reproduzem a proporção do design.
-import content from "../../data/encontro-de-sabores/content.json";
-const { patrocinio } = content;
+import type { ConteudoEncontro } from "../../services/encontroContentService";
+
+interface Props {
+  patrocinio: ConteudoEncontro["patrocinio"];
+}
+const { patrocinio } = Astro.props;
 
 const BANDA = 108; // px de altura da faixa no design
 ---

@@ -11,13 +11,23 @@
 // O logo e os três ícones foram exportados do próprio Figma: o logotipo da
 // Condor não veio na entrega de assets e os ícones de marca não dá para
 // redesenhar à mão sem fugir do original.
-import content from "../../data/encontro-de-sabores/content.json";
-const { rodape } = content;
+import {
+  toEncontroCdn,
+  type ConteudoEncontro,
+} from "../../services/encontroContentService";
 
+interface Props {
+  rodape: ConteudoEncontro["rodape"];
+}
+const { rodape } = Astro.props;
+
+// Logo e ícones não passam pelo content.json (o bloco `rodape` só tem o
+// copyright, o alt e os links), então vão pelo helper na mão.
+const LOGO = toEncontroCdn("/assets/encontro-de-sabores/images/condor-rodape.webp");
 const ICONE: Record<string, string> = {
-  Facebook: "/assets/encontro-de-sabores/images/redes/facebook.webp",
-  Instagram: "/assets/encontro-de-sabores/images/redes/instagram.webp",
-  LinkedIn: "/assets/encontro-de-sabores/images/redes/linkedin.webp",
+  Facebook: toEncontroCdn("/assets/encontro-de-sabores/images/redes/facebook.webp"),
+  Instagram: toEncontroCdn("/assets/encontro-de-sabores/images/redes/instagram.webp"),
+  LinkedIn: toEncontroCdn("/assets/encontro-de-sabores/images/redes/linkedin.webp"),
 };
 ---
 
@@ -28,7 +38,7 @@ const ICONE: Record<string, string> = {
     class="mx-auto flex min-h-[136px] w-full max-w-[1160px] flex-col items-center justify-center gap-4 md:min-h-0 md:flex-row md:justify-between md:gap-6"
   >
     <img
-      src="/assets/encontro-de-sabores/images/condor-rodape.webp"
+      src={LOGO}
       alt={rodape.logoAlt}
       width="335"
       height="86"

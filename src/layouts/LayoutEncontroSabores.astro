@@ -6,6 +6,7 @@ import "../styles/encontro-de-sabores.css";
 import settings from "../data/settings.json";
 import Analytics from "../components/Analytics.astro";
 import content from "../data/encontro-de-sabores/content.json";
+import { toEncontroCdn } from "../services/encontroContentService";
 
 interface Props {
   title?: string;
@@ -17,7 +18,10 @@ const { title = seo.title, description = seo.description } = Astro.props;
 const { gtmId } = settings;
 
 // Absoluta por causa dos crawlers: og:image relativo quase todos ignoram.
-const ogImage = new URL(seo.ogImage, Astro.url).href;
+// O caminho local vira URL do Minio antes de virar absoluta; se já for
+// absoluta, `new URL` a devolve como está. Os defaults de seo daqui são só
+// fallback: as rotas passam o title/description vindos do Minio.
+const ogImage = new URL(toEncontroCdn(seo.ogImage), Astro.url).href;
 
 // Fonte única de verdade para o href do Google Fonts (async + fallback noscript).
 // Montserrat 400/500/700 e Archivo 700 são as duas famílias do design-specs.
