@@ -1,0 +1,107 @@
+---
+// O formulário de inscrição, compartilhado pelos DOIS canais:
+//   web  → dentro do ModalInscricao.astro          (source=social, cota qtd_social)
+//   CRM  → inline em /encontro-de-sabores/crm/     (source=crm,    cota qtd_crm)
+// É o mesmo padrão de dois canais que maes e sabores usam. O markup é um só
+// para que uma correção de validação ou de acessibilidade não precise ser
+// feita duas vezes.
+//
+// Campos e critérios: os do briefing. Os três checkboxes são obrigatórios e
+// vêm DESMARCADOS por padrão.
+import content from "../../data/encontro-de-sabores/content.json";
+
+interface Props {
+  eventId?: string;
+  source: "social" | "crm";
+}
+const { eventId = "", source } = Astro.props;
+const { evento, mensagens, formulario } = content;
+
+const CAMPOS = formulario.campos;
+const CHECKS = formulario.aceites;
+---
+
+{/* Sucesso: SUBSTITUI o formulário, não o deixa visível e desabilitado. */}
+<div
+  id="form-sucesso"
+  hidden
+  tabindex="-1"
+  class="rounded-encontro-lg bg-encontro-cinza px-6 py-8 text-center"
+>
+  <p class="font-bold text-encontro-tijolo text-[clamp(16px,1.8vw,22px)]">
+    {mensagens.sucesso.titulo}
+  </p>
+  <p class="mt-4 font-normal leading-[1.55] text-encontro-tijolo text-[clamp(13px,1.2vw,16px)]">
+    {mensagens.sucesso.corpo}<br />
+    <strong>{evento.data} | {evento.horario} | {evento.local}</strong><br />
+    {evento.endereco}.
+  </p>
+  <p class="mt-4 text-encontro-tijolo/80 text-[clamp(12px,1vw,14px)]">
+    {mensagens.sucesso.confirmacao}
+  </p>
+</div>
+
+<form id="form-inscricao" data-event-id={eventId} data-source={source} novalidate class="mt-6">
+  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    {CAMPOS.map((c) => (
+      <div class:list={["flex flex-col gap-1", c.nome === "nome" && "sm:col-span-2"]}>
+        <label for={c.nome} class="font-medium text-encontro-creme text-[clamp(12px,1.1vw,14px)]">
+          {c.rotulo} <span aria-hidden="true">*</span>
+        </label>
+        {/* inputmode e NÃO type="number": em CPF e telefone, number quebra a
+            colagem e adiciona setas de incremento que não fazem sentido. */}
+        <input
+          id={c.nome}
+          name={c.nome}
+          type={c.tipo}
+          inputmode={c.inputmode}
+          autocomplete={c.autocomplete}
+          placeholder={c.placeholder}
+          maxlength={c.maxlength}
+          required
+          aria-required="true"
+          aria-describedby={`erro-${c.nome}`}
+          class="min-h-[48px] w-full rounded-encontro-sm border-2 border-transparent bg-white px-4 text-encontro-vinho placeholder:text-encontro-vinho/40 text-[clamp(14px,1.2vw,16px)] transition-colors duration-150 focus-visible:border-encontro-creme focus-visible:outline-none aria-[invalid=true]:border-encontro-red"
+        />
+        <p id={`erro-${c.nome}`} aria-live="polite" class="min-h-[1.05em] font-medium text-encontro-creme text-[clamp(12px,1vw,13px)]"></p>
+      </div>
+    ))}
+  </div>
+
+  <fieldset class="mt-4 border-0 p-0">
+    <legend class="sr-only">{formulario.legenda}</legend>
+    <div class="flex flex-col gap-1">
+      {CHECKS.map((c) => (
+        <div>
+          {/* min-h-[44px]: alvo de toque mínimo no mobile. */}
+          <label class="flex min-h-[44px] cursor-pointer items-start gap-3 py-1">
+            <input
+              id={c.nome}
+              name={c.nome}
+              type="checkbox"
+              required
+              aria-required="true"
+              aria-describedby={`erro-${c.nome}`}
+              class="mt-[3px] h-5 w-5 shrink-0 accent-encontro-creme focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme"
+            />
+            <span class="leading-[1.35] text-[clamp(12px,1.1vw,14px)]">{c.texto}</span>
+          </label>
+          <p id={`erro-${c.nome}`} aria-live="polite" class="min-h-[1.05em] pl-8 font-medium text-encontro-creme text-[clamp(12px,1vw,13px)]"></p>
+        </div>
+      ))}
+    </div>
+  </fieldset>
+
+  {/* Aviso do envio: CPF repetido, vagas esgotadas, erro de rede. */}
+  <p id="form-aviso" role="status" aria-live="assertive" class="mt-3 min-h-[1.2em] text-center font-bold text-encontro-creme text-[clamp(12px,1.1vw,15px)]"></p>
+
+  <div class="mt-3 text-center">
+    <button
+      type="submit"
+      data-track="encontro_form_enviar"
+      class="inline-flex min-h-[52px] w-full max-w-[280px] items-center justify-center rounded-encontro-sm bg-encontro-creme px-8 font-bold uppercase tracking-[0.06em] text-encontro-vinho shadow-sm transition duration-200 text-[clamp(13px,1.11vw,16px)] hover:bg-white hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme disabled:opacity-60 disabled:shadow-none motion-safe:enabled:hover:scale-[1.02] motion-safe:enabled:active:scale-[0.98]"
+    >
+      {formulario.enviar}
+    </button>
+  </div>
+</form>

@@ -1,0 +1,90 @@
+---
+// Modal de inscrição. Segue o padrão do repo (EventModal.astro,
+// SaboresEventModal.astro): <dialog> nativo aberto com showModal(), fechamento
+// com Esc —de graça— e ao clicar fora do quadro.
+//
+// Ser modal resolve também a fidelidade: o Figma não traz bloco de formulário,
+// então em fluxo ele somava ~390px e empurrava a página inteira. Dentro de um
+// <dialog> a página fica idêntica ao design e é o CTA «INSCREVA-SE» do Figma
+// que o abre.
+//
+// O conteúdo depende do estado, que é o mesmo do padrão do repo:
+//   SOON      ainda não abriram (antes de 04/09)
+//   OPEN      o formulário
+//   FULL      15 vagas ocupadas
+//   FINISHED  passou de 07/09 23:59
+// FULL e FINISHED mostram o mesmo texto: é o que o briefing pede.
+import content from "../../data/encontro-de-sabores/content.json";
+import FormularioInscricao from "./FormularioInscricao.astro";
+
+interface Props {
+  estado: "SOON" | "OPEN" | "FULL" | "FINISHED";
+  eventId?: string;
+}
+const { estado, eventId = "" } = Astro.props;
+const { mensagens, evento, programacao, formulario } = content;
+---
+
+<dialog
+  id="encontro-modal"
+  aria-labelledby="encontro-modal-titulo"
+  {/* `m-auto` é obrigatório: um <dialog> se centraliza com `margin:auto`, e o
+      preflight do Tailwind aplica `margin:0` em tudo, então sem isso o modal
+      fica colado na esquerda. `max-h` + `overflow-y-auto` para que o
+      formulário possa rolar em telas baixas. */}
+  class="m-auto max-h-[90svh] w-[min(92vw,640px)] overflow-y-auto rounded-encontro-lg bg-encontro-vinho p-0 text-encontro-branco backdrop:bg-black/70"
+>
+  <div class="relative px-6 py-8 sm:px-8 md:px-10 md:py-10">
+    <button
+      type="button"
+      data-fecha-inscricao
+      aria-label={formulario.fechar}
+      class="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full text-encontro-creme transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true" class="h-6 w-6">
+        <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"></path>
+      </svg>
+    </button>
+
+    {estado === "SOON" && (
+      <div class="text-center">
+        <h2 id="encontro-modal-titulo" class="font-bold leading-tight text-encontro-creme text-[clamp(20px,2.6vw,32px)]">
+          {programacao.destaque}
+        </h2>
+        <p class="mt-4 leading-relaxed text-[clamp(13px,1.3vw,17px)]">
+          As inscrições para o {evento.nome} abrem em{" "}
+          <strong>{evento.aberturaInscricoes}</strong>. Reserve sua agenda:{" "}
+          {evento.dataCurta} às {evento.horario}, no {evento.local}.
+        </p>
+      </div>
+    )}
+
+    {(estado === "FULL" || estado === "FINISHED") && (
+      <div class="text-center">
+        <h2 id="encontro-modal-titulo" class="font-bold leading-tight text-encontro-creme text-[clamp(20px,2.6vw,32px)]">
+          {mensagens.encerradoTitulo}
+        </h2>
+        <p class="mt-4 leading-relaxed text-[clamp(13px,1.3vw,17px)]">
+          {estado === "FULL" ? mensagens.esgotado : mensagens.encerrado}
+        </p>
+      </div>
+    )}
+
+    {estado === "OPEN" && (
+      <>
+        <h2 id="encontro-modal-titulo" class="text-center font-bold leading-tight text-encontro-creme text-[clamp(20px,2.6vw,32px)]">
+          {formulario.titulo}
+        </h2>
+        <p class="mt-2 text-center text-[clamp(12px,1.2vw,16px)]">
+          {evento.dataCurta} às {evento.horario} · {evento.local}
+        </p>
+        <FormularioInscricao eventId={eventId} source="social" />
+      </>
+    )}
+  </div>
+</dialog>
+
+<script>
+  import { montarModalInscricao } from "../../scripts/encontro-de-sabores/formulario";
+  montarModalInscricao();
+</script>
