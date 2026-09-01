@@ -283,7 +283,14 @@ export function montarFormulario(): void {
     if (invalidos.length) {
       invalidos[0].focus();
       if (aviso) {
-        aviso.textContent = d.erroFormulario ?? "";
+        // Com UM único campo por corrigir, repetir a mensagem dele diz qual e
+        // porquê; «verifique os campos destacados» não acrescenta nada, porque
+        // o campo já está destacado e com o erro por baixo. Com vários campos
+        // é o contrário: a genérica é a que resume.
+        aviso.textContent =
+          invalidos.length === 1
+            ? (invalidos[0].dataset.erro ?? d.erroFormulario ?? "")
+            : (d.erroFormulario ?? "");
         aviso.dataset.tipo = "erro";
       }
       return;
