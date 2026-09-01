@@ -63,6 +63,12 @@ const CHECKS = formulario.aceites;
   novalidate
   class="mt-4 sm:mt-6"
 >
+  {/* O nome do evento vai para `inscricoes.tema` através de `p_tema`. Todas as
+      outras campanhas mandam este campo (EventRegistrationForm.astro e as
+      rotas [id].astro); sem ele as inscrições desta chegavam com o tema vazio,
+      o que estraga qualquer exportação por evento. */}
+  <input type="hidden" name="eventTema" value={evento.nome} />
+
   <div class="grid grid-cols-2 gap-x-3 gap-y-2 sm:gap-3">
     {CAMPOS.map((c) => (
       <div class:list={[

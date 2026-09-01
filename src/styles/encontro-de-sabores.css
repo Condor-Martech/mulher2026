@@ -16,7 +16,7 @@
    excluem esta campanha para que as utilidades dela não vazem para lá. Sem
    essas linhas, o CSS de quatro LPs no ar muda em silêncio.
 
-   Os valores saem de public/assets/encontro-de-sabores/design-specs.md, exportado
+   Os valores saem de src/data/encontro-de-sabores/design-specs.md, exportado
    do Figma. Não inventar tons: se precisar de um novo, pedir para o design.
    ============================================================================ */
 @import "tailwindcss" source(none);

@@ -54,7 +54,10 @@ const fontsHref =
 
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={Astro.url.href} />
+    {/* Sem a query string: `Astro.url.href` carrega ?utm_source, ?src e
+        ?force_status, e cada variante viraria uma canónica diferente — o mesmo
+        conteúdo indexado N vezes. */}
+    <link rel="canonical" href={`${Astro.url.origin}${Astro.url.pathname}`} />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content={Astro.url.href} />
