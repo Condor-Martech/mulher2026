@@ -33,7 +33,7 @@ const { seo, evento, programacao, mensagens, hero } = content;
 Astro.response.headers.set("Cache-Control", "no-store");
 ---
 
-<LayoutEncontroSabores title={seo.tituloCrm}>
+<LayoutEncontroSabores title={seo.tituloCrm} noindex>
   {/* Resgate de imagens: os assets são servidos do Minio (toEncontroCdn reescreve
       /assets/… → s3.cndr.me/…). Se um asset ainda não estiver no Minio (404/rede),
       o <img> cai sozinho na cópia local `/assets/encontro-de-sabores/…` que foi no

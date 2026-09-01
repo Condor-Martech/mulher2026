@@ -11,10 +11,16 @@ import { toEncontroCdn } from "../services/encontroContentService";
 interface Props {
   title?: string;
   description?: string;
+  /** Mantém a página fora dos buscadores. Ver a rota /crm/. */
+  noindex?: boolean;
 }
 
 const { seo } = content;
-const { title = seo.title, description = seo.description } = Astro.props;
+const {
+  title = seo.title,
+  description = seo.description,
+  noindex = false,
+} = Astro.props;
 const { gtmId } = settings;
 
 // Absoluta por causa dos crawlers: og:image relativo quase todos ignoram.
@@ -54,6 +60,13 @@ const fontsHref =
 
     <title>{title}</title>
     <meta name="description" content={description} />
+    {/* A rota do CRM tem cota própria (qtd_crm) e é pública: quem chega a ela
+        inscreve-se contra as vagas reservadas à base do CRM. Se um buscador a
+        indexar, quem procurar pelo evento cai lá e gasta uma dessas vagas, e
+        quem recebeu o e-mail encontra «esgotado». Isto não é um controlo de
+        acesso — o link continua a funcionar para quem o tem —, só tira a
+        página do caminho de quem não devia chegar por aí. */}
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     {/* Sem a query string: `Astro.url.href` carrega ?utm_source, ?src e
         ?force_status, e cada variante viraria uma canónica diferente — o mesmo
         conteúdo indexado N vezes. */}
