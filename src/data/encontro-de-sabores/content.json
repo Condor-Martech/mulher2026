@@ -125,6 +125,7 @@
   "formulario": {
     "titulo": "Faça sua inscrição",
     "fechar": "Fechar",
+    "fecharSucesso": "Entendi",
     "enviar": "ENVIAR INSCRIÇÃO",
     "enviando": "Enviando…",
     "legenda": "Critérios de participação e aceite",

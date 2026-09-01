@@ -79,7 +79,7 @@ const { mensagens, evento, programacao, formulario } = content;
         <p class="mt-2 text-center text-[clamp(12px,1.2vw,16px)]">
           {evento.dataCurta} às {evento.horario} · {evento.local}
         </p>
-        <FormularioInscricao eventId={eventId} source="social" content={content} />
+        <FormularioInscricao eventId={eventId} source="social" content={content} emModal />
       </>
     )}
   </div>
