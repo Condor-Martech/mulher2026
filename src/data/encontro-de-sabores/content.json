@@ -1,0 +1,198 @@
+{
+  "seo": {
+    "title": "Encontro de Sabores Condor | 09/09 no Condor Nilo Peçanha",
+    "description": "Experiência gastronômica VIP no Espaço de Eventos Condor Nilo Peçanha, com degustação de salgados, tábua de frios, pizza show cooking preparada por Chef, bebidas e sobremesa artesanal. Vagas limitadas.",
+    "ogImage": "/assets/encontro-de-sabores/images/hero-1280.webp",
+    "tituloCrm": "Inscrição | Encontro de Sabores Condor"
+  },
+  "evento": {
+    "nome": "Encontro de Sabores Condor",
+    "data": "09/09/2026",
+    "dataCurta": "09/09",
+    "horario": "19h30",
+    "local": "Condor Nilo Peçanha",
+    "endereco": "R. Nilo Peçanha, 1000 - São Francisco",
+    "cidade": "Curitiba/PR",
+    "aberturaInscricoes": "04/09/2026",
+    "enderecoLinhas": [
+      "Endereço: R. Nilo Peçanha,",
+      "1000 - São Francisco"
+    ],
+    "mapaRotulo": "Ver Condor Nilo Peçanha no Google Maps (abre em nova aba)"
+  },
+  "hero": {
+    "selo": "/assets/encontro-de-sabores/images/selo.webp",
+    "seloAlt": "Encontro de Sabores Condor",
+    "cta": "INSCREVA-SE",
+    "navRotulo": "Navegação principal",
+    "menu": [
+      {
+        "rotulo": "Home",
+        "href": "#home",
+        "ativo": true
+      },
+      {
+        "rotulo": "Programação",
+        "href": "#programacao",
+        "ativo": false
+      },
+      {
+        "rotulo": "Patrocínio",
+        "href": "#patrocinadores",
+        "ativo": false
+      }
+    ]
+  },
+  "agenda": {
+    "titulo": "Reserve sua agenda e participe:",
+    "rotuloData": "Data:",
+    "rotuloHorario": "Início:"
+  },
+  "programacao": {
+    "titulo": "PROGRAMAÇÃO",
+    "descricao": "Experiência gastronômica VIP no Espaço de Eventos Condor Nilo Peçanha, com degustação de salgados, tábua de frios, pizza show cooking preparada por Chef, bebidas e sobremesa artesanal.",
+    "destaque": "Inscrições limitadas"
+  },
+  "patrocinio": {
+    "titulo": "PATROCÍNIO:",
+    "logos": [
+      {
+        "nome": "Santa Clara",
+        "arquivo": "/assets/encontro-de-sabores/patrocinio/santa-clara.webp",
+        "altura": 45.4
+      },
+      {
+        "nome": "Baden Baden",
+        "arquivo": "/assets/encontro-de-sabores/patrocinio/baden-baden.webp",
+        "altura": 28.4
+      },
+      {
+        "nome": "Pomarola",
+        "arquivo": "/assets/encontro-de-sabores/patrocinio/pomarola.webp",
+        "altura": 27.7
+      },
+      {
+        "nome": "Elefante",
+        "arquivo": "/assets/encontro-de-sabores/patrocinio/elefante.webp",
+        "altura": 15.6
+      },
+      {
+        "nome": "FYS",
+        "arquivo": "/assets/encontro-de-sabores/patrocinio/fys.webp",
+        "altura": 43.7
+      },
+      {
+        "nome": "Freddo",
+        "arquivo": "/assets/encontro-de-sabores/patrocinio/freddo.webp",
+        "altura": 52.6
+      },
+      {
+        "nome": "Rizolli",
+        "arquivo": "/assets/encontro-de-sabores/patrocinio/rizolli.webp",
+        "altura": 50.6
+      }
+    ]
+  },
+  "rodape": {
+    "copyright": "©Condor 2026. Todos os direitos reservados.",
+    "redes": [
+      {
+        "nome": "Facebook",
+        "href": "https://www.facebook.com/redecondor"
+      },
+      {
+        "nome": "Instagram",
+        "href": "https://www.instagram.com/redecondor/"
+      },
+      {
+        "nome": "LinkedIn",
+        "href": "https://www.linkedin.com/company/redecondor"
+      }
+    ],
+    "logoAlt": "Condor"
+  },
+  "mensagens": {
+    "sucesso": {
+      "titulo": "Inscrição realizada com sucesso!",
+      "corpo": "Esperamos por você.",
+      "confirmacao": "Você receberá um e-mail de confirmação."
+    },
+    "esgotado": "As inscrições para o Encontro de Sabores Condor estão encerradas. Agradecemos o seu interesse!",
+    "encerrado": "As inscrições para o Encontro de Sabores Condor estão encerradas. Agradecemos o seu interesse!",
+    "erro": "Não foi possível concluir sua inscrição. Verifique seus dados e tente novamente.",
+    "encerradoTitulo": "Inscrições encerradas"
+  },
+  "formulario": {
+    "titulo": "Faça sua inscrição",
+    "fechar": "Fechar",
+    "enviar": "ENVIAR INSCRIÇÃO",
+    "enviando": "Enviando…",
+    "legenda": "Critérios de participação e aceite",
+    "campos": [
+      {
+        "nome": "nome",
+        "rotulo": "Nome completo",
+        "tipo": "text",
+        "autocomplete": "name",
+        "placeholder": "Seu nome completo",
+        "inputmode": "text",
+        "maxlength": 120
+      },
+      {
+        "nome": "cpf",
+        "rotulo": "CPF",
+        "tipo": "text",
+        "autocomplete": "off",
+        "placeholder": "000.000.000-00",
+        "inputmode": "numeric",
+        "maxlength": 14
+      },
+      {
+        "nome": "email",
+        "rotulo": "E-mail",
+        "tipo": "email",
+        "autocomplete": "email",
+        "placeholder": "voce@email.com",
+        "inputmode": "email",
+        "maxlength": 120
+      },
+      {
+        "nome": "telefone",
+        "rotulo": "Celular",
+        "tipo": "tel",
+        "autocomplete": "tel-national",
+        "placeholder": "(41) 90000-0000",
+        "inputmode": "tel",
+        "maxlength": 16
+      }
+    ],
+    "aceites": [
+      {
+        "nome": "maioridade",
+        "texto": "Declaro que sou maior de 18 anos."
+      },
+      {
+        "nome": "restricao",
+        "texto": "Declaro que não possuo restrição alimentar."
+      },
+      {
+        "nome": "lgpd",
+        "texto": "Li e aceito os Termos de Participação e a Política de Privacidade."
+      }
+    ],
+    "erros": {
+      "nome": "Informe seu nome completo.",
+      "email": "Informe um e-mail válido.",
+      "cpf": "Informe um CPF válido.",
+      "telefone": "Informe um celular válido com DDD.",
+      "maioridade": "É necessário declarar que você é maior de 18 anos.",
+      "restricao": "É necessário declarar que não possui restrição alimentar.",
+      "lgpd": "É necessário aceitar os termos e a Política de Privacidade.",
+      "generico": "Campo inválido.",
+      "formulario": "Verifique os campos destacados.",
+      "cpfDuplicado": "Este CPF já possui inscrição confirmada para o evento.",
+      "esgotado": "As inscrições estão encerradas. Agradecemos o seu interesse!",
+      "envio": "Não foi possível concluir sua inscrição. Verifique seus dados e tente novamente."
+    }
+  }
+}
