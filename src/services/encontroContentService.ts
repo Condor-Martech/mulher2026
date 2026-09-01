@@ -56,10 +56,20 @@ const transformData = (obj: any): any => {
  *
  * Nunca lança: se o Minio estiver fora, a página sobe com o conteúdo local que
  * foi junto no build. O que o build carrega é o fallback, não a verdade.
+ *
+ * O TIMEOUT é o que faz esse fallback existir de verdade. 404 e conexão
+ * recusada falham rápido e caem sozinhos no catch. Um Minio meio morto —
+ * conecta e não responde — não: sem prazo, o fetch espera para sempre, e como
+ * o SSR roda sem cache isso acontece a CADA requisição. A LP cairia junto com
+ * um Minio que nem chegou a cair. Vencido o prazo, o AbortSignal lança e o
+ * catch abaixo serve o conteúdo local, que é o comportamento desejado.
  */
+const TIMEOUT_MS = 2500;
 export const getEncontroContent = async () => {
   try {
-    const res = await fetch(`${S3_JSON_URL}?t=${Date.now()}`);
+    const res = await fetch(`${S3_JSON_URL}?t=${Date.now()}`, {
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
     if (res.ok) {
       console.log("[EncontroService] Conteúdo carregado do Minio");
       return transformData(await res.json());
@@ -68,7 +78,12 @@ export const getEncontroContent = async () => {
       `[EncontroService] Minio fetch não-OK: ${res.status} ${res.statusText}`,
     );
   } catch (err) {
-    console.error("[EncontroService] Erro ao conectar com Minio:", err);
+    const nome = (err as Error)?.name;
+    if (nome === "TimeoutError" || nome === "AbortError") {
+      console.warn(`[EncontroService] Minio não respondeu em ${TIMEOUT_MS}ms`);
+    } else {
+      console.error("[EncontroService] Erro ao conectar com Minio:", err);
+    }
   }
 
   console.log("[EncontroService] Usando fallback local");
