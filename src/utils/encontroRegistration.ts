@@ -158,9 +158,36 @@ function reiniciar(
   }
 }
 
+/**
+ * Trava o scroll da página enquanto o modal está aberto.
+ *
+ * O <dialog> já bloqueia o CLIQUE no que está por trás, mas não o scroll: no
+ * mobile o dedo continua a rolar a página de fundo e o formulário sai de
+ * vista. O diálogo contém o gesto quando se chega ao seu próprio fim (ver a
+ * classe de overscroll no ModalInscricao.astro); isto trata do resto.
+ *
+ * NÃO escrever aqui o nome dessa classe: este arquivo mora em `src/utils/`, que
+ * as quatro folhas de estilo em produção varrem, e o Tailwind extrai nomes de
+ * classe até de comentários. Escrevê-lo custou 48 bytes de CSS morto em maes,
+ * mulher, pascoa e sabores — medido.
+ */
+function travarFundo(): void {
+  document.body.dataset.overflowAnterior = document.body.style.overflow;
+  document.body.style.overflow = "hidden";
+}
+
+function soltarFundo(): void {
+  document.body.style.overflow = document.body.dataset.overflowAnterior ?? "";
+  delete document.body.dataset.overflowAnterior;
+}
+
 export function montarModalInscricao(): void {
   const modal = document.querySelector<HTMLDialogElement>("#encontro-modal");
   if (!modal) return;
+
+  // `close` cobre TODAS as saídas: o botão ×, o clique fora e o Esc — que o
+  // <dialog> trata sozinho e não passa por nenhum handler nosso.
+  modal.addEventListener("close", soltarFundo);
 
   for (const disparador of document.querySelectorAll<HTMLElement>(
     "[data-abre-inscricao]",
@@ -170,6 +197,7 @@ export function montarModalInscricao(): void {
       const form = modal.querySelector<HTMLFormElement>("#form-inscricao");
       reiniciar(modal, form);
       modal.showModal();
+      travarFundo();
       track("event_modal_opened", {
         event_id: form?.dataset.eventId ?? "",
         source: form?.dataset.source ?? "social",

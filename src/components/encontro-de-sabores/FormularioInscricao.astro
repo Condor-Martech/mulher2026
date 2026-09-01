@@ -61,11 +61,18 @@ const CHECKS = formulario.aceites;
   data-enviando={formulario.enviando}
   data-enviar={formulario.enviar}
   novalidate
-  class="mt-6"
+  class="mt-4 sm:mt-6"
 >
-  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+  <div class="grid grid-cols-2 gap-x-3 gap-y-2 sm:gap-3">
     {CAMPOS.map((c) => (
-      <div class:list={["flex flex-col gap-1", c.nome === "nome" && "sm:col-span-2"]}>
+      <div class:list={[
+        "flex flex-col gap-1",
+        c.nome === "nome" && "col-span-2",
+        // O e-mail é longo demais para meia largura no mobile, então ocupa a
+        // linha toda — e vai para o fim (order-1) para que CPF e celular
+        // fiquem lado a lado. No desktop volta à ordem e à posição do Figma.
+        c.nome === "email" && "col-span-2 order-1 sm:order-none sm:col-span-1",
+      ]}>
         <label for={c.nome} class="font-medium text-encontro-creme text-[clamp(12px,1.1vw,14px)]">
           {c.rotulo} <span aria-hidden="true">*</span>
         </label>
@@ -85,18 +92,18 @@ const CHECKS = formulario.aceites;
           data-erro={formulario.erros[c.nome as keyof typeof formulario.erros]}
           class="min-h-[48px] w-full rounded-encontro-sm border-2 border-transparent bg-white px-4 text-encontro-vinho placeholder:text-encontro-vinho/40 text-[clamp(14px,1.2vw,16px)] transition-colors duration-150 focus-visible:border-encontro-creme focus-visible:outline-none aria-[invalid=true]:border-encontro-red"
         />
-        <p id={`erro-${c.nome}`} aria-live="polite" class="min-h-[1.05em] font-medium text-encontro-creme text-[clamp(12px,1vw,13px)]"></p>
+        <p id={`erro-${c.nome}`} aria-live="polite" class="min-h-0 font-medium text-encontro-creme text-[clamp(12px,1vw,13px)] sm:min-h-[1.05em]"></p>
       </div>
     ))}
   </div>
 
-  <fieldset class="mt-4 border-0 p-0">
+  <fieldset class="mt-3 border-0 p-0 sm:mt-4">
     <legend class="sr-only">{formulario.legenda}</legend>
     <div class="flex flex-col gap-1">
       {CHECKS.map((c) => (
         <div>
           {/* min-h-[44px]: alvo de toque mínimo no mobile. */}
-          <label class="flex min-h-[44px] cursor-pointer items-start gap-3 py-1">
+          <label class="flex min-h-[44px] cursor-pointer items-start gap-3 py-0.5 sm:py-1">
             <input
               id={c.nome}
               name={c.nome}
@@ -111,16 +118,16 @@ const CHECKS = formulario.aceites;
               {c.texto}{c.obrigatorio && <span aria-hidden="true"> *</span>}
             </span>
           </label>
-          <p id={`erro-${c.nome}`} aria-live="polite" class="min-h-[1.05em] pl-8 font-medium text-encontro-creme text-[clamp(12px,1vw,13px)]"></p>
+          <p id={`erro-${c.nome}`} aria-live="polite" class="min-h-0 pl-8 font-medium text-encontro-creme text-[clamp(12px,1vw,13px)] sm:min-h-[1.05em]"></p>
         </div>
       ))}
     </div>
   </fieldset>
 
   {/* Aviso do envio: CPF repetido, vagas esgotadas, erro de rede. */}
-  <p id="form-aviso" role="status" aria-live="assertive" class="mt-3 min-h-[1.2em] text-center font-bold text-encontro-creme text-[clamp(12px,1.1vw,15px)]"></p>
+  <p id="form-aviso" role="status" aria-live="assertive" class="mt-2 min-h-0 text-center font-bold text-encontro-creme text-[clamp(12px,1.1vw,15px)] sm:mt-3 sm:min-h-[1.2em]"></p>
 
-  <div class="mt-3 text-center">
+  <div class="mt-2 text-center sm:mt-3">
     <button
       type="submit"
       data-track="encontro_form_enviar"
