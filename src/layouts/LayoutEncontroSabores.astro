@@ -1,0 +1,87 @@
+---
+// Layout exclusivo do Encontro de Sabores Condor.
+// Importa APENAS o próprio CSS (bundle isolado): seus tokens @theme não interferem
+// em mulher/maes/pascoa/sabores, porque cada página carrega o seu layout.
+import "../styles/encontro-de-sabores.css";
+import settings from "../data/settings.json";
+import Analytics from "../components/Analytics.astro";
+import content from "../data/encontro-de-sabores/content.json";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { seo } = content;
+const { title = seo.title, description = seo.description } = Astro.props;
+const { gtmId } = settings;
+
+// Absoluta por causa dos crawlers: og:image relativo quase todos ignoram.
+const ogImage = new URL(seo.ogImage, Astro.url).href;
+
+// Fonte única de verdade para o href do Google Fonts (async + fallback noscript).
+// Montserrat 400/500/700 e Archivo 700 são as duas famílias do design-specs.
+const fontsHref =
+  "https://fonts.googleapis.com/css2?family=Archivo:wght@700&family=Montserrat:wght@400;500;700&display=swap";
+---
+
+<!doctype html>
+<html lang="pt-br" class="w-full max-w-[100vw] overflow-x-hidden">
+  <head>
+    {/* charset + viewport PRIMEIRO: precisam cair nos primeiros 1024 bytes
+        (auditoria "charset" do Lighthouse), antes dos scripts do GTM. */}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {gtmId && (
+      <script is:inline define:vars={{ gtmId }}>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',gtmId);
+      </script>
+    )}
+    <Analytics />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#7B0B02" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={Astro.url.href} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url.href} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={ogImage} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    {/* Carregamento async (media=print → onload) para não bloquear o render; display=swap
+        já pinta com a fonte de fallback. <noscript> = fallback sem JS. */}
+    <link rel="stylesheet" href={fontsHref} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={fontsHref} /></noscript>
+  </head>
+
+  <body class="font-sans antialiased relative min-h-screen w-full overflow-x-hidden bg-encontro-vinho text-encontro-branco">
+    {gtmId && (
+      <noscript>
+        <iframe
+          src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+          height="0"
+          width="0"
+          style="display:none;visibility:hidden"></iframe>
+      </noscript>
+    )}
+    <slot />
+  </body>
+</html>

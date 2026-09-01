@@ -1,0 +1,82 @@
+---
+// Patrocinadores.
+//
+// MEDIDAS DO FIGMA (tela 1440×2498)
+//   card branco      x 190  y 2082  w 1077  h 120  raio 30
+//   faixa de logos   x 261  y 2088  w 918   h 108
+//   mobile (393):    card x 26 y 1370 w 329 h 36 · logos x 48 w 281 h 34
+//
+// O design entrega os 7 logos como UMA imagem de 5022×595 com o rótulo
+// «PATROCÍNIO:» rasterizado dentro. Aqui eles vão separados e em fluxo: a tira
+// não reflowa, não dá para ler com leitor de tela e em 320 px deixa cada logo
+// com ~40 px.
+//
+// DESVIO DELIBERADO DO DESIGN, combinado: o frame mobile do Figma põe os 7
+// logos em UMA linha de 329×36, o que deixa cada marca com ~40 px de largura —
+// ilegível, e pior ainda em 320. Aqui eles vão em grid e ocupam várias linhas.
+// É a única parte em que a implementação se afasta do design de propósito.
+//
+// ATENÇÃO ao tamanho: NÃO são igualados por altura. Na tira original cada marca
+// tem seu próprio tamanho óptico, medido em cima do arquivo (5022×595) e
+// guardado no content.json como `altura` em % da faixa de 108 px:
+//   Freddo 52.6 · Rizolli 50.6 · Santa Clara 45.4 · FYS 43.7
+//   Baden Baden 28.4 · Pomarola 27.7 · Elefante 15.6
+// Igualar por altura inchava os logotipos-palavra (Elefante triplicava de
+// tamanho). Essas porcentagens reproduzem a proporção do design.
+import content from "../../data/encontro-de-sabores/content.json";
+const { patrocinio } = content;
+
+const BANDA = 108; // px de altura da faixa no design
+---
+
+<section
+  id="patrocinadores"
+  class="w-full scroll-mt-4 bg-encontro-tijolo px-6 pb-10 md:pb-16 lg:px-8"
+>
+  {/* 1077/1440 = 74.79% */}
+  <div
+    class="mx-auto flex w-full max-w-[1077px] flex-col items-center justify-center gap-4 rounded-encontro-lg bg-encontro-branco px-6 py-4 sm:flex-row sm:gap-6 md:min-h-[120px] md:gap-8 md:px-[4.9%]"
+  >
+{/* Piso de 12px, não 9: o rótulo é texto real e em 9px não dá para ler.
+        No Figma ele vai rasterizado dentro da tira, então lá isso não se aplica. */}
+    <h2
+      class="shrink-0 font-bold uppercase tracking-[0.04em] text-encontro-vinho text-[clamp(12px,1.1vw,16px)]"
+    >
+      {patrocinio.titulo}
+    </h2>
+
+    {/* Cada logo tem sua própria altura. A faixa do design mede 108px; em
+        telas menores ela escala com a largura mantendo as proporções. */}
+    <ul
+      class="grid w-full max-w-[918px] grid-cols-4 items-center justify-items-center gap-x-4 gap-y-4 sm:flex sm:justify-between sm:gap-x-3"
+    >
+      {patrocinio.logos.map((logo) => (
+        <li class="flex items-center justify-center">
+          <img
+            src={logo.arquivo}
+            alt={logo.nome}
+            width="300"
+            height="200"
+            loading="lazy"
+            decoding="async"
+            class="h-auto w-full object-contain sm:w-auto"
+            style={`--h:${((logo.altura / 100) * BANDA).toFixed(1)}px; max-height:var(--h); height:auto;`}
+          />
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* A partir do sm o logo é dimensionado pela altura óptica (o seu --h), não
+     pela largura. É feito em CSS e não com utilitários porque o valor é
+     diferente para cada marca e vem do dado, não de uma escala fixa. */
+  @media (min-width: 640px) {
+    li img {
+      height: min(var(--h), 9vw);
+      width: auto;
+      max-width: 100%;
+    }
+  }
+</style>

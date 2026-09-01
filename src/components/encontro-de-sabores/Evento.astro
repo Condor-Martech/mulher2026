@@ -1,0 +1,214 @@
+---
+// Bloco central: «Reserve sua agenda», a caixa escura com data e endereço, e a
+// caixa aninhada de PROGRAMAÇÃO. No Figma é UMA caixa dentro da outra, não duas
+// seções irmãs.
+//
+// MEDIDAS DO FIGMA (tela 1440×2498)
+//   título «Reserve sua agenda…»  y 1067  Montserrat Bold 45  #FFD88F  centralizado
+//   caixa escura #7B0B02          x 179  y 1170  w 1088  h 844
+//     «Data / Início»             x 338  y 1231  Montserrat Bold 45  branco
+//     caixa endereço #A72B00      x 663  y 1218  w 454  h 128
+//       pin                       x 691  y 1252  w 46  h 57
+//       texto                     x 753  y 1236  Montserrat Bold 24  branco
+//     caixa PROGRAMAÇÃO #A72B00   x 246  y 1393  w 961  h 570
+//       título                    y 1437.5  Montserrat Bold 45  branco
+//       filete #FFD88F            x 387.5  y 1511  w 671
+//       card #F6F6F6              x 408  y 1548  w 610  h 288  raio 40
+//         descrição               x 432  y 1590  w 561  Montserrat Bold 20  #A72B00
+//         pílula branca           x 473  y 1721  w 480  h 75  raio 25
+//           «Inscrições limitadas»  Montserrat Bold 26  #A72B00
+//       CTA #FFD88F               x 609  y 1868  w 208  h 50   texto 16  #7B0B02
+//
+// Mobile (frame 393×1593): caixa escura x 23 y 446 w 341 h 904; card claro
+// x 81 w 224 h 428; pílula x 102 w 182 h 98; CTA x 103 w 181 h 44.
+//
+// As larguras do MOBILE fogem desse frame de propósito. As porcentagens se
+// multiplicam entre si —341 › 78.9% › 83.3% › 88.8%— e deixavam o texto com
+// 199px de 393, ou seja, 30 caracteres por linha. Baixar o padding do pai só
+// recupera 20px, então a cadeia também é aberta. As caixas e a ordem delas são
+// as do design; o que muda é quanto elas ocupam na largura do mobile.
+//
+// ─── ALCANCE DAS CORREÇÕES ────────────────────────────────────────────────
+// A ESTRUTURA é a do Figma e não se toca: quatro caixas aninhadas, com suas
+// porcentagens, raios e espaçamentos exatos. O que se corrige é como o texto se
+// lê DENTRO delas, porque o design não deixa uma única redonda na página
+// inteira —21 negritos contra 1 redonda— e a hierarquia se apoia só no
+// tamanho:
+//   · data         rótulo em 500 a 0.62em, dado em 700 no corpo inteiro
+//   · descrição    400 e entrelinha 1.55 (a centralização fica: é decisão de
+//                  design, não descuido do Figma)
+//   · pílula       vinho com texto creme (8,2:1) em vez de branco sobre
+//                  #F6F6F6 (1,1:1), que era a mensagem de maior valor comercial
+//                  da página com a ênfase mais fraca do card
+import content from "../../data/encontro-de-sabores/content.json";
+const { agenda, evento, programacao, hero } = content;
+
+// Link para o Google Maps. Mesmo critério de sabores (SaboresEventCard.astro e
+// sabores-de-inverno/palestra/[id].astro): busca por nome + endereço, que não
+// precisa de API key e resolve no pin da loja. O `evento.mapsUrl` do
+// content.json sobrescreve isso se algum dia for preciso apontar para uma ficha
+// específica do Google Business.
+const mapsOverride = (evento as { mapsUrl?: string }).mapsUrl;
+const mapsQuery = [evento.local, evento.endereco, evento.cidade]
+  .filter(Boolean)
+  .join(" ")
+  .trim();
+const mapsUrl =
+  mapsOverride ||
+  (mapsQuery
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`
+    : null);
+
+// Tag dinâmica: <a> se houver mapa, <div> se não. Sem URL não sobra um link
+// morto nem um `href` vazio, só a caixa de sempre.
+const CajaEndereco = mapsUrl ? "a" : "div";
+const propsEndereco = mapsUrl
+  ? {
+      href: mapsUrl,
+      // Nova aba de propósito: esta é uma LP de inscrição com 15 vagas. Mandar
+      // o usuário para o Maps na mesma aba é perdê-lo.
+      target: "_blank",
+      rel: "noopener noreferrer",
+      "aria-label": evento.mapaRotulo,
+      "data-track": "encontro_mapa",
+    }
+  : {};
+---
+
+<section class="w-full bg-encontro-tijolo px-4 pb-10 pt-6 sm:px-6 md:pb-[68px] md:pt-[47px] lg:px-8">
+  <h2
+    class="mx-auto max-w-none text-balance text-center font-bold leading-[1.25] text-encontro-creme text-[32px] md:max-w-[777px] md:leading-[1.22] md:whitespace-nowrap md:text-[clamp(28px,3.13vw,45px)]"
+  >
+    {agenda.titulo}
+  </h2>
+
+  {/* Caixa escura: 1088/1440 = 75.56% da tela.
+      No Figma a caixa começa 12px ACIMA do fim do título, e isso foi copiado
+      como -mt-18px. Era uma sobreposição da TELA, não do texto: lá o bloco do
+      título mede 144px (314..458) e o texto não o preenche. O nosso mede 96 e
+      vai cheio, então a mesma margem negativa comia 13px da última linha —as
+      descidas do «p» de «participe:» ficavam cortadas pela caixa— e fazia isso
+      em TODA largura abaixo de md, inclusive em 640px, onde o título já cabe em
+      uma linha.
+      O ar é recuperado de onde sobrava: a entrelinha cai de 1.5 para 1.25, que
+      são 16px a menos nas duas linhas. Com isso a margem pode ser positiva e a
+      página fica 2px mais alta que antes, não 42. */}
+  <div
+    class="mx-auto mt-[14px] w-full max-w-[1088px] rounded-[24px] bg-encontro-vinho px-0 py-[25px] md:mt-[48px] md:rounded-[40px] md:pb-[51px] md:pt-[48px]"
+  >
+    {/* Data e endereço: coluna no mobile, linha a partir de md, centralizadas entre si. */}
+    <div class="mx-auto flex w-full flex-col items-center gap-5 md:w-[71.6%] md:flex-row md:items-center md:justify-between md:gap-6">
+      {/* O Figma dá rótulo e dado em Bold 45, então «Data:» pesa o mesmo que
+          «09/09» e o olho não distingue qual é o dado. Mesmo bloco, mesma
+          caixa, mesmas duas linhas: só muda a distribuição de peso e corpo. */}
+      <p
+        class="text-center leading-[1.5] text-encontro-branco text-[32px] md:text-left md:leading-[1.2] md:text-[clamp(26px,3.5vw,45px)]"
+      >
+        <span class="text-[0.62em] font-medium uppercase tracking-[0.06em]">{agenda.rotuloData}</span>
+        <span class="font-bold">{evento.dataCurta}</span><br />
+        <span class="text-[0.62em] font-medium uppercase tracking-[0.06em]">{agenda.rotuloHorario}</span>
+        <span class="font-bold">{evento.horario}</span>
+      </p>
+
+      {/* Caixa de endereço. ATENÇÃO à porcentagem: o Figma a dá como 454 dos
+          1088 da CAIXA ESCURA, mas este <address> não pendura na caixa escura,
+          pendura na linha, que por sua vez é 71.6% dela (779). Os 41.7%
+          aplicados aqui davam 325 em vez de 454, o texto em `nowrap` não cabia
+          e —com `justify-center`— vazava pelos dois lados: o pin ficava pintado
+          fora do fundo tijolo. 454/779 = 58.3%.
+          O `justify-start` ainda ancora o pin no padding esquerdo aconteça o
+          que acontecer, em vez de repartir qualquer sobra pelos dois lados.
+          As quebras de linha são as do Figma —três linhas, o endereço partido
+          depois da vírgula—, não as que o navegador resolver dar. */}
+      {/* O fundo, o raio e o padding vivem no <a>, não no <address>: assim a
+          caixa inteira é o alvo clicável, não só o texto.
+          Sem rótulo «Ver no mapa» por decisão de design: a caixa toda é o link
+          e o sinal visível é o pin. Para quem não vê a caixa, o `aria-label`
+          avisa que abre o Google Maps em uma nova aba. */}
+      <address class="w-[88%] not-italic md:w-[58.3%] md:shrink-0">
+        <CajaEndereco
+          {...propsEndereco}
+          class:list={[
+            "flex w-full items-center justify-start gap-[10px] rounded-[18px] bg-encontro-tijolo px-[16px] py-[13px] md:gap-[16px] md:px-[28px] md:py-[20px]",
+            mapsUrl &&
+              "transition duration-200 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme motion-safe:hover:scale-[1.01]",
+          ]}
+        >
+          {/* Pin: 46/454 = 10.1% da caixa. */}
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+            class="w-[40px] shrink-0 text-encontro-branco md:w-[46px]"
+          >
+            {/* De traço, como no Figma: contorno de gota + ponto central. */}
+            <path
+              d="M12 2.6a6.4 6.4 0 0 0-6.4 6.4c0 4.6 6.4 12.4 6.4 12.4s6.4-7.8 6.4-12.4A6.4 6.4 0 0 0 12 2.6Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"></path>
+            <circle cx="12" cy="9" r="2.1"></circle>
+          </svg>
+          {/* `whitespace-nowrap`: as três linhas são as do Figma. Sem isso o
+              navegador quebra por conta própria e saem cinco. O tamanho quem
+              ajusta é o clamp, para caberem em qualquer largura. */}
+          <p
+            class="whitespace-nowrap font-bold leading-[1.2] text-encontro-branco text-[14px] md:leading-[1.25] md:text-[clamp(13px,1.45vw,24px)]"
+          >
+            {evento.local}<br />
+            {evento.enderecoLinhas[0]}<br />
+            {evento.enderecoLinhas[1]}
+          </p>
+        </CajaEndereco>
+      </address>
+    </div>
+
+    {/* Caixa aninhada de PROGRAMAÇÃO: 961/1088 = 88.3% da caixa escura. */}
+    <div
+      id="programacao"
+      class="mx-auto mt-[28px] w-[88%] scroll-mt-4 rounded-[20px] bg-encontro-tijolo px-0 py-[26px] md:mt-[47px] md:w-[88.33%] md:rounded-[40px] md:pb-[45px] md:pt-[44px]"
+    >
+      <h3
+        class="text-center font-bold uppercase leading-tight text-encontro-branco text-[24px] md:text-[clamp(24px,3.5vw,45px)]"
+      >
+        {programacao.titulo}
+      </h3>
+      {/* Filete dourado: 671/961 = 69.8% da caixa. */}
+      <div
+        class="mx-auto mt-4 h-[2px] w-[69.8%] bg-encontro-creme md:mt-[19px] md:h-[3px]"
+        aria-hidden="true"
+      >
+      </div>
+
+      {/* Card claro: 610/961 = 63.5%. */}
+      <div
+        class="mx-auto mt-[38px] w-[92%] max-w-[610px] rounded-[24px] bg-encontro-cinza px-0 pb-[28px] pt-[20px] md:mt-[34px] md:w-full md:rounded-[40px] md:px-[24px] md:pb-[40px] md:pt-[42px]"
+      >
+        <p
+          class="mx-auto w-[92%] text-center font-normal leading-[1.6] text-encontro-tijolo text-[14px] md:leading-[1.55] md:w-full md:text-[clamp(14px,1.39vw,20px)]"
+        >
+          {programacao.descricao}
+        </p>
+
+        {/* Pílula: 480/610 = 78.7% do card, raio 25 do Figma. O preenchimento
+            passa de branco para vinho: no design era #FFF sobre #F6F6F6, 1,1:1. */}
+        <p
+          class="mx-auto mt-10 flex min-h-[98px] w-[88%] max-w-[480px] items-center justify-center rounded-[25px] bg-encontro-vinho px-3 text-center font-bold leading-[1.2] text-encontro-creme text-[20px] md:mt-[35px] md:h-[75px] md:w-full md:min-h-0 md:text-[clamp(18px,1.81vw,26px)]"
+        >
+          {programacao.destaque}
+        </p>
+      </div>
+
+      <div class="mt-7 text-center md:mt-[32px]">
+        <button
+          type="button"
+          data-abre-inscricao
+          data-track="encontro_cta_programacao"
+          class="inline-flex h-[44px] w-[181px] items-center justify-center rounded-[10px] bg-encontro-creme text-[14px] font-bold tracking-wide text-encontro-vinho shadow-sm transition duration-200 hover:bg-white hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme motion-safe:hover:scale-[1.03] motion-safe:active:scale-[0.98] md:h-[50px] md:w-[208px] md:text-[clamp(14px,1.11vw,16px)]"
+        >
+          {hero.cta}
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

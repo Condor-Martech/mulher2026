@@ -1,0 +1,72 @@
+---
+// Rodapé institucional.
+//
+// MEDIDAS DO FIGMA (tela 1440×2498)
+//   faixa #7B0B02            y 2270  h 228
+//   logo Condor              x 141   y 2355  w 167.37  h 43
+//   copyright                x 511   y 2365  Montserrat Regular 20  branco
+//   redes                    x 1166..1296  y 2358  h 37, três ícones de ~39
+//   mobile: logo x 137 y 1462 w 121 h 33 · copyright y 1509 · redes y 1536
+//
+// O logo e os três ícones foram exportados do próprio Figma: o logotipo da
+// Condor não veio na entrega de assets e os ícones de marca não dá para
+// redesenhar à mão sem fugir do original.
+import content from "../../data/encontro-de-sabores/content.json";
+const { rodape } = content;
+
+const ICONE: Record<string, string> = {
+  Facebook: "/assets/encontro-de-sabores/images/redes/facebook.webp",
+  Instagram: "/assets/encontro-de-sabores/images/redes/instagram.webp",
+  LinkedIn: "/assets/encontro-de-sabores/images/redes/linkedin.webp",
+};
+---
+
+<footer class="flex w-full items-center bg-encontro-vinho px-6 py-4 md:min-h-[224px] md:py-0 lg:px-8">
+  {/* Mobile: coluna centralizada (logo → copyright → redes), como o frame 393.
+      Desktop: os três em linha, com o copyright centralizado. */}
+  <div
+    class="mx-auto flex min-h-[136px] w-full max-w-[1160px] flex-col items-center justify-center gap-4 md:min-h-0 md:flex-row md:justify-between md:gap-6"
+  >
+    <img
+      src="/assets/encontro-de-sabores/images/condor-rodape.webp"
+      alt={rodape.logoAlt}
+      width="335"
+      height="86"
+      loading="lazy"
+      decoding="async"
+      class="h-[33px] w-auto md:h-[43px]"
+    />
+
+    <p
+      class="text-center font-normal text-encontro-branco text-[12px] md:text-[clamp(14px,1.4vw,20px)]"
+    >
+      {rodape.copyright}
+    </p>
+
+    <ul class="flex items-center gap-3 md:gap-[13px]">
+      {rodape.redes.map((rede) => (
+        <li>
+          <a
+            href={rede.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-track="encontro_rodape_rede"
+            aria-label={rede.nome}
+            class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme"
+          >
+            <img
+              src={ICONE[rede.nome]}
+              alt=""
+              aria-hidden="true"
+              width="120"
+              height="120"
+              loading="lazy"
+              decoding="async"
+              class="h-[30px] w-auto md:h-[37px]"
+            />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</footer>
