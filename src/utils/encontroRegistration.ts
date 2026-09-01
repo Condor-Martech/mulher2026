@@ -26,6 +26,7 @@
  * envios simultâneos com uma vaga livre entrariam os dois.
  */
 import { registrationService } from "../services/registrationService";
+import { supabase } from "../lib/supabase";
 import { track } from "../lib/track";
 
 type Validador = (valor: string, el: HTMLInputElement) => boolean;
@@ -91,6 +92,48 @@ function mascaraTelefone(v: string): string {
   if (d.length <= 10)
     return d.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{4})(\d)/, "$1-$2");
   return d.replace(/(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d)/, "$1-$2");
+}
+
+/**
+ * Grava os três aceites — ANTES de inscrever, e a ordem é o ponto todo.
+ *
+ * Estas declarações são a prova de que a pessoa aceitou, e a de restrição
+ * alimentar é a que protege num evento com degustação: se alguém com alergia
+ * ou intolerância passar mal, o que se apresenta é a declaração. Logo, não
+ * pode existir inscrição sem ela.
+ *
+ * Gravando primeiro, o pior caso é uma linha órfã de quem começou e não
+ * terminou (CPF repetido, vagas esgotadas) — inofensiva, ninguém a lê.
+ * Inscrevendo primeiro, o pior caso seria uma inscrição sem prova, que é
+ * exatamente o caso em que se precisa dela.
+ *
+ * Tabela própria desta campanha. NÃO toca a RPC nem `inscricoes`, que são
+ * partilhadas pelas cinco campanhas em produção: acrescentar um parâmetro à
+ * RPC obrigaria a apagá-la e recriá-la, e a definição dela não está versionada
+ * em lado nenhum. Enquanto isso não se resolver, o caminho seguro é este.
+ */
+async function gravarAceites(
+  eventId: string,
+  source: "social" | "crm",
+  dados: Record<string, unknown>,
+): Promise<boolean> {
+  const { error } = await supabase.from("encontro_consentimentos").insert({
+    event_id: eventId,
+    cpf: String(dados.cpf ?? "").replace(/\D/g, ""),
+    source,
+    maioridade: !!dados.maioridade,
+    restricao: !!dados.restricao,
+    lgpd: !!dados.lgpd,
+  });
+
+  // 23505 = a linha já existe (unique event_id+cpf). Acontece quando a pessoa
+  // tenta de novo depois de a RPC recusar: a declaração já ficou guardada na
+  // primeira tentativa, que é o que interessa. Não é erro.
+  if (error && error.code !== "23505") {
+    console.error("[Encontro] Falha ao gravar os aceites:", error);
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -311,17 +354,28 @@ export function montarFormulario(): void {
 
     const dados = Object.fromEntries(new FormData(form).entries());
     try {
+      // Os aceites PRIMEIRO. Se não ficarem gravados, não se inscreve — ver
+      // gravarAceites(). Ninguém entra no evento sem a declaração guardada.
+      if (!(await gravarAceites(eventId, source, dados))) {
+        track("registration_failed", {
+          event_id: eventId,
+          source,
+          reason: "aceites",
+        });
+        if (aviso) {
+          aviso.textContent = d.erroEnvio ?? "";
+          aviso.dataset.tipo = "erro";
+        }
+        return; // o finally repõe o botão
+      }
+
       // O canal é declarado pelo próprio formulário:
       //   a LP web   → social  (cota qtd_social, as 15 vagas da LP)
       //   o CRM      → crm     (cota qtd_crm, as outras 15)
       //
-      // PENDÊNCIA CONHECIDA — os três aceites não chegam ao banco. O
-      // registrationService monta um payload fixo (p_nome, p_email, p_cpf,
-      // p_telefone, p_source, p_tema, p_nome_filho, p_cpf_filho,
-      // p_maioridade_filho) e `maioridade`, `restricao` e `lgpd` não estão
-      // nele. Não é específico desta campanha: o sabores também coleta `lgpd`
-      // como obrigatório e o perde do mesmo jeito. Resolver mexe no serviço
-      // compartilhado e na RPC, então é decisão de projeto, não desta LP.
+      // O registrationService monta um payload fixo e não leva os três
+      // aceites: é partilhado pelas cinco campanhas, e por isso eles vão pela
+      // tabela própria acima em vez de por aqui.
       const res = await registrationService.submitRegistration(
         { ...dados, eventId },
         source,
