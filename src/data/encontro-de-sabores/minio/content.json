@@ -15,7 +15,7 @@
     "cidade": "Curitiba/PR",
     "aberturaInscricoes": "04/09/2026",
     "enderecoLinhas": [
-      "Endereço: R. Nilo Peçanha,",
+      "R. Nilo Peçanha,",
       "1000 - São Francisco"
     ],
     "mapaRotulo": "Ver Condor Nilo Peçanha no Google Maps (abre em nova aba)"
@@ -45,8 +45,8 @@
   },
   "programacao": {
     "titulo": "PROGRAMAÇÃO",
-    "descricao": "Experiência gastronômica VIP no Espaço de Eventos Condor Nilo Peçanha, com degustação de salgados, tábua de frios, pizza show cooking preparada por Chef, bebidas e sobremesa artesanal.",
-    "destaque": "Inscrições limitadas"
+    "descricao": "Experiência gastronômica VIP no Espaço de Eventos Condor Nilo Peçanha, com degustação de salgados, tábua de frios, pizza show cooking preparada por um chef, bebidas e sobremesa artesanal.",
+    "destaque": "Vagas limitadas"
   },
   "patrocinio": {
     "titulo": "PATROCÍNIO:",
