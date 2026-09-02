@@ -18,6 +18,24 @@ import type { Event, EventStatus } from '../types/event';
 
 export const CAMPANHA_ID = 'encontro-de-sabores';
 
+/**
+ * Prazo para o Supabase responder.
+ *
+ * Sem isto a página fica pendurada. Medido: contra um servidor que ACEITA a
+ * ligação e nunca responde, a rota não devolveu nada em 30 segundos — e como o
+ * SSR corre sem cache isso repetir-se-ia a cada visita, as ligações
+ * acumulavam-se e caía o site inteiro, não só o formulário. É o mesmo buraco
+ * que o encontroContentService já tapou para o Minio.
+ *
+ * O Supabase INALCANÇÁVEL nunca foi problema: falha em 0,15s e a página serve
+ * SOON. O perigo é o Supabase lento, não o Supabase morto.
+ *
+ * 8 segundos e não 2: normalmente responde em menos de 300ms, mas na sexta às
+ * 10h, quando o CRM dispara os e-mails, uma ponta de lentidão não pode fazer
+ * com que toda a gente veja «em breve».
+ */
+const TEMPO_LIMITE_MS = 8000;
+
 const ESTADOS_VALIDOS = ['OPEN', 'SOON', 'FULL', 'FINISHED'] as const;
 
 /**
@@ -81,11 +99,13 @@ export async function obterEstado(
       .eq('active', true)
       .eq('campanha_id', CAMPANHA_ID)
       .limit(1)
+      .abortSignal(AbortSignal.timeout(TEMPO_LIMITE_MS))
       .maybeSingle(),
     supabase
       .from('campanhas')
       .select('active')
       .eq('id', CAMPANHA_ID)
+      .abortSignal(AbortSignal.timeout(TEMPO_LIMITE_MS))
       .maybeSingle(),
   ]);
 
@@ -107,7 +127,8 @@ export async function obterEstado(
       .from('inscricoes')
       .select('*', { count: 'exact', head: true })
       .eq('event_id', palestra.id)
-      .eq('source', source);
+      .eq('source', source)
+      .abortSignal(AbortSignal.timeout(TEMPO_LIMITE_MS));
     ocupadas = count ?? 0;
   }
 

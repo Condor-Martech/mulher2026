@@ -95,6 +95,35 @@ function mascaraTelefone(v: string): string {
 }
 
 /**
+ * Prazo para as duas escritas do envio: os aceites e a RPC.
+ *
+ * O serviço partilhado não tem prazo nenhum. Se o Supabase aceitar a ligação e
+ * não responder — o caso mau, que não é o de estar em baixo —, a promessa nunca
+ * resolve: o botão fica em «Enviando…» para sempre, sem erro, sem forma de
+ * tentar outra vez. A pessoa fecha a página convencida de que se inscreveu.
+ *
+ * Aqui só se envolve a chamada, sem tocar no registrationService, que é das
+ * cinco campanhas. Passado o prazo, o catch do submit mostra a mensagem de erro
+ * e o finally devolve o botão.
+ *
+ * 12s e não 8: o servidor tem 8 para as leituras, mas isto é uma ESCRITA que a
+ * pessoa está a olhar. Cortá-la cedo demais pode dar erro a quem afinal ficou
+ * inscrito — a RPC já gravou e a resposta é que se perdeu.
+ */
+const PRAZO_ENVIO_MS = 12000;
+
+// PromiseLike e não Promise: o builder do Supabase é um thenable, não uma
+// Promise de verdade — só ganha `.catch` depois do Promise.resolve.
+function comPrazo<T>(promessa: PromiseLike<T>, ms: number): Promise<T> {
+  return Promise.race([
+    Promise.resolve(promessa),
+    new Promise<T>((_, rejeitar) =>
+      setTimeout(() => rejeitar(new Error("tempo esgotado")), ms),
+    ),
+  ]);
+}
+
+/**
  * Grava os três aceites — ANTES de inscrever, e a ordem é o ponto todo.
  *
  * Estas declarações são a prova de que a pessoa aceitou, e a de restrição
@@ -117,14 +146,17 @@ async function gravarAceites(
   source: "social" | "crm",
   dados: Record<string, unknown>,
 ): Promise<boolean> {
-  const { error } = await supabase.from("encontro_consentimentos").insert({
-    event_id: eventId,
-    cpf: String(dados.cpf ?? "").replace(/\D/g, ""),
-    source,
-    maioridade: !!dados.maioridade,
-    restricao: !!dados.restricao,
-    lgpd: !!dados.lgpd,
-  });
+  const { error } = await comPrazo(
+    supabase.from("encontro_consentimentos").insert({
+      event_id: eventId,
+      cpf: String(dados.cpf ?? "").replace(/\D/g, ""),
+      source,
+      maioridade: !!dados.maioridade,
+      restricao: !!dados.restricao,
+      lgpd: !!dados.lgpd,
+    }),
+    PRAZO_ENVIO_MS,
+  );
 
   // 23505 = a linha já existe (unique event_id+cpf). Acontece quando a pessoa
   // tenta de novo depois de a RPC recusar: a declaração já ficou guardada na
@@ -376,9 +408,9 @@ export function montarFormulario(): void {
       // O registrationService monta um payload fixo e não leva os três
       // aceites: é partilhado pelas cinco campanhas, e por isso eles vão pela
       // tabela própria acima em vez de por aqui.
-      const res = await registrationService.submitRegistration(
-        { ...dados, eventId },
-        source,
+      const res = await comPrazo(
+        registrationService.submitRegistration({ ...dados, eventId }, source),
+        PRAZO_ENVIO_MS,
       );
       if (res.success) {
         track("registration_succeeded", { event_id: eventId, source });
