@@ -177,16 +177,6 @@
         "nome": "restricao",
         "texto": "Declaro que não possuo restrição alimentar.",
         "obrigatorio": true
-      },
-      {
-        "nome": "lgpd",
-        "texto": "Li e aceito a ",
-        "obrigatorio": true,
-        "link": {
-          "rotulo": "Política de Privacidade",
-          "href": "https://www.condor.com.br/politica-de-privacidade"
-        },
-        "sufixo": "."
       }
     ],
     "erros": {
@@ -196,7 +186,6 @@
       "telefone": "Informe um celular válido com DDD.",
       "maioridade": "É necessário declarar que você é maior de 18 anos.",
       "restricao": "É necessário declarar que não possui restrição alimentar.",
-      "lgpd": "É necessário aceitar os termos e a Política de Privacidade.",
       "generico": "Campo inválido.",
       "formulario": "Verifique os campos destacados.",
       "cpfDuplicado": "Este CPF já possui inscrição confirmada para o evento.",

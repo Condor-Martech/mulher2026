@@ -116,6 +116,13 @@ const CHECKS = formulario.aceites;
         // linha toda — e vai para o fim (order-1) para que CPF e celular
         // fiquem lado a lado. No desktop volta à ordem e à posição do Figma.
         c.nome === "email" && "col-span-2 order-1 sm:order-none sm:col-span-1",
+        // Abaixo de 360px a coluna de meia largura fica com menos de 142px e o
+        // placeholder do celular —«(41) 90000-0000», o mais comprido— entra
+        // cortado. Medido: precisa de 142px com o recuo mobile. Aí CPF e
+        // celular passam a ocupar a linha toda; a partir de 360 voltam a ficar
+        // lado a lado, como no Figma.
+        (c.nome === "cpf" || c.nome === "telefone") &&
+          "col-span-2 min-[360px]:col-span-1",
       ]}>
         <label for={c.nome} class="font-medium text-encontro-creme text-[clamp(12px,1.1vw,14px)]">
           {c.rotulo} <span aria-hidden="true">*</span>
@@ -134,7 +141,7 @@ const CHECKS = formulario.aceites;
           aria-required="true"
           aria-describedby={`erro-${c.nome}`}
           data-erro={formulario.erros[c.nome as keyof typeof formulario.erros]}
-          class="min-h-[48px] w-full rounded-encontro-sm border-2 border-transparent bg-white px-4 text-encontro-vinho placeholder:text-encontro-vinho/40 text-[clamp(14px,1.2vw,16px)] transition-colors duration-150 focus-visible:border-encontro-creme focus-visible:outline-none aria-[invalid=true]:border-encontro-red"
+          class="min-h-[48px] w-full rounded-encontro-sm border-2 border-transparent bg-white px-3 sm:px-4 text-encontro-vinho placeholder:text-encontro-vinho/40 text-[clamp(14px,1.2vw,16px)] transition-colors duration-150 focus-visible:border-encontro-creme focus-visible:outline-none aria-[invalid=true]:border-encontro-red"
         />
         <p id={`erro-${c.nome}`} aria-live="polite" class="min-h-0 font-medium text-encontro-creme text-[clamp(12px,1vw,13px)] sm:min-h-[1.05em]"></p>
       </div>

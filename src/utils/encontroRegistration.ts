@@ -153,7 +153,16 @@ async function gravarAceites(
       source,
       maioridade: !!dados.maioridade,
       restricao: !!dados.restricao,
-      lgpd: !!dados.lgpd,
+      // O aceite da LGPD saiu do formulário a pedido do cliente: não há
+      // checkbox nem aviso nenhum. Gravar `true` seria inventar um aceite que
+      // ninguém deu e `false` leria-se como recusa, então vai `null` — na
+      // planilha sai célula vazia, que é o que é: não foi pedido. A coluna é
+      // nullable desde 02/09 (ver migrations/…_lgpd_nullable.sql); mandar null
+      // antes disso rebentava o insert e bloqueava a inscrição.
+      //
+      // Se a caixa voltar a `formulario.aceites[]` no content.json, o valor
+      // dela volta a mandar sem tocar neste arquivo.
+      lgpd: dados.lgpd === undefined ? null : !!dados.lgpd,
     }),
     PRAZO_ENVIO_MS,
   );
