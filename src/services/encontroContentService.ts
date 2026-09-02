@@ -30,6 +30,37 @@ export const toEncontroCdn = (path: string): string =>
     ? path.replace(LOCAL_PREFIX, ENCONTRO_ASSETS_BASE)
     : path;
 
+/**
+ * Mistura o que vem do Minio POR CIMA do conteúdo local, chave a chave.
+ *
+ * Antes o JSON do Minio SUBSTITUÍA o local inteiro, e isso custava duas coisas:
+ * quem editava um texto tinha de subir os 5 KB completos, e um bloco em falta
+ * derrubava a página — medido, sem `formulario` dá «Cannot read properties of
+ * undefined (reading 'fechar')» e a rota devolve a página de erro.
+ *
+ * Agora o Minio carrega só o que muda (datas, patrocinadores, textos) e o resto
+ * vem do repo. O que não se subir não desaparece: preenche-se sozinho.
+ *
+ * Objetos fundem-se em profundidade. ARRAYS substituem-se inteiros, de
+ * propósito: é o que permite TIRAR um patrocinador subindo a lista sem ele.
+ * Fundir arrays elemento a elemento tornaria impossível encurtar uma lista.
+ */
+const mesclar = (base: any, novo: any): any => {
+  if (novo === undefined) return base;
+  if (novo === null || Array.isArray(novo)) return novo;
+  if (
+    typeof novo !== "object" ||
+    typeof base !== "object" ||
+    base === null ||
+    Array.isArray(base)
+  ) {
+    return novo;
+  }
+  const saida: any = { ...base };
+  for (const chave in novo) saida[chave] = mesclar(base[chave], novo[chave]);
+  return saida;
+};
+
 /** Percorre a árvore e aplica `toEncontroCdn` em cada string. */
 const transformData = (obj: any): any => {
   if (typeof obj === "string") return toEncontroCdn(obj);
@@ -71,8 +102,10 @@ export const getEncontroContent = async () => {
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });
     if (res.ok) {
+      const remoto = await res.json();
       console.log("[EncontroService] Conteúdo carregado do Minio");
-      return transformData(await res.json());
+      // Sobre o local, não em vez dele: ver mesclar().
+      return transformData(mesclar(localContentData, remoto));
     }
     console.warn(
       `[EncontroService] Minio fetch não-OK: ${res.status} ${res.statusText}`,
