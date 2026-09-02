@@ -36,8 +36,8 @@ insert into palestras (
   '2026-09-09 19:30:00-03',   -- evento
   '2026-09-04 10:00:00-03',   -- abre inscrições (10h de Curitiba)
   '2026-09-07 23:59:59-03',   -- fecha inscrições
-  15,                         -- cota da LP  (source = 'social')
-  15                          -- cota do CRM (source = 'crm')
+  20,                         -- cota da LP  (source = 'social')
+  10                          -- cota do CRM (source = 'crm')
 )
 on conflict (id) do update
   set active                  = excluded.active,
