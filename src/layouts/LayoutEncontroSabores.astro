@@ -4,7 +4,6 @@
 // em mulher/maes/pascoa/sabores, porque cada página carrega o seu layout.
 import "../styles/encontro-de-sabores.css";
 import settings from "../data/settings.json";
-import Analytics from "../components/Analytics.astro";
 import content from "../data/encontro-de-sabores/content.json";
 import { toEncontroCdn } from "../services/encontroContentService";
 
@@ -59,7 +58,21 @@ const fontsHref =
       if (matchMedia("(prefers-reduced-motion: no-preference)").matches)
         document.documentElement.dataset.js = "";
     </script>
-    <Analytics />
+    {/* Sem OpenPanel nesta campanha, de propósito.
+        `opapi.cndr.me` —o servidor auto-hospedado que o partial <Analytics>
+        procura— não tem registo de DNS: google.com, github.com e s3.cndr.me
+        resolvem desta mesma máquina, este não. Com o
+        PUBLIC_OPENPANEL_CLIENT_ID definido, o script era renderizado e cada
+        carga tentava um host inexistente, enchendo a consola de erros. Como a
+        medição não vai ser implementada aqui, o partial sai.
+
+        As outras quatro campanhas montam-no nas suas próprias layouts e ficam
+        como estão — estão no ar, não se tocam.
+
+        O que fica e não custa nada: as chamadas a `track()` do funil e os
+        atributos `data-track`. Sem `window.op` o track.ts é um no-op por
+        optional-chaining com try/catch à volta, e os data-track são atributos
+        mortos. Repor a medição é devolver esta linha ao <head>. */}
 
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
