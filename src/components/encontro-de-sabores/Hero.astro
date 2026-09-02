@@ -48,7 +48,13 @@ const FOTO = (largura: number) =>
     class="absolute inset-0 h-full w-full object-cover object-[50%_72%]"
   />
 
-  {/* Proporção do design: mobile 393/296, desktop 1443/1020. */}
+  {/* Proporção: no mobile a DA PRÓPRIA FOTO (1920/1599 = 1.201), no desktop a
+      do design (1443/1020).
+      A do Figma para mobile era 393/296 = 1.328, mais larga que a foto, e com
+      `min-h-[80svh]` o contêiner ficava em 390×675 — ratio 0.58, muito mais
+      vertical que a imagem. Como quem absorve a diferença é o `object-cover`,
+      cortava pelos lados: medido, viam-se 48% da largura da foto num telemóvel
+      de 390px. Com o contêiner no ratio da imagem não se corta nada. */}
   {/* A proporção do Figma (1443/1020) dá 1018px de altura a 1440 de largura:
         mais que a janela de um notebook, então o hero preenchia a tela e nada
         indicava que havia conteúdo abaixo. Cortamos em 86svh para aparecer a
@@ -57,7 +63,7 @@ const FOTO = (largura: number) =>
         Quem absorve o corte é a foto (object-cover); o selo vai em % do
         contêiner, então diminui junto com ele e a composição se mantém. */}
   <div
-    class="relative mx-auto aspect-[393/296] max-h-[86svh] w-full max-w-[1440px] md:aspect-[1443/1020]"
+    class="relative mx-auto aspect-[1920/1599] max-h-[86svh] w-full max-w-[1440px] md:aspect-[1443/1020]"
   >
     {/* Pílula do menu. No Figma mobile ela não existe, então aparece do md pra cima. */}
     <nav
@@ -94,7 +100,7 @@ const FOTO = (largura: number) =>
       height="656"
       fetchpriority="high"
       decoding="async"
-      class="absolute left-[17.3%] top-[13.18%] h-[45.6%] w-[62.6%] object-contain object-left md:left-[5.903%] md:top-[19.02%] md:h-[40.39%] md:w-[55.694%]"
+      class="absolute left-[17.3%] top-[13.18%] h-auto w-[62.6%] object-contain object-left md:left-[5.903%] md:top-[19.02%] md:h-[40.39%] md:w-[55.694%]"
     />
 
     {/* Indicador de scroll. O corte em 86svh deixa aparecer a faixa
