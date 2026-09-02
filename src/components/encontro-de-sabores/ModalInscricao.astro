@@ -32,8 +32,15 @@ const { mensagens, evento, programacao, formulario } = content;
   {/* `m-auto` é obrigatório: um <dialog> se centraliza com `margin:auto`, e o
       preflight do Tailwind aplica `margin:0` em tudo, então sem isso o modal
       fica colado na esquerda. `max-h` + `overflow-y-auto` para que o
-      formulário possa rolar em telas baixas. */}
-  class="m-auto max-h-[95svh] w-[min(94vw,640px)] overscroll-contain overflow-y-auto rounded-encontro-lg bg-encontro-vinho p-0 text-encontro-branco backdrop:bg-black/70 sm:max-h-[90svh] sm:w-[min(92vw,640px)]"
+      formulário possa rolar em telas baixas.
+
+      `max-w-none` porque o UA stylesheet dá ao <dialog> um
+      `max-width: calc(100% - 6px - 2em)` — a 360px isso o prendia em 322px em
+      vez dos 338 que o `94vw` pede, e o `w-` sozinho não vence um `max-width`.
+      Eram os 16px que faltavam para o placeholder «(41) 90000-0000» caber na
+      coluna de meia largura, e o que fazia o modal ser mais estreito que o
+      mesmo formulário na rota do CRM. */}
+  class="m-auto max-h-[95svh] w-[min(94vw,640px)] max-w-none overscroll-contain overflow-y-auto rounded-encontro-lg bg-encontro-vinho p-0 text-encontro-branco backdrop:bg-black/70 sm:max-h-[90svh] sm:w-[min(92vw,640px)]"
 >
   <div class="relative px-5 py-5 sm:px-8 sm:py-8 md:px-10 md:py-10">
     <button
@@ -49,7 +56,7 @@ const { mensagens, evento, programacao, formulario } = content;
 
     {estado === "SOON" && (
       <div class="text-center">
-        <h2 id="encontro-modal-titulo" class="font-bold leading-tight text-encontro-creme text-[clamp(20px,2.6vw,32px)]">
+        <h2 id="encontro-modal-titulo" class="pr-10 sm:pr-0 font-bold leading-tight text-encontro-creme text-[clamp(20px,2.6vw,32px)]">
           {programacao.destaque}
         </h2>
         <p class="mt-4 leading-relaxed text-[clamp(13px,1.3vw,17px)]">
@@ -62,7 +69,7 @@ const { mensagens, evento, programacao, formulario } = content;
 
     {(estado === "FULL" || estado === "FINISHED") && (
       <div class="text-center">
-        <h2 id="encontro-modal-titulo" class="font-bold leading-tight text-encontro-creme text-[clamp(20px,2.6vw,32px)]">
+        <h2 id="encontro-modal-titulo" class="pr-10 sm:pr-0 font-bold leading-tight text-encontro-creme text-[clamp(20px,2.6vw,32px)]">
           {mensagens.encerradoTitulo}
         </h2>
         <p class="mt-4 leading-relaxed text-[clamp(13px,1.3vw,17px)]">
@@ -73,7 +80,7 @@ const { mensagens, evento, programacao, formulario } = content;
 
     {estado === "OPEN" && (
       <>
-        <h2 id="encontro-modal-titulo" class="text-center font-bold leading-tight text-encontro-creme text-[clamp(20px,2.6vw,32px)]">
+        <h2 id="encontro-modal-titulo" class="pr-10 sm:pr-0 text-center font-bold leading-tight text-encontro-creme text-[clamp(20px,2.6vw,32px)]">
           {formulario.titulo}
         </h2>
         <p class="mt-2 text-center text-[clamp(12px,1.2vw,16px)]">
