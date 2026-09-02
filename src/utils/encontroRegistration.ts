@@ -343,6 +343,14 @@ export function montarFormulario(): void {
       el.addEventListener("change", () => validar(el));
   }
 
+  // Um <a> dentro de um <label> continua a alternar a checkbox ao ser clicado:
+  // o clique conta como clique na etiqueta. Sem isto, abrir a Política de
+  // Privacidade desmarcava o aceite pelas costas da pessoa.
+  form.addEventListener("click", (ev) => {
+    const alvo = (ev.target as HTMLElement)?.closest("[data-aceite-link]");
+    if (alvo) ev.stopPropagation();
+  });
+
   // Início do funil, uma única vez por carga.
   form.addEventListener(
     "focusin",

@@ -180,8 +180,13 @@
       },
       {
         "nome": "lgpd",
-        "texto": "Li e aceito os Termos de Participação e a Política de Privacidade.",
-        "obrigatorio": true
+        "texto": "Li e aceito a ",
+        "obrigatorio": true,
+        "link": {
+          "rotulo": "Política de Privacidade",
+          "href": "https://www.condor.com.br/politica-de-privacidade"
+        },
+        "sufixo": "."
       }
     ],
     "erros": {

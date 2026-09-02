@@ -158,8 +158,26 @@ const CHECKS = formulario.aceites;
               data-erro={formulario.erros[c.nome as keyof typeof formulario.erros]}
               class="mt-[3px] h-5 w-5 shrink-0 accent-encontro-creme focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme"
             />
+            {/* O aceite pode levar um link — hoje só o da LGPD. Sai do
+                content.json (`link.rotulo` + `link.href`), então acrescentar ou
+                tirar documentos é subir o JSON ao Minio, sem tocar aqui.
+                Se um dia houver regulamento do evento, volta por aí. */}
             <span class="leading-[1.35] text-[clamp(12px,1.1vw,14px)]">
-              {c.texto}{c.obrigatorio && <span aria-hidden="true"> *</span>}
+              {c.texto}
+              {"link" in c && (c as any).link && (
+                <a
+                  href={(c as any).link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-aceite-link
+                  class="underline underline-offset-2 transition-colors hover:text-encontro-creme focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme"
+                >{/* colado ao <a>: uma quebra de linha aqui entra no texto do
+                     link, alonga o sublinhado e mete um espaço antes do ponto
+                     */}{(c as any).link.rotulo}</a>
+              )}{/* colado de propósito: uma quebra de linha aqui vira um espaço
+                     no HTML e sai «Política de Privacidade .» */}{
+                "sufixo" in c ? (c as any).sufixo : ""
+              }{c.obrigatorio && <span aria-hidden="true"> *</span>}
             </span>
           </label>
           <p id={`erro-${c.nome}`} aria-live="polite" class="min-h-0 pl-8 font-medium text-encontro-creme text-[clamp(12px,1vw,13px)] sm:min-h-[1.05em]"></p>
