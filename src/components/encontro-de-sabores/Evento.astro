@@ -82,7 +82,7 @@ const propsEndereco = mapsUrl
 
 <section
   data-revelar
-  class="w-full bg-encontro-tijolo px-4 pb-10 pt-6 sm:px-6 md:pb-[68px] md:pt-[47px] lg:px-8"
+  class="w-full bg-encontro-tijolo px-2 pb-10 pt-6 sm:px-6 md:pb-[68px] md:pt-[47px] lg:px-8"
 >
   <h2
     class="mx-auto max-w-none text-balance text-center font-bold leading-[1.25] text-encontro-creme text-[32px] md:max-w-[777px] md:leading-[1.22] md:whitespace-nowrap md:text-[clamp(28px,3.13vw,45px)]"
@@ -102,7 +102,7 @@ const propsEndereco = mapsUrl
       são 16px a menos nas duas linhas. Com isso a margem pode ser positiva e a
       página fica 2px mais alta que antes, não 42. */}
   <div
-    class="mx-auto mt-[14px] w-full max-w-[1088px] rounded-[24px] bg-encontro-vinho px-0 py-[25px] md:mt-[48px] md:rounded-[40px] md:pb-[51px] md:pt-[48px]"
+    class="mx-auto mt-[14px] w-full max-w-[1088px] rounded-[24px] bg-encontro-vinho px-0 py-[24px] md:mt-[48px] md:rounded-[40px] md:pb-[51px] md:pt-[48px]"
   >
     {/* Data e endereço: coluna no mobile, linha a partir de md, centralizadas entre si. */}
     <div class="mx-auto flex w-full flex-col items-center gap-5 md:w-[71.6%] md:flex-row md:items-center md:justify-between md:gap-6">
@@ -133,7 +133,7 @@ const propsEndereco = mapsUrl
           Sem rótulo «Ver no mapa» por decisão de design: a caixa toda é o link
           e o sinal visível é o pin. Para quem não vê a caixa, o `aria-label`
           avisa que abre o Google Maps em uma nova aba. */}
-      <address class="w-[88%] not-italic md:w-[58.3%] md:shrink-0">
+      <address class="w-fit not-italic md:w-[58.3%] md:shrink-0">
         <CajaEndereco
           {...propsEndereco}
           class:list={[
@@ -201,7 +201,7 @@ const propsEndereco = mapsUrl
         {/* Pílula: 480/610 = 78.7% do card, raio 25 do Figma. O preenchimento
             passa de branco para vinho: no design era #FFF sobre #F6F6F6, 1,1:1. */}
         <p
-          class="mx-auto mt-10 flex min-h-[98px] w-[88%] max-w-[480px] items-center justify-center rounded-[25px] bg-encontro-vinho px-3 text-center font-bold leading-[1.2] text-encontro-creme text-[20px] md:mt-[35px] md:h-[75px] md:w-full md:min-h-0 md:text-[clamp(18px,1.81vw,26px)]"
+          class="mx-auto mt-8 flex min-h-0 w-[88%] max-w-[480px] items-center justify-center rounded-[20px] bg-encontro-vinho px-4 py-[14px] text-center font-bold leading-[1.2] text-encontro-creme text-[20px] md:mt-[35px] md:h-[75px] md:rounded-[25px] md:px-3 md:py-0 md:w-full md:text-[clamp(18px,1.81vw,26px)]"
         >
           {programacao.destaque}
         </p>

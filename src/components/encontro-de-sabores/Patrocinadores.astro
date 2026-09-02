@@ -31,21 +31,22 @@ interface Props {
 const { patrocinio } = Astro.props;
 
 const BANDA = 108; // px de altura da faixa no design
+const BANDA_MOBILE = 150; // no mobile a faixa cresce: mesma proporcao, logos maiores
 ---
 
 <section
   data-revelar
   id="patrocinadores"
-  class="w-full scroll-mt-4 bg-encontro-tijolo px-6 pb-10 md:pb-16 lg:px-8"
+  class="w-full scroll-mt-4 bg-encontro-tijolo px-4 pb-10 sm:px-6 md:pb-16 lg:px-8"
 >
   {/* 1077/1440 = 74.79% */}
   <div
-    class="mx-auto flex w-full max-w-[1077px] flex-col items-center justify-center gap-4 rounded-encontro-lg bg-encontro-branco px-6 py-4 sm:flex-row sm:gap-6 md:min-h-[120px] md:gap-8 md:px-[4.9%]"
+    class="mx-auto flex w-full max-w-[1077px] flex-col items-center justify-center gap-5 rounded-encontro-lg bg-encontro-branco px-4 py-6 sm:flex-row sm:gap-6 sm:px-6 sm:py-4 md:min-h-[120px] md:gap-8 md:px-[4.9%]"
   >
 {/* Piso de 12px, não 9: o rótulo é texto real e em 9px não dá para ler.
         No Figma ele vai rasterizado dentro da tira, então lá isso não se aplica. */}
     <h2
-      class="shrink-0 font-bold uppercase tracking-[0.04em] text-encontro-vinho text-[clamp(12px,1.1vw,16px)]"
+      class="shrink-0 font-bold uppercase tracking-[0.08em] text-encontro-vinho text-[14px] sm:tracking-[0.04em] sm:text-[clamp(12px,1.1vw,16px)]"
     >
       {patrocinio.titulo}
     </h2>
@@ -53,10 +54,10 @@ const BANDA = 108; // px de altura da faixa no design
     {/* Cada logo tem sua própria altura. A faixa do design mede 108px; em
         telas menores ela escala com a largura mantendo as proporções. */}
     <ul
-      class="grid w-full max-w-[918px] grid-cols-4 items-center justify-items-center gap-x-4 gap-y-4 sm:flex sm:justify-between sm:gap-x-3"
+      class="flex w-full max-w-[918px] flex-wrap items-center justify-center gap-x-5 gap-y-6 sm:flex-nowrap sm:justify-between sm:gap-x-3 sm:gap-y-0"
     >
       {patrocinio.logos.map((logo) => (
-        <li class="flex items-center justify-center">
+        <li class="flex basis-[calc(33.333%-0.84rem)] items-center justify-center sm:basis-auto">
           <img
             src={logo.arquivo}
             alt={logo.nome}
@@ -65,7 +66,7 @@ const BANDA = 108; // px de altura da faixa no design
             loading="lazy"
             decoding="async"
             class="h-auto w-full object-contain sm:w-auto"
-            style={`--h:${((logo.altura / 100) * BANDA).toFixed(1)}px; max-height:var(--h); height:auto;`}
+            style={`--h:${((logo.altura / 100) * BANDA).toFixed(1)}px; --hm:${((logo.altura / 100) * BANDA_MOBILE).toFixed(1)}px; max-height:var(--hm); height:auto;`}
           />
         </li>
       ))}
