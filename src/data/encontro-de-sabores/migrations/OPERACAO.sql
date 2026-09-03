@@ -77,8 +77,9 @@ select
   i.telefone,
   case when i.source = 'crm' then 'CRM' else 'LP' end as canal,
   c.maioridade  as declarou_maior_18,
-  c.restricao   as declarou_sem_restricao,
-  c.lgpd        as aceitou_termos
+  c.restricao   as declarou_sem_restricao
+  -- Sem `aceitou_termos`: o aceite saiu do formulário e a coluna sempre vem
+  -- null. A coluna `lgpd` continua na tabela, para o caso de a caixa voltar.
 from inscricoes i
 left join encontro_consentimentos c
   on c.event_id = i.event_id and c.cpf = i.cpf
