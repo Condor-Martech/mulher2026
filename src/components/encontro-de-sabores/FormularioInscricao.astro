@@ -1,0 +1,208 @@
+---
+// O formulário de inscrição, compartilhado pelos DOIS canais:
+//   web  → dentro do ModalInscricao.astro          (source=social, cota qtd_social)
+//   CRM  → inline em /encontro-de-sabores/crm/     (source=crm,    cota qtd_crm)
+// É o mesmo padrão de dois canais que maes e sabores usam. O markup é um só
+// para que uma correção de validação ou de acessibilidade não precise ser
+// feita duas vezes.
+//
+// Cada edição do evento traz regras próprias, então NADA disso está no
+// JavaScript: o que é obrigatório vem de `formulario.aceites[].obrigatorio` no
+// content.json, vira o atributo `required` aqui, e o validador só obedece ao
+// `required` (mesmo critério do saboresRegistration.ts). Mudar o que se exige
+// na próxima edição é subir o content.json ao Minio — sem deploy, sem tocar JS.
+//
+// As mensagens de erro viajam no próprio markup, em `data-erro`, em vez de
+// serem importadas pelo script do cliente. Assim o texto continua vindo do
+// Minio e o bundle não carrega nenhuma string.
+import type { ConteudoEncontro } from "../../services/encontroContentService";
+
+interface Props {
+  eventId?: string;
+  source: "social" | "crm";
+  content: ConteudoEncontro;
+  /** Dentro do <dialog>: só aí faz sentido um botão que fecha. Na rota do CRM
+   *  o formulário é da própria página e não há nada para fechar. */
+  emModal?: boolean;
+}
+const { eventId = "", source, content, emModal = false } = Astro.props;
+const { evento, mensagens, formulario } = content;
+
+const CAMPOS = formulario.campos;
+const CHECKS = formulario.aceites;
+---
+
+{/* Sucesso: SUBSTITUI o formulário, não o deixa visível e desabilitado. */}
+<div
+  id="form-sucesso"
+  hidden
+  tabindex="-1"
+  class="rounded-encontro-lg bg-encontro-cinza px-5 py-7 text-center sm:px-8 sm:py-9"
+>
+  {/* Selo de confirmação. SVG e não emoji: o emoji muda de desenho conforme o
+      sistema operativo e não aceita a paleta da campanha. */}
+  <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-encontro-creme sm:h-20 sm:w-20">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="3"
+      aria-hidden="true"
+      class="h-8 w-8 text-encontro-vinho sm:h-10 sm:w-10"
+    >
+      <path d="M4 12.5l5.2 5.2L20 7" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </div>
+
+  <p class="mt-4 font-bold leading-tight text-encontro-vinho text-[clamp(18px,2vw,26px)]">
+    {mensagens.sucesso.titulo}
+  </p>
+  <p class="mt-2 leading-snug text-encontro-tijolo text-[clamp(13px,1.2vw,16px)]">
+    {mensagens.sucesso.corpo}
+  </p>
+
+  {/* Quando e onde num quadro próprio: é a parte que a pessoa vai querer reler
+      ou fotografar, então sai do meio do texto corrido. */}
+  <div class="mt-4 rounded-encontro-sm bg-encontro-vinho px-4 py-3 text-encontro-branco sm:px-6 sm:py-4">
+    <p class="font-bold leading-snug text-encontro-creme text-[clamp(14px,1.3vw,18px)]">
+      {evento.data} · {evento.horario}
+    </p>
+    <p class="mt-1 leading-snug text-[clamp(12px,1.1vw,15px)]">
+      {evento.local}<br />{evento.endereco}
+    </p>
+  </div>
+
+  <p class="mt-3 text-encontro-tijolo/85 text-[clamp(12px,1vw,14px)]">
+    {mensagens.sucesso.confirmacao}
+  </p>
+
+  {emModal && (
+    <button
+      type="button"
+      data-fecha-inscricao
+      class="mt-5 inline-flex min-h-[48px] w-full max-w-[240px] items-center justify-center rounded-encontro-sm bg-encontro-vinho px-8 font-bold uppercase tracking-[0.06em] text-encontro-creme transition duration-200 hover:bg-encontro-tijolo focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-vinho motion-safe:hover:scale-[1.02] motion-safe:active:scale-[0.98]"
+    >
+      {formulario.fecharSucesso}
+    </button>
+  )}
+</div>
+
+<form
+  id="form-inscricao"
+  data-event-id={eventId}
+  data-source={source}
+  data-erro-formulario={formulario.erros.formulario}
+  data-erro-cpf-duplicado={formulario.erros.cpfDuplicado}
+  data-erro-esgotado={formulario.erros.esgotado}
+  data-erro-nao-aberto={formulario.erros.naoAberto}
+  data-erro-envio={formulario.erros.envio}
+  data-enviando={formulario.enviando}
+  data-enviar={formulario.enviar}
+  novalidate
+  class="mt-4 sm:mt-6"
+>
+  {/* O nome do evento vai para `inscricoes.tema` através de `p_tema`. Todas as
+      outras campanhas mandam este campo (EventRegistrationForm.astro e as
+      rotas [id].astro); sem ele as inscrições desta chegavam com o tema vazio,
+      o que estraga qualquer exportação por evento. */}
+  <input type="hidden" name="eventTema" value={evento.nome} />
+
+  <div class="grid grid-cols-2 gap-x-3 gap-y-2 sm:gap-3">
+    {CAMPOS.map((c) => (
+      <div class:list={[
+        "flex flex-col gap-1",
+        c.nome === "nome" && "col-span-2",
+        // O e-mail é longo demais para meia largura no mobile, então ocupa a
+        // linha toda — e vai para o fim (order-1) para que CPF e celular
+        // fiquem lado a lado. No desktop volta à ordem e à posição do Figma.
+        c.nome === "email" && "col-span-2 order-1 sm:order-none sm:col-span-1",
+        // Abaixo de 360px a coluna de meia largura fica com menos de 142px e o
+        // placeholder do celular —«(41) 90000-0000», o mais comprido— entra
+        // cortado. Medido: precisa de 142px com o recuo mobile. Aí CPF e
+        // celular passam a ocupar a linha toda; a partir de 360 voltam a ficar
+        // lado a lado, como no Figma.
+        (c.nome === "cpf" || c.nome === "telefone") &&
+          "col-span-2 min-[360px]:col-span-1",
+      ]}>
+        <label for={c.nome} class="font-medium text-encontro-creme text-[clamp(12px,1.1vw,14px)]">
+          {c.rotulo} <span aria-hidden="true">*</span>
+        </label>
+        {/* inputmode e NÃO type="number": em CPF e telefone, number quebra a
+            colagem e adiciona setas de incremento que não fazem sentido. */}
+        <input
+          id={c.nome}
+          name={c.nome}
+          type={c.tipo}
+          inputmode={c.inputmode}
+          autocomplete={c.autocomplete}
+          placeholder={c.placeholder}
+          maxlength={c.maxlength}
+          required
+          aria-required="true"
+          aria-describedby={`erro-${c.nome}`}
+          data-erro={formulario.erros[c.nome as keyof typeof formulario.erros]}
+          class="min-h-[48px] w-full rounded-encontro-sm border-2 border-transparent bg-white px-3 sm:px-4 text-encontro-vinho placeholder:text-encontro-vinho/40 text-[clamp(14px,1.2vw,16px)] transition-colors duration-150 focus-visible:border-encontro-creme focus-visible:outline-none aria-[invalid=true]:border-encontro-red"
+        />
+        <p id={`erro-${c.nome}`} aria-live="polite" class="min-h-0 font-medium text-encontro-creme text-[clamp(12px,1vw,13px)] sm:min-h-[1.05em]"></p>
+      </div>
+    ))}
+  </div>
+
+  <fieldset class="mt-3 border-0 p-0 sm:mt-4">
+    <legend class="sr-only">{formulario.legenda}</legend>
+    <div class="flex flex-col gap-1">
+      {CHECKS.map((c) => (
+        <div>
+          {/* min-h-[44px]: alvo de toque mínimo no mobile. */}
+          <label class="flex min-h-[44px] cursor-pointer items-start gap-3 py-0.5 sm:py-1">
+            <input
+              id={c.nome}
+              name={c.nome}
+              type="checkbox"
+              required={c.obrigatorio}
+              aria-required={c.obrigatorio ? "true" : "false"}
+              aria-describedby={`erro-${c.nome}`}
+              data-erro={formulario.erros[c.nome as keyof typeof formulario.erros]}
+              class="mt-[3px] h-5 w-5 shrink-0 accent-encontro-creme focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme"
+            />
+            {/* O aceite pode levar um link — hoje só o da LGPD. Sai do
+                content.json (`link.rotulo` + `link.href`), então acrescentar ou
+                tirar documentos é subir o JSON ao Minio, sem tocar aqui.
+                Se um dia houver regulamento do evento, volta por aí. */}
+            <span class="leading-[1.35] text-[clamp(12px,1.1vw,14px)]">
+              {c.texto}
+              {"link" in c && (c as any).link && (
+                <a
+                  href={(c as any).link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-aceite-link
+                  class="underline underline-offset-2 transition-colors hover:text-encontro-creme focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme"
+                >{/* colado ao <a>: uma quebra de linha aqui entra no texto do
+                     link, alonga o sublinhado e mete um espaço antes do ponto
+                     */}{(c as any).link.rotulo}</a>
+              )}{/* colado de propósito: uma quebra de linha aqui vira um espaço
+                     no HTML e sai «Política de Privacidade .» */}{
+                "sufixo" in c ? (c as any).sufixo : ""
+              }{c.obrigatorio && <span aria-hidden="true"> *</span>}
+            </span>
+          </label>
+          <p id={`erro-${c.nome}`} aria-live="polite" class="min-h-0 pl-8 font-medium text-encontro-creme text-[clamp(12px,1vw,13px)] sm:min-h-[1.05em]"></p>
+        </div>
+      ))}
+    </div>
+  </fieldset>
+
+  {/* Aviso do envio: CPF repetido, vagas esgotadas, erro de rede. */}
+  <p id="form-aviso" role="status" aria-live="assertive" class="mt-2 min-h-0 text-center font-bold text-encontro-creme text-[clamp(12px,1.1vw,15px)] sm:mt-3 sm:min-h-[1.2em]"></p>
+
+  <div class="mt-2 text-center sm:mt-3">
+    <button
+      type="submit"
+      data-track="encontro_form_enviar"
+      class="inline-flex min-h-[52px] w-full max-w-[280px] items-center justify-center rounded-encontro-sm bg-encontro-creme px-8 font-bold uppercase tracking-[0.06em] text-encontro-vinho shadow-sm transition duration-200 text-[clamp(13px,1.11vw,16px)] hover:bg-white hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme disabled:opacity-60 disabled:shadow-none motion-safe:enabled:hover:scale-[1.02] motion-safe:enabled:active:scale-[0.98]"
+    >
+      {formulario.enviar}
+    </button>
+  </div>
+</form>

@@ -1,0 +1,162 @@
+/* ============================================================================
+   Encontro de Sabores Condor — design system (1 CSS por campanha, padrão
+   maes.css / saboresInverno.css). Tailwind v4.
+   Carregado SÓ pelo LayoutEncontroSabores.astro: bundle isolado, seus tokens @theme
+   não vazam para mulher/maes/pascoa/sabores.
+
+   Por que `source(none)`
+   ----------------------
+   Cada folha com `@import "tailwindcss"` faz a própria varredura e, por padrão,
+   essa varredura pega o projeto INTEIRO. Sem `source(none)`, esta folha levaria
+   junto as utilidades das outras quatro campanhas —que esta página não usa nem
+   carrega— e engordaria à toa. Com `source(none)` a detecção automática é
+   desligada e só entra o que é desta campanha.
+
+   O movimento espelho está nas outras quatro folhas: os `@source not` delas
+   excluem esta campanha para que as utilidades dela não vazem para lá. Sem
+   essas linhas, o CSS de quatro LPs no ar muda em silêncio.
+
+   Os valores saem de src/data/encontro-de-sabores/design-specs.md, exportado
+   do Figma. Não inventar tons: se precisar de um novo, pedir para o design.
+   ============================================================================ */
+@import "tailwindcss" source(none);
+
+@source "../components/encontro-de-sabores";
+@source "../pages/encontro-de-sabores";
+
+/* ═══════════════════════ tokens ═══════════════════════ */
+@theme {
+  /* Paleta do Figma (design-specs.md) */
+  --color-encontro-vinho: #7b0b02; /* fundo principal, o vinho escuro */
+  --color-encontro-tijolo: #a72b00; /* fundo secundário, o laranja queimado */
+  --color-encontro-creme: #ffd88f; /* títulos e CTA sobre o vinho */
+  --color-encontro-branco: #ffffff;
+  --color-encontro-cinza: #f6f6f6; /* fundo do card de patrocínio */
+  --color-encontro-red: #c62828;   /* só mensagens de erro do formulário */
+
+  /* Marca Condor, compartilhada com as demais campanhas */
+  --color-condor-blue: #0055a5;
+  --color-condor-red: #e31c24;
+
+  /* Tipografia: Montserrat em 400/500/700 e Archivo Bold, conforme design-specs.
+     O itálico de «Sabores» NÃO é uma fonte: vem rasterizado dentro do
+     selo (selo.webp), então não precisa carregar. */
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-archivo: "Archivo", "Montserrat", ui-sans-serif, sans-serif;
+
+  /* ── Raios: DOIS valores, não oito ───────────────────────────────────
+     O Figma usa 40, 30, 25, 24, 20, 18, 12 e 10 px em superfícies do
+     mesmo nível hierárquico, sem regra que as relacione. Unificamos:
+       lg 32px  superfícies (card, modal, card de patrocínio)
+       sm 16px  controles e chips (botões, inputs, endereço, pílula)
+     Mantém o caráter arredondado do design e tira o ruído. Onde uma
+     superfície fica aninhada, o raio interno é o externo menos o
+     padding, que é a regra opticamente correta. */
+  --radius-encontro-lg: 32px;
+  --radius-encontro-sm: 16px;
+
+  /* Indicador de scroll do hero. O corte em 86svh não basta para deixar
+     claro que há conteúdo abaixo: a linha cresce para baixo e se recolhe
+     pelo mesmo lado. Quem desliga é o bloco de reduced-motion. */
+  --animate-descer: descer 2.4s ease-in-out infinite;
+
+  @keyframes descer {
+    0%   { transform: scaleY(0); transform-origin: top; }
+    45%  { transform: scaleY(1); transform-origin: top; }
+    55%  { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* Entrada do modal de inscrição. Sem isto ele aparece de um fotograma para o
+     outro, o que a esta escala — ocupa quase o ecrã todo — assusta. */
+  @keyframes entrada-modal {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes entrada-fundo {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+}
+
+/* ═══════════════════════ base ═══════════════════════ */
+@layer base {
+  /* Deslocamento suave nas âncoras do menu (#home, #programacao,
+     #patrocinadores). O bloco de prefers-reduced-motion no fim devolve o
+     salto instantâneo a quem o pedir. */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* A secção não encosta no topo do ecrã ao ser alcançada. */
+  :target {
+    scroll-margin-top: 24px;
+  }
+
+  /* Revelação ao entrar no ecrã.
+     O estado escondido existe SÓ sob `html[data-js]`, marcado por um script
+     inline no <head>. Sem JS, com o JS desligado ou se o script falhar, nada
+     se esconde: o pior caso é a página sem animação, nunca a página em
+     branco. */
+  @media (prefers-reduced-motion: no-preference) {
+    html[data-js] [data-revelar] {
+      opacity: 0;
+      transform: translateY(18px);
+      transition:
+        opacity 0.55s ease-out,
+        transform 0.55s ease-out;
+    }
+
+    html[data-js] [data-revelar][data-visivel] {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* O <dialog> não anima ao abrir por si: passa de display:none a visível num
+     fotograma. A curva é ease-out acentuada — arranca depressa e assenta — que
+     é o que dá a sensação de leve em vez de lento.
+
+     Só a ABERTURA. Fechar exigiria segurar o close() com JS ou depender de
+     @starting-style, e o salto ao fechar não incomoda: o que se olha nesse
+     momento é a página que volta, não o que desaparece.
+
+     Quem desliga é o bloco de prefers-reduced-motion no fim deste ficheiro,
+     que zera a duração de qualquer animação. */
+  #encontro-modal[open] {
+    animation: entrada-modal 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  #encontro-modal[open]::backdrop {
+    animation: entrada-fundo 0.28s ease-out;
+  }
+
+  /* O hero é uma foto escura sangrada; declarar o fundo aqui evita o
+     flash branco entre o primeiro paint e o carregamento da imagem. */
+  body {
+    background-color: var(--color-encontro-vinho);
+  }
+
+  /* Respeitar quem pede menos movimento. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after,
+    /* O ::backdrop do <dialog> não é descendente de nada, então o seletor
+       universal não lhe chega: sem esta linha o fundo do modal continuava a
+       animar para quem pede menos movimento. */
+    *::backdrop {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

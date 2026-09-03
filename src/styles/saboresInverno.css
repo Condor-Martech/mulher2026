@@ -5,6 +5,14 @@
    Rutas de assets reescritas a /assets/sabores-de-inverno/ (convención del repo).
    ============================================================================ */
 @import "tailwindcss";
+/* /encontro-de-sabores tiene su propio Tailwind aislado en src/styles/encontro-de-sabores.css, con
+   source(none). Sin esta exclusión, el escaneo automático de ESTA hoja también
+   encuentra su marcado y emite aquí sus utilidades, en una hoja que aquella
+   campaña no carga. Borrar estas líneas engorda las 4 hojas vivas en silencio. */
+@source not "../**/encontro-de-sabores/**";
+@source not "../pages/encontro-de-sabores/**";
+@source not "../../public/assets/encontro-de-sabores/**";
+
 
 
 /* ═══════════════════════ tokens ═══════════════════════ */

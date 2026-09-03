@@ -1,0 +1,137 @@
+---
+// Canal CRM do Encontro de Sabores Condor.
+//
+// É o segundo dos dois canais do briefing. O briefing dividia 15/15; a
+// regra de negócio em vigor é 20 pela LP (qtd_social) e 10 pelo CRM
+// (qtd_crm) — os mesmos 30 lugares, repartidos de outra forma.
+// Mesmo padrão de /maes/palestra/[id] e /sabores-de-inverno/palestra/[id]: uma
+// página própria, com o formulário EM LINHA (não em modal) e sua própria cota.
+//
+//   web  → /encontro-de-sabores/            modal   source=social  cota qtd_social
+//   CRM  → /encontro-de-sabores/crm/  em linha source=crm    cota qtd_crm
+//
+// SSR sem cache: o estado das vagas é consultado a cada requisição, nunca é
+// calculado no build nem servido do cache.
+//
+// O estado vem de services/encontroEventService.ts com source='crm': ele busca a
+// linha do evento em `palestras` com campanha_id = 'encontro-de-sabores' e o
+// estado sai de utils/eventStatus.ts. Enquanto essa linha não existir, o serviço
+// devolve SOON — não há mais nenhum estado fixo aqui.
+import LayoutEncontroSabores from "../../../layouts/LayoutEncontroSabores.astro";
+import FormularioInscricao from "../../../components/encontro-de-sabores/FormularioInscricao.astro";
+import RodapeEncontro from "../../../components/encontro-de-sabores/RodapeEncontro.astro";
+import { obterEstado } from "../../../services/encontroEventService";
+import { getEncontroContent } from "../../../services/encontroContentService";
+
+// Mesmo padrão da rota web: um fetch por requisição, prop-drilled.
+const [{ status: estado, eventId }, conteudoBruto] = await Promise.all([
+  // Astro.url só alimenta o `?force_status` de desenvolvimento; no build vira ruído inerte.
+  obterEstado("crm", Astro.url),
+  getEncontroContent(),
+]);
+const content = conteudoBruto ?? {};
+const { seo, evento, programacao, mensagens, hero } = content;
+
+Astro.response.headers.set("Cache-Control", "no-store");
+---
+
+<LayoutEncontroSabores title={seo.tituloCrm} noindex>
+  {/* Resgate de imagens: os assets são servidos do Minio (toEncontroCdn reescreve
+      /assets/… → s3.cndr.me/…). Se um asset ainda não estiver no Minio (404/rede),
+      o <img> cai sozinho na cópia local `/assets/encontro-de-sabores/…` que foi no
+      build. is:inline e no topo do body para se registrar antes de as imagens
+      carregarem. Não cobre backgrounds de CSS, só elementos <img>. */}
+  <script is:inline>
+    (function () {
+      var FROM = "https://s3.cndr.me/lp-content/encontro-de-sabores/";
+      var TO = "/assets/encontro-de-sabores/";
+      function resgatar(img) {
+        if (!img || img.tagName !== "IMG" || img.dataset.localFallback) return;
+        if (img.src.indexOf(FROM) === -1 && (img.srcset || "").indexOf(FROM) === -1) return;
+        img.dataset.localFallback = "1";
+        // O srcset ANTES do src: com srcset presente o browser ignora o src, e
+        // trocar só o src deixaria a imagem quebrada. O hero é o único <img>
+        // com srcset da página, e foi exatamente onde isto apareceu.
+        if (img.srcset) img.srcset = img.srcset.split(FROM).join(TO);
+        img.src = img.src.split(FROM).join(TO);
+      }
+      // `error` não borbulha → capture. Pega falhas futuras de carregamento.
+      document.addEventListener("error", function (e) { resgatar(e.target); }, true);
+      // E as que já falharam antes deste script rodar.
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("img").forEach(function (img) {
+          if (img.complete && img.naturalWidth === 0) resgatar(img);
+        });
+      });
+    })();
+  </script>
+
+  <main class="min-h-screen w-full bg-encontro-tijolo px-3 py-10 sm:px-6 md:py-16 lg:px-8">
+    <div class="mx-auto w-full max-w-[720px]">
+      <img
+        src={hero.selo}
+        alt={hero.seloAlt}
+        width="1200"
+        height="656"
+        fetchpriority="high"
+        decoding="async"
+        class="mx-auto w-[min(100%,340px)] md:w-[min(100%,420px)]"
+      />
+
+      <div
+        class="mt-8 rounded-encontro-lg bg-encontro-vinho px-5 py-8 sm:px-8 md:mt-12 md:px-10 md:py-10"
+      >
+        <h1
+          class="text-center font-bold leading-tight text-encontro-creme text-[clamp(22px,3.2vw,36px)]"
+        >
+          {evento.nome}
+        </h1>
+        <p
+          class="mt-4 text-center font-normal leading-[1.5] text-encontro-branco text-[clamp(13px,1.4vw,18px)]"
+        >
+          {evento.data} · {evento.horario}<br />
+          {evento.local} — {evento.endereco}
+        </p>
+
+        {estado === "OPEN" && (
+          <>
+            <p class="mt-6 flex min-h-[56px] items-center justify-center rounded-encontro-sm bg-encontro-tijolo px-5 text-center font-bold text-encontro-creme text-[clamp(14px,1.3vw,18px)]">
+              {programacao.destaque}
+            </p>
+            <FormularioInscricao source="crm" eventId={eventId} content={content} />
+          </>
+        )}
+
+        {/* SOON não é a mesma coisa que encerrado: «ainda não abriu» e «já
+            fechou» são mensagens diferentes. Manter as duas juntas num ternário
+            dizia que as inscrições tinham acabado antes mesmo de começar. */}
+        {estado === "SOON" && (
+          <p
+            class="mt-6 text-center leading-relaxed text-encontro-branco text-[clamp(13px,1.3vw,17px)]"
+          >
+            As inscrições abrem em <strong>{evento.aberturaInscricoes}</strong>.
+            Reserve sua agenda: {evento.dataCurta} às {evento.horario}, no{" "}
+            {evento.local}.
+          </p>
+        )}
+
+        {(estado === "FULL" || estado === "FINISHED") && (
+          /* Encerrado: o formulário é SUBSTITUÍDO pela mensagem, não fica
+             visível e desabilitado. É o que o briefing pede. */
+          <p
+            class="mt-6 text-center leading-relaxed text-encontro-branco text-[clamp(13px,1.3vw,17px)]"
+          >
+            {estado === "FULL" ? mensagens.esgotado : mensagens.encerrado}
+          </p>
+        )}
+      </div>
+    </div>
+  </main>
+
+  <RodapeEncontro rodape={content.rodape} />
+</LayoutEncontroSabores>
+
+<script>
+  import { montarFormulario } from "../../../utils/encontroRegistration";
+  montarFormulario();
+</script>

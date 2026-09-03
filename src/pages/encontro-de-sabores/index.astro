@@ -1,0 +1,93 @@
+---
+// Encontro de Sabores Condor — única rota da campanha.
+//
+// SSR (sem `prerender`), como as demais campanhas com inscrição: o estado das
+// vagas não pode vir de cache nem ser calculado no build, tem que ser
+// consultado a cada requisição.
+//
+// O estado sai de obterEstado(): ele consulta no Supabase a linha do evento em
+// `palestras` com campanha_id = 'encontro-de-sabores' e calcula o status com
+// utils/eventStatus.ts, igual a /maes/palestra/[id] e /sabores-de-inverno.
+// Enquanto essa linha não existir, o retorno é 'SOON', que é o estado real: o
+// briefing abre as inscrições em 04/09/2026 e a data ainda não chegou.
+import LayoutEncontroSabores from "../../layouts/LayoutEncontroSabores.astro";
+import Hero from "../../components/encontro-de-sabores/Hero.astro";
+import Evento from "../../components/encontro-de-sabores/Evento.astro";
+import ModalInscricao from "../../components/encontro-de-sabores/ModalInscricao.astro";
+import { obterEstado } from "../../services/encontroEventService";
+import { getEncontroContent } from "../../services/encontroContentService";
+import Patrocinadores from "../../components/encontro-de-sabores/Patrocinadores.astro";
+import RodapeEncontro from "../../components/encontro-de-sabores/RodapeEncontro.astro";
+
+// Estado da inscrição. Não há valor fixo aqui: quem calcula é o
+// eventStatus.ts em SSR, a partir da linha do evento em `palestras`.
+//
+// O formulário fica em MODAL, como no resto do repo (EventModal.astro,
+// SaboresEventModal.astro). Assim a página não cresce em relação ao Figma —que
+// não traz bloco de inscrição— e quem abre é o CTA «INSCREVA-SE» do design.
+//
+// Este é o canal WEB (src=social, cota qtd_social: as 20 vagas da LP; o CRM
+// tem as suas 10 em qtd_crm e conta à parte).
+// O canal CRM tem a própria rota, com o formulário inline, em
+// /encontro-de-sabores/crm/, igual a /maes/palestra/[id] e sabores.
+// Estado real, a cada requisição. Enquanto a linha do evento não existir em
+// `palestras` com campanha_id = 'encontro-de-sabores', devolve SOON e a página
+// continua de pé: não estoura por causa de uma linha que ainda não está lá.
+// Conteúdo editorial (textos + assets) do Minio, com fallback local. UM só
+// fetch por requisição, passado por props aos componentes que precisam —
+// padrão do sabores-de-inverno. Editar um texto passa a ser subir o
+// content.json ao Minio, sem build nem deploy.
+const [{ status: estado, eventId }, conteudoBruto] = await Promise.all([
+  // Astro.url só alimenta o `?force_status` de desenvolvimento; no build vira ruído inerte.
+  obterEstado("social", Astro.url),
+  getEncontroContent(),
+]);
+// Rede de segurança: o serviço sempre devolve objeto, mas garantimos que
+// `content` nunca seja null para os acessos `content.hero` etc.
+const content = conteudoBruto ?? {};
+
+// Dados ao vivo: nada de cache enquanto houver vagas a contar.
+Astro.response.headers.set("Cache-Control", "no-store");
+---
+
+<LayoutEncontroSabores title={content.seo?.title} description={content.seo?.description}>
+  {/* Resgate de imagens: os assets são servidos do Minio (toEncontroCdn reescreve
+      /assets/… → s3.cndr.me/…). Se um asset ainda não estiver no Minio (404/rede),
+      o <img> cai sozinho na cópia local `/assets/encontro-de-sabores/…` que foi no
+      build. is:inline e no topo do body para se registrar antes de as imagens
+      carregarem. Não cobre backgrounds de CSS, só elementos <img>. */}
+  <script is:inline>
+    (function () {
+      var FROM = "https://s3.cndr.me/lp-content/encontro-de-sabores/";
+      var TO = "/assets/encontro-de-sabores/";
+      function resgatar(img) {
+        if (!img || img.tagName !== "IMG" || img.dataset.localFallback) return;
+        if (img.src.indexOf(FROM) === -1 && (img.srcset || "").indexOf(FROM) === -1) return;
+        img.dataset.localFallback = "1";
+        // O srcset ANTES do src: com srcset presente o browser ignora o src, e
+        // trocar só o src deixaria a imagem quebrada. O hero é o único <img>
+        // com srcset da página, e foi exatamente onde isto apareceu.
+        if (img.srcset) img.srcset = img.srcset.split(FROM).join(TO);
+        img.src = img.src.split(FROM).join(TO);
+      }
+      // `error` não borbulha → capture. Pega falhas futuras de carregamento.
+      document.addEventListener("error", function (e) { resgatar(e.target); }, true);
+      // E as que já falharam antes deste script rodar.
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("img").forEach(function (img) {
+          if (img.complete && img.naturalWidth === 0) resgatar(img);
+        });
+      });
+    })();
+  </script>
+
+  <main>
+    <Hero hero={content.hero} />
+    <Evento content={content} estado={estado} />
+    <Patrocinadores patrocinio={content.patrocinio} />
+  </main>
+
+  {/* Fora do <main>: é um diálogo, não conteúdo da página. */}
+  <ModalInscricao estado={estado} eventId={eventId} content={content} />
+  <RodapeEncontro rodape={content.rodape} />
+</LayoutEncontroSabores>

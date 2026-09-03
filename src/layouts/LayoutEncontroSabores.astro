@@ -1,0 +1,155 @@
+---
+// Layout exclusivo do Encontro de Sabores Condor.
+// Importa APENAS o próprio CSS (bundle isolado): seus tokens @theme não interferem
+// em mulher/maes/pascoa/sabores, porque cada página carrega o seu layout.
+import "../styles/encontro-de-sabores.css";
+import settings from "../data/settings.json";
+import content from "../data/encontro-de-sabores/content.json";
+import { toEncontroCdn } from "../services/encontroContentService";
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Mantém a página fora dos buscadores. Ver a rota /crm/. */
+  noindex?: boolean;
+}
+
+const { seo } = content;
+const {
+  title = seo.title,
+  description = seo.description,
+  noindex = false,
+} = Astro.props;
+const { gtmId } = settings;
+
+// Absoluta por causa dos crawlers: og:image relativo quase todos ignoram.
+// O caminho local vira URL do Minio antes de virar absoluta; se já for
+// absoluta, `new URL` a devolve como está. Os defaults de seo daqui são só
+// fallback: as rotas passam o title/description vindos do Minio.
+const ogImage = new URL(toEncontroCdn(seo.ogImage), Astro.url).href;
+
+// Fonte única de verdade para o href do Google Fonts (async + fallback noscript).
+// Montserrat 400/500/700 e Archivo 700 são as duas famílias do design-specs.
+const fontsHref =
+  "https://fonts.googleapis.com/css2?family=Archivo:wght@700&family=Montserrat:wght@400;500;700&display=swap";
+---
+
+<!doctype html>
+<html lang="pt-br" class="w-full max-w-[100vw] overflow-x-hidden">
+  <head>
+    {/* charset + viewport PRIMEIRO: precisam cair nos primeiros 1024 bytes
+        (auditoria "charset" do Lighthouse), antes dos scripts do GTM. */}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {gtmId && (
+      <script is:inline define:vars={{ gtmId }}>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',gtmId);
+      </script>
+    )}
+    {/* Marca o <html> ANTES do primeiro paint: é isto que ativa, no CSS, o
+        estado inicial escondido das secções que se revelam ao rolar. Feito
+        aqui e não no script diferido para não haver um instante em que a
+        secção aparece e volta a esconder-se. Se não correr, nada se esconde. */}
+    <script is:inline>
+      if (matchMedia("(prefers-reduced-motion: no-preference)").matches)
+        document.documentElement.dataset.js = "";
+    </script>
+    {/* Sem OpenPanel nesta campanha, de propósito.
+        `opapi.cndr.me` —o servidor auto-hospedado que o partial <Analytics>
+        procura— não tem registo de DNS: google.com, github.com e s3.cndr.me
+        resolvem desta mesma máquina, este não. Com o
+        PUBLIC_OPENPANEL_CLIENT_ID definido, o script era renderizado e cada
+        carga tentava um host inexistente, enchendo a consola de erros. Como a
+        medição não vai ser implementada aqui, o partial sai.
+
+        As outras quatro campanhas montam-no nas suas próprias layouts e ficam
+        como estão — estão no ar, não se tocam.
+
+        O que fica e não custa nada: as chamadas a `track()` do funil e os
+        atributos `data-track`. Sem `window.op` o track.ts é um no-op por
+        optional-chaining com try/catch à volta, e os data-track são atributos
+        mortos. Repor a medição é devolver esta linha ao <head>. */}
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#7B0B02" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {/* A rota do CRM tem cota própria (qtd_crm) e é pública: quem chega a ela
+        inscreve-se contra as vagas reservadas à base do CRM. Se um buscador a
+        indexar, quem procurar pelo evento cai lá e gasta uma dessas vagas, e
+        quem recebeu o e-mail encontra «esgotado». Isto não é um controlo de
+        acesso — o link continua a funcionar para quem o tem —, só tira a
+        página do caminho de quem não devia chegar por aí. */}
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {/* Sem a query string: `Astro.url.href` carrega ?utm_source, ?src e
+        ?force_status, e cada variante viraria uma canónica diferente — o mesmo
+        conteúdo indexado N vezes. */}
+    <link rel="canonical" href={`${Astro.url.origin}${Astro.url.pathname}`} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url.href} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={ogImage} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    {/* Carregamento async (media=print → onload) para não bloquear o render; display=swap
+        já pinta com a fonte de fallback. <noscript> = fallback sem JS. */}
+    <link rel="stylesheet" href={fontsHref} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={fontsHref} /></noscript>
+  </head>
+
+  <body class="font-sans antialiased relative min-h-screen w-full overflow-x-hidden bg-encontro-vinho text-encontro-branco">
+    {gtmId && (
+      <noscript>
+        <iframe
+          src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+          height="0"
+          width="0"
+          style="display:none;visibility:hidden"></iframe>
+      </noscript>
+    )}
+    <slot />
+
+    <script>
+      // Revela cada secção quando entra no ecrã. Uma vez só: voltar a animar
+      // ao subir cansa depois da segunda passagem.
+      const raiz = document.documentElement;
+      const alvos = document.querySelectorAll("[data-revelar]");
+
+      if (!("IntersectionObserver" in window)) {
+        // Sem suporte, tira a marca: senão as secções ficavam escondidas para
+        // sempre, que é muito pior do que não ter animação.
+        delete raiz.dataset.js;
+      } else if (raiz.dataset.js !== undefined && alvos.length) {
+        const observador = new IntersectionObserver(
+          (entradas) => {
+            for (const entrada of entradas) {
+              if (!entrada.isIntersecting) continue;
+              (entrada.target as HTMLElement).dataset.visivel = "";
+              observador.unobserve(entrada.target);
+            }
+          },
+          // Dispara um pouco antes de a secção chegar ao fundo do ecrã, para
+          // que a animação termine quando o olho lá chega.
+          { rootMargin: "0px 0px -12% 0px" },
+        );
+        for (const alvo of alvos) observador.observe(alvo);
+      }
+    </script>
+  </body>
+</html>
