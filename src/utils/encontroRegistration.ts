@@ -419,8 +419,8 @@ export function montarFormulario(): void {
       }
 
       // O canal é declarado pelo próprio formulário:
-      //   a LP web   → social  (cota qtd_social, as 15 vagas da LP)
-      //   o CRM      → crm     (cota qtd_crm, as outras 15)
+      //   a LP web   → social  (cota qtd_social, as 20 vagas da LP)
+      //   o CRM      → crm     (cota qtd_crm, as outras 10)
       //
       // O registrationService monta um payload fixo e não leva os três
       // aceites: é partilhado pelas cinco campanhas, e por isso eles vão pela

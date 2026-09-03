@@ -6,8 +6,11 @@
  * de `palestras` com este campanha_id.
  *
  * Dois canais sobre o mesmo evento, como em maes:
- *   web (LP)  → source 'social' → cota qtd_social  → 15 vagas
- *   CRM       → source 'crm'    → cota qtd_crm     → 15 vagas
+ *   web (LP)  → source 'social' → cota qtd_social  → 20 vagas
+ *   CRM       → source 'crm'    → cota qtd_crm     → 10 vagas
+ *
+ * (O briefing dividia 15/15; a regra de negócio em vigor é 20/10, com o
+ * mesmo total de 30. Os números vivem na linha de `palestras`, não aqui.)
  *
  * A consulta acontece a cada requisição (SSR, sem cache): o briefing exige que
  * o estado das vagas não venha de cache nem seja calculado no build.
