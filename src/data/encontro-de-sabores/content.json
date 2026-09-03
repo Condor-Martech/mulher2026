@@ -24,6 +24,11 @@
     "selo": "/assets/encontro-de-sabores/images/selo.webp",
     "seloAlt": "Encontro de Sabores Condor",
     "cta": "INSCREVA-SE",
+    "ctaEstados": {
+      "SOON": "EM BREVE",
+      "FULL": "ESGOTADO",
+      "FINISHED": "ENCERRADO"
+    },
     "navRotulo": "Navegação principal",
     "menu": [
       {
@@ -120,7 +125,12 @@
     "esgotado": "As inscrições para o Encontro de Sabores Condor estão encerradas. Agradecemos o seu interesse!",
     "encerrado": "As inscrições para o Encontro de Sabores Condor estão encerradas. Agradecemos o seu interesse!",
     "erro": "Não foi possível concluir sua inscrição. Verifique seus dados e tente novamente.",
-    "encerradoTitulo": "Inscrições encerradas"
+    "encerradoTitulo": "Inscrições encerradas",
+    "botaoAviso": {
+      "SOON": "As inscrições abrem em 04/09/2026.",
+      "FULL": "Todas as vagas foram preenchidas.",
+      "FINISHED": "O período de inscrições terminou."
+    }
   },
   "formulario": {
     "titulo": "Faça sua inscrição",

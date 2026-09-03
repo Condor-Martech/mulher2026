@@ -26,7 +26,8 @@ import RodapeEncontro from "../../components/encontro-de-sabores/RodapeEncontro.
 // SaboresEventModal.astro). Assim a página não cresce em relação ao Figma —que
 // não traz bloco de inscrição— e quem abre é o CTA «INSCREVA-SE» do design.
 //
-// Este é o canal WEB (src=social, cota qtd_social: as 15 vagas da LP).
+// Este é o canal WEB (src=social, cota qtd_social: as 20 vagas da LP; o CRM
+// tem as suas 10 em qtd_crm e conta à parte).
 // O canal CRM tem a própria rota, com o formulário inline, em
 // /encontro-de-sabores/crm/, igual a /maes/palestra/[id] e sabores.
 // Estado real, a cada requisição. Enquanto a linha do evento não existir em
@@ -82,7 +83,7 @@ Astro.response.headers.set("Cache-Control", "no-store");
 
   <main>
     <Hero hero={content.hero} />
-    <Evento content={content} />
+    <Evento content={content} estado={estado} />
     <Patrocinadores patrocinio={content.patrocinio} />
   </main>
 

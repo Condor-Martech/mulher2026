@@ -44,9 +44,21 @@ import type { ConteudoEncontro } from "../../services/encontroContentService";
 
 interface Props {
   content: ConteudoEncontro;
+  /** Estado das inscrições, calculado no servidor a cada pedido pelo
+   *  obterEstado(). Sem ele o botão dizia sempre «INSCREVA-SE» e abria o modal
+   *  mesmo antes de 04/09 — a página prometia uma inscrição que a base recusa. */
+  estado: "SOON" | "OPEN" | "FULL" | "FINISHED";
 }
-const { content } = Astro.props;
-const { agenda, evento, programacao, hero } = content;
+const { content, estado } = Astro.props;
+const { agenda, evento, programacao, hero, mensagens } = content;
+
+// Mesma tabela de estados do resto do repo (data/events.json, statusConfig):
+// só OPEN deixa o botão ativo; os outros três trocam o rótulo e desativam.
+// Os textos saem do content.json — e `mensagens` e `hero` vão no payload do
+// Minio, então dá para mudar o rótulo sem deploy.
+const aberto = estado === "OPEN";
+const rotuloCta = aberto ? hero.cta : hero.ctaEstados[estado];
+const avisoCta = aberto ? null : mensagens.botaoAviso[estado];
 
 // Link para o Google Maps. Mesmo critério de sabores (SaboresEventCard.astro e
 // sabores-de-inverno/palestra/[id].astro): busca por nome + endereço, que não
@@ -70,7 +82,7 @@ const CajaEndereco = mapsUrl ? "a" : "div";
 const propsEndereco = mapsUrl
   ? {
       href: mapsUrl,
-      // Nova aba de propósito: esta é uma LP de inscrição com 15 vagas. Mandar
+      // Nova aba de propósito: esta é uma LP de inscrição com 20 vagas. Mandar
       // o usuário para o Maps na mesma aba é perdê-lo.
       target: "_blank",
       rel: "noopener noreferrer",
@@ -208,14 +220,28 @@ const propsEndereco = mapsUrl
       </div>
 
       <div class="mt-7 text-center md:mt-[32px]">
+        {/* `disabled` de verdade, não só um estilo: assim não recebe clique nem
+            foco, e nenhum leitor de ecrã o anuncia como acionável. O
+            `data-abre-inscricao` também sai quando está fechado — sem ele o
+            script nem sequer o regista. */}
         <button
           type="button"
-          data-abre-inscricao
+          disabled={!aberto}
+          data-abre-inscricao={aberto ? "" : undefined}
           data-track="encontro_cta_programacao"
-          class="inline-flex h-[44px] w-[181px] items-center justify-center rounded-[10px] bg-encontro-creme text-[14px] font-bold tracking-wide text-encontro-vinho shadow-sm transition duration-200 hover:bg-white hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme motion-safe:hover:scale-[1.03] motion-safe:active:scale-[0.98] md:h-[50px] md:w-[208px] md:text-[clamp(14px,1.11vw,16px)]"
+          data-estado={estado}
+          class="inline-flex h-[44px] w-[181px] items-center justify-center rounded-[10px] bg-encontro-creme text-[14px] font-bold tracking-wide text-encontro-vinho shadow-sm transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-encontro-creme enabled:hover:bg-white enabled:hover:shadow-md disabled:cursor-not-allowed disabled:bg-white/12 disabled:text-encontro-creme disabled:shadow-none motion-safe:enabled:hover:scale-[1.03] motion-safe:enabled:active:scale-[0.98] md:h-[50px] md:w-[208px] md:text-[clamp(14px,1.11vw,16px)]"
         >
-          {hero.cta}
+          {rotuloCta}
         </button>
+
+        {/* Um botão desativado sem explicação é um beco. Com o modal fora de
+            alcance, é aqui que a pessoa fica a saber quando abre. */}
+        {avisoCta && (
+          <p class="mx-auto mt-3 w-[88%] max-w-[420px] leading-snug text-encontro-creme text-[13px] md:mt-4 md:text-[clamp(13px,1.04vw,15px)]">
+            {avisoCta}
+          </p>
+        )}
       </div>
     </div>
   </div>
